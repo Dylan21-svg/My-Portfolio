@@ -1,0 +1,205 @@
+{
+  "home": {
+    "hero": {
+      "name": "Che Amah Diland Ngwa",
+      "title": "Junior Backend-Software Engineer",
+      "tagline": "I specialize in the art of the backend where speed, security, and scalability converge. With a deep focus on the Python ecosystem, I build distributed systems designed to handle the heavy lifting of modern web apps. I am a firm believer in rigorous testing, containerized deployments, and building software that stays online when everything else goes offline.",
+      "ctaText": "VIEW MY WORK",
+      "profileImage": "/images/D21.jpeg",
+      "backgroundImage": "/images/dylan.jpg"
+    },
+    "cards": [
+      {
+        "id": "1",
+        "type": "profile",
+        "title": "A BACKEND-SOFTWARE ENGINEER",
+        "content": "Dylan Sparks\nBuea, Cameroon"
+      },
+      {
+        "id": "2",
+        "type": "tech-stack",
+        "title": "Tech Stack",
+        "content": ""
+      },
+      {
+        "id": "3",
+        "type": "credentials",
+        "title": "Credentials",
+        "content": ""
+      },
+      {
+        "id": "4",
+        "type": "projects",
+        "title": "Projects"
+      },
+      {
+        "id": "5",
+        "type": "services",
+        "title": "Services Offering",
+        "content": "Custom API Development (REST, GraphQL, WebSockets)\n\nDatabase Design & Schema Architecting\n\nSaaS Backend Infrastructure\n\nThird-Party API Integrations (Payments, CRM, Auth)\n\nServer-Side Logic & Business Workflow Automation\n\nLegacy Code Refactoring & Python Version Upgrades\n\nDatabase Query Optimization & Performance Tuning\n\nCloud Deployment & Infrastructure Management (AWS, GCP, Heroku)\n\nContainerization & DevOps Pipelines (Docker, CI/CD)\n\nBackground Task Processing & Job Queues\n\nAuthentication & Authorization Systems (OAuth2, JWT, RBAC)\n\nUnit, Integration, and Load Testing"
+      },
+      {
+        "id": "6",
+        "type": "profiles",
+        "title": "Profiles",
+        "content": "LinkedIn\nGithub\nTikTok"
+      }
+    ],
+    "stats": [
+      {
+        "number": "04",
+        "label": "YEARS EXPERIENCE"
+      },
+      {
+        "number": "+20",
+        "label": "CLIENTS WORLDWIDE"
+      },
+      {
+        "number": "+30",
+        "label": "TOTAL PROJECTS"
+      }
+    ]
+  },
+  "about": {
+    "profile": {
+      "name": "CHE AMAH DILAND NGWA",
+      "bio": "I am a Backend-Software Engineer and Chief Operating Officer at SAMITECH Corporation, focused on building high-impact, scalable solutions. Currently pursuing my Higher National Diploma in Software Engineering, I bridge the gap between technical execution and operational strategy.\n\nMy technical expertise is rooted in the Python ecosystem, where I specialize in developing SaaS platforms and AI/ML-driven applications. I am particularly passionate about architectural challenges, such as designing offline-first systems that ensure software remains functional and accessible in low-connectivity environments.\n\nTechnical Focus & Interests\nBackend Development: Architecting robust SaaS solutions using Python.\n\nFuture-Proofing: Exploring the intersection of Machine Learning and daily automation.\n\nDesign Philosophy: I have a strong affinity for \"hacker aesthetics\" clean, terminal-inspired interfaces and logic-driven UI/UX.\n\nOperational Leadership: Managing workflows and product roadmaps to turn conceptual ideas into market-ready revenue generators.",
+      "image": "/images/dylan1.jpg"
+    },
+    "experience": [
+      {
+        "period": "2022 - Present",
+        "title": "Senior Software Engineer",
+        "company": "TechCorp Inc.",
+        "description": "Leading development of scalable web applications serving 100k+ users"
+      },
+      {
+        "period": "2020 - 2022",
+        "title": "Full Stack Developer",
+        "company": "StartupXYZ",
+        "description": "Built MVPs for 5+ startups, focusing on React and Node.js stack"
+      },
+      {
+        "period": "2018 - 2020",
+        "title": "Junior Developer",
+        "company": "WebSolutions Ltd.",
+        "description": "Developed responsive websites and maintained legacy systems"
+      }
+    ],
+    "education": [
+      {
+        "period": "2016 - 2020",
+        "degree": "Bachelor of Computer Science",
+        "institution": "University of Technology",
+        "description": "Focus on software engineering and data structures"
+      },
+      {
+        "period": "2014 - 2016",
+        "degree": "Associate Degree in IT",
+        "institution": "Community College",
+        "description": "Foundation in programming and web development"
+      }
+    ]
+  },
+  "works": {
+    "projects": [
+      {
+        "title": " VELORA Store",
+        "category": "Full-Stack Development",
+        "description": "A modern e-commerce solution with real-time inventory management",
+        "image": "/images/velora.png",
+        "images": [
+          "https://via.placeholder.com/800x400/1a7a7a/ffffff?text=E-Commerce+1",
+          "https://via.placeholder.com/800x400/1a7a7a/ffffff?text=E-Commerce+2"
+        ],
+        "technologies": [
+          "Flask",
+          "Python",
+          "PostgreSQL",
+          "Stripe"
+        ],
+        "features": [
+          "User authentication and authorization",
+          "Real-time inventory tracking",
+          "Payment processing with Stripe",
+          "Admin dashboard for order management",
+          "Responsive design for all devices"
+        ],
+        "liveUrl": "https://example-ecommerce.com",
+        "githubUrl": "https://github.com/dylansparks/ecommerce-platform"
+      },
+      {
+        "title": "Task Management App",
+        "category": "React Application",
+        "description": "Collaborative task management with real-time updates",
+        "image": "https://via.placeholder.com/400x300/1a7a7a/ffffff?text=Task+Manager",
+        "images": [
+          "https://via.placeholder.com/800x400/1a7a7a/ffffff?text=Task+Manager+1",
+          "https://via.placeholder.com/800x400/1a7a7a/ffffff?text=Task+Manager+2"
+        ],
+        "technologies": [
+          "React",
+          "Node.js",
+          "Socket.io",
+          "MongoDB"
+        ],
+        "features": [
+          "Real-time collaboration",
+          "Drag and drop task management",
+          "Team workspaces",
+          "Progress tracking",
+          "Mobile responsive"
+        ],
+        "liveUrl": "https://taskmanager-demo.com",
+        "githubUrl": "https://github.com/dylansparks/task-manager"
+      },
+      {
+        "title": "AI-Powered Analytics Dashboard",
+        "category": "Data Visualization",
+        "description": "Intelligent analytics platform with predictive insights",
+        "image": "https://via.placeholder.com/400x300/1a7a7a/ffffff?text=Analytics",
+        "images": [
+          "https://via.placeholder.com/800x400/1a7a7a/ffffff?text=Analytics+1",
+          "https://via.placeholder.com/800x400/1a7a7a/ffffff?text=Analytics+2"
+        ],
+        "technologies": [
+          "Python",
+          "FastAPI",
+          "React",
+          "D3.js",
+          "TensorFlow"
+        ],
+        "features": [
+          "Predictive analytics",
+          "Interactive data visualizations",
+          "Machine learning insights",
+          "Real-time data processing",
+          "Custom dashboard builder"
+        ],
+        "liveUrl": "https://analytics-ai.com",
+        "githubUrl": "https://github.com/dylansparks/ai-analytics"
+      }
+    ]
+  },
+  "contact": {
+    "info": {
+      "email": "ngwadiland68@gmail.com",
+      "phone": "+237672344814",
+      "location": "Bonduma Gate, Buea"
+    },
+    "social": [
+      {
+        "platform": "GitHub",
+        "url": "https://github.com/Dylan21-svg"
+      },
+      {
+        "platform": "LinkedIn",
+        "url": "https://linkedin.com/in/dylansparks"
+      },
+      {
+        "platform": "Instagram",
+        "url": "https://twitter.com/dylansparks"
+      }
+    ]
+  }
+}
