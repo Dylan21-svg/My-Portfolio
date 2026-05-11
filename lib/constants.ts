@@ -38,3 +38,5 @@ export const education: Education[] = [
     description: "Certification in network management, server maintenance, and IT infrastructure."
   }
 ]
+
+export const projects: Project[] = []
