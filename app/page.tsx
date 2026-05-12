@@ -64,7 +64,7 @@ export default function Home() {
         </div>
 
         <div className="container mx-auto px-4 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="grid lg:grid-cols-2 gap-6 items-center">
             {/* Left Side - Headshot */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
@@ -76,8 +76,8 @@ export default function Home() {
                 <Image
                   src={data.home.hero.profileImage}
                   alt={data.home.hero.name}
-                  width={300}
-                  height={300}
+                  width={400}
+                  height={400}
                   className="rounded-full border-4 border-primary shadow-teal-glow"
                 />
               </div>

@@ -26,12 +26,12 @@ const spaceGrotesk = Space_Grotesk({
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
-  title: 'Che Amah Diland Ngwa (Dylan Sparks) - Software Engineer Portfolio',
+  title: 'Che Amah Diland Ngwa - Software Engineer Portfolio',
   description: 'Software Engineer specializing in Backend Development, Python, and scalable distributed systems. Known as Che Amah Diland Ngwa and Dylan Sparks.',
   keywords: ['Che Amah Diland Ngwa', 'Dylan Sparks', 'Software Engineer', 'Backend Developer', 'Python', 'Next.js'],
-  authors: [{ name: 'Che Amah Diland Ngwa (Dylan Sparks)' }],
+  authors: [{ name: 'Che Amah Diland Ngwa' }],
   openGraph: {
-    title: 'Che Amah Diland Ngwa (Dylan Sparks) - Software Engineer Portfolio',
+    title: 'Che Amah Diland Ngwa - Software Engineer Portfolio',
     description: 'Building scalable solutions and innovative applications. Backend specialist in Python and distributed systems.',
     type: 'website',
   },

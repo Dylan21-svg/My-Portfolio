@@ -1,7 +1,7 @@
 {
   "home": {
     "hero": {
-      "name": "Che Amah Diland Ngwa (Dylan Sparks)",
+      "name": "Che Amah Diland Ngwa",
       "title": "Junior Backend-Software Engineer",
       "tagline": "I specialize in the art of the backend where speed, security, and scalability converge. With a deep focus on the Python ecosystem, I build distributed systems designed to handle the heavy lifting of modern web apps. I am a firm believer in rigorous testing, containerized deployments, and building software that stays online when everything else goes offline.",
       "ctaText": "VIEW MY WORK",
@@ -62,7 +62,7 @@
   },
   "about": {
     "profile": {
-      "name": "CHE AMAH DILAND NGWA (DYLAN SPARKS)",
+      "name": "CHE AMAH DILAND NGWA",
       "bio": "I am a Backend-Software Engineer and Chief Operating Officer at SAMITECH Corporation, focused on building high-impact, scalable solutions. Currently pursuing my Higher National Diploma in Software Engineering, I bridge the gap between technical execution and operational strategy.\n\nMy technical expertise is rooted in the Python ecosystem, where I specialize in developing SaaS platforms and AI/ML-driven applications. I am particularly passionate about architectural challenges, such as designing offline-first systems that ensure software remains functional and accessible in low-connectivity environments.\n\nTechnical Focus & Interests\nBackend Development: Architecting robust SaaS solutions using Python.\n\nFuture-Proofing: Exploring the intersection of Machine Learning and daily automation.\n\nDesign Philosophy: I have a strong affinity for \"hacker aesthetics\" clean, terminal-inspired interfaces and logic-driven UI/UX.\n\nOperational Leadership: Managing workflows and product roadmaps to turn conceptual ideas into market-ready revenue generators.",
       "image": "/images/dylan1.jpg"
     },
