@@ -64,13 +64,13 @@ export default function Home() {
         </div>
 
         <div className="container mx-auto px-4 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-4 items-center">
+          <div className="grid lg:grid-cols-2 gap-8 items-center">
             {/* Left Side - Headshot */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
-              className="flex justify-center lg:justify-end lg:-mr-8"
+              className="flex justify-center lg:justify-end"
             >
               <div className="relative">
                 <Image
