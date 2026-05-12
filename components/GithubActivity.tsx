@@ -3,9 +3,63 @@
 import { motion } from 'framer-motion'
 import { Github, GitCommit, GitPullRequest, Star } from 'lucide-react'
 
-const activity: any[] = []
+import { useState, useEffect } from 'react'
 
 export default function GithubActivity() {
+  const [activities, setActivities] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchActivity() {
+      try {
+        const response = await fetch('https://api.github.com/users/Dylan21-svg/events/public?per_page=5')
+        const data = await response.json()
+        
+        if (Array.isArray(data)) {
+          const processed = data.map(event => {
+            let message = ''
+            let icon = GitCommit
+
+            switch (event.type) {
+              case 'PushEvent':
+                message = event.payload.commits[0]?.message || 'Pushed changes'
+                icon = GitCommit
+                break
+              case 'PullRequestEvent':
+                message = `${event.payload.action} pull request`
+                icon = GitPullRequest
+                break
+              case 'WatchEvent':
+                message = 'Starred a repository'
+                icon = Star
+                break
+              case 'CreateEvent':
+                message = `Created ${event.payload.ref_type} ${event.payload.ref || ''}`
+                icon = Plus
+                break
+              default:
+                message = event.type.replace('Event', '')
+            }
+
+            return {
+              repo: event.repo.name.split('/')[1],
+              date: new Date(event.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+              message: message,
+              icon: icon
+            }
+          })
+          setActivities(processed)
+        }
+      } catch (error) {
+        console.error('Error fetching GitHub activity:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchActivity()
+  }, [])
+
   return (
     <div className="glassmorphism rounded-2xl p-8">
       <div className="flex items-center justify-between mb-8">
@@ -14,7 +68,7 @@ export default function GithubActivity() {
           <h3 className="text-2xl font-bold font-display">Recent Activity</h3>
         </div>
         <a 
-          href="https://github.com" 
+          href="https://github.com/Dylan21-svg" 
           target="_blank" 
           rel="noopener noreferrer"
           className="text-primary text-sm font-semibold hover:underline"
@@ -24,8 +78,12 @@ export default function GithubActivity() {
       </div>
 
       <div className="space-y-4">
-        {activity.length > 0 ? (
-          activity.map((item, index) => (
+        {loading ? (
+          <div className="text-center py-8 text-text-gray animate-pulse">
+            Fetching latest updates...
+          </div>
+        ) : activities.length > 0 ? (
+          activities.map((item, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, x: -20 }}
@@ -47,7 +105,7 @@ export default function GithubActivity() {
           ))
         ) : (
           <div className="text-center py-8 text-text-gray italic">
-            No recent activity to show
+            No recent public activity to show
           </div>
         )}
       </div>
