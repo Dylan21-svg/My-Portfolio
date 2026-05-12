@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import jwt from 'jsonwebtoken'
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 import { cookies } from 'next/headers'
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-default-secret-key-at-least-32-chars'
