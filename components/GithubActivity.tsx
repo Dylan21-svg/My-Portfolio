@@ -12,11 +12,12 @@ export default function GithubActivity() {
   useEffect(() => {
     async function fetchActivity() {
       try {
-        const response = await fetch('https://api.github.com/users/Dylan21-svg/events/public?per_page=5')
-        const data = await response.json()
+        // Try fetching events first
+        const eventsResponse = await fetch('https://api.github.com/users/Dylan21-svg/events/public?per_page=5')
+        const eventsData = await eventsResponse.json()
         
-        if (Array.isArray(data)) {
-          const processed = data.map(event => {
+        if (Array.isArray(eventsData) && eventsData.length > 0) {
+          const processed = eventsData.map(event => {
             let message = ''
             let icon = GitCommit
 
@@ -49,9 +50,23 @@ export default function GithubActivity() {
             }
           })
           setActivities(processed)
+        } else {
+          // Fallback: Fetch recent repositories if no events found
+          const repoResponse = await fetch('https://api.github.com/users/Dylan21-svg/repos?sort=updated&per_page=5')
+          const repoData = await repoResponse.json()
+          
+          if (Array.isArray(repoData)) {
+            const processedRepos = repoData.map(repo => ({
+              repo: repo.name,
+              date: new Date(repo.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+              message: repo.description || 'Recently updated repository',
+              icon: Github
+            }))
+            setActivities(processedRepos)
+          }
         }
       } catch (error) {
-        console.error('Error fetching GitHub activity:', error)
+        console.error('Error fetching GitHub data:', error)
       } finally {
         setLoading(false)
       }
