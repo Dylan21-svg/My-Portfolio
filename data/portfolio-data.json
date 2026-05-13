@@ -2,8 +2,8 @@
   "home": {
     "hero": {
       "name": "Che Amah Diland Ngwa",
-      "title": "Junior Backend-Software Engineer",
-      "tagline": "I specialize in the art of the backend where speed, security, and scalability converge. With a deep focus on the Python ecosystem, I build distributed systems designed to handle the heavy lifting of modern web apps. I am a firm believer in rigorous testing, containerized deployments, and building software that stays online when everything else goes offline.",
+      "title": "Software Engineer",
+      "tagline": "I specialize in backend architecture where speed, security, and scalability converge. With a deep focus on the Python ecosystem, I build distributed systems designed to handle the heavy lifting of modern web apps and enterprise solutions.",
       "ctaText": "VIEW MY WORK",
       "profileImage": "/images/D21.jpeg",
       "backgroundImage": "/images/dylan.jpg"
@@ -63,7 +63,7 @@
   "about": {
     "profile": {
       "name": "CHE AMAH DILAND NGWA",
-      "bio": "I am a Backend-Software Engineer and Chief Operating Officer at SAMITECH Corporation, focused on building high-impact, scalable solutions. Currently pursuing my Higher National Diploma in Software Engineering, I bridge the gap between technical execution and operational strategy.\n\nMy technical expertise is rooted in the Python ecosystem, where I specialize in developing SaaS platforms and AI/ML-driven applications. I am particularly passionate about architectural challenges, such as designing offline-first systems that ensure software remains functional and accessible in low-connectivity environments.\n\nTechnical Focus & Interests\nBackend Development: Architecting robust SaaS solutions using Python.\n\nFuture-Proofing: Exploring the intersection of Machine Learning and daily automation.\n\nDesign Philosophy: I have a strong affinity for \"hacker aesthetics\" clean, terminal-inspired interfaces and logic-driven UI/UX.\n\nOperational Leadership: Managing workflows and product roadmaps to turn conceptual ideas into market-ready revenue generators.",
+      "bio": "I am a Software Engineer and Chief Operating Officer at SAMITECH Corporation, focused on building high-impact, scalable solutions. Currently pursuing my Higher National Diploma in Software Engineering, I specialize in bridging technical execution with efficient operational strategy.\n\nMy expertise is rooted in the Python ecosystem, where I develop robust backend infrastructures and SaaS platforms. I am particularly interested in architectural challenges like data synchronization and system resilience. My design philosophy balances clean, logic-driven interfaces with high-performance server-side logic, turning conceptual ideas into market-ready products.",
       "image": "/images/dylan1.jpg"
     },
     "experience": [
@@ -104,9 +104,61 @@
   "works": {
     "projects": [
       {
-        "title": " VELORA Store",
-        "category": "Full-Stack Development",
-        "description": "A modern e-commerce solution with real-time inventory management",
+        "title": "CodeForge",
+        "category": "Backend Development",
+        "description": "A resilient educational platform designed for low-connectivity environments with an optimized data sync engine.",
+        "image": "/images/codeforge.png",
+        "images": [
+          "https://via.placeholder.com/800x400/1a7a7a/ffffff?text=CodeForge+Architecture",
+          "https://via.placeholder.com/800x400/1a7a7a/ffffff?text=Offline+Sync+Engine"
+        ],
+        "technologies": [
+          "Python",
+          "FastAPI",
+          "PostgreSQL",
+          "Service Workers",
+          "Local LLMs"
+        ],
+        "features": [
+          "Priority-Queue data synchronization protocol",
+          "Instant offline code execution and feedback",
+          "Reduced data overhead by 98% for remote users",
+          "Scalable microservices architecture",
+          "Adaptive learning path generation"
+        ],
+        "liveUrl": "https://codeforge.dev",
+        "githubUrl": "https://github.com/Dylan21-svg/codeforge"
+      },
+      {
+        "title": "RevenueArchitect AI",
+        "category": "SaaS Development",
+        "description": "A conversion optimization tool that uses machine learning to analyze revenue leaks and automate growth workflows.",
+        "image": "/images/revenue-architect.png",
+        "images": [
+          "https://via.placeholder.com/800x400/1a7a7a/ffffff?text=ML+Analytics",
+          "https://via.placeholder.com/800x400/1a7a7a/ffffff?text=ROI+Dashboard"
+        ],
+        "technologies": [
+          "Python",
+          "Machine Learning",
+          "Redis",
+          "Next.js",
+          "Stripe"
+        ],
+        "features": [
+          "Automated conversion rate analysis",
+          "Real-time revenue tracking and forecasting",
+          "Scalable background processing with Celery",
+          "Predictive customer behavior modeling",
+          "Seamless third-party API integrations"
+        ],
+        "liveUrl": "https://revenuearchitect.ai",
+        "githubUrl": "https://github.com/Dylan21-svg/revenue-architect"
+      },
+      {
+        "title": "VELORA Store",
+        "category": "High-Scale E-Commerce",
+        "description": "A modern e-commerce backend built for high-concurrency environments and real-time inventory management.",
         "image": "/images/velora.png",
         "images": [
           "https://via.placeholder.com/800x400/1a7a7a/ffffff?text=E-Commerce+1",
@@ -114,70 +166,20 @@
         ],
         "technologies": [
           "Flask",
-          "Python",
+          "Celery",
+          "RabbitMQ",
           "PostgreSQL",
-          "Stripe"
+          "Docker"
         ],
         "features": [
-          "User authentication and authorization",
-          "Real-time inventory tracking",
-          "Payment processing with Stripe",
-          "Admin dashboard for order management",
-          "Responsive design for all devices"
+          "Real-time inventory synchronization",
+          "Distributed task management",
+          "Automated audit logging and monitoring",
+          "PCI-compliant payment integration",
+          "Elastic horizontal scaling architecture"
         ],
-        "liveUrl": "https://example-ecommerce.com",
-        "githubUrl": "https://github.com/dylansparks/ecommerce-platform"
-      },
-      {
-        "title": "Task Management App",
-        "category": "React Application",
-        "description": "Collaborative task management with real-time updates",
-        "image": "https://via.placeholder.com/400x300/1a7a7a/ffffff?text=Task+Manager",
-        "images": [
-          "https://via.placeholder.com/800x400/1a7a7a/ffffff?text=Task+Manager+1",
-          "https://via.placeholder.com/800x400/1a7a7a/ffffff?text=Task+Manager+2"
-        ],
-        "technologies": [
-          "React",
-          "Node.js",
-          "Socket.io",
-          "MongoDB"
-        ],
-        "features": [
-          "Real-time collaboration",
-          "Drag and drop task management",
-          "Team workspaces",
-          "Progress tracking",
-          "Mobile responsive"
-        ],
-        "liveUrl": "https://taskmanager-demo.com",
-        "githubUrl": "https://github.com/dylansparks/task-manager"
-      },
-      {
-        "title": "AI-Powered Analytics Dashboard",
-        "category": "Data Visualization",
-        "description": "Intelligent analytics platform with predictive insights",
-        "image": "https://via.placeholder.com/400x300/1a7a7a/ffffff?text=Analytics",
-        "images": [
-          "https://via.placeholder.com/800x400/1a7a7a/ffffff?text=Analytics+1",
-          "https://via.placeholder.com/800x400/1a7a7a/ffffff?text=Analytics+2"
-        ],
-        "technologies": [
-          "Python",
-          "FastAPI",
-          "React",
-          "D3.js",
-          "TensorFlow"
-        ],
-        "features": [
-          "Predictive analytics",
-          "Interactive data visualizations",
-          "Machine learning insights",
-          "Real-time data processing",
-          "Custom dashboard builder"
-        ],
-        "liveUrl": "https://analytics-ai.com",
-        "githubUrl": "https://github.com/dylansparks/ai-analytics"
+        "liveUrl": "https://velora-store.com",
+        "githubUrl": "https://github.com/Dylan21-svg/velora-store"
       }
     ]
   },

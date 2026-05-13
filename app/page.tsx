@@ -88,7 +88,7 @@ export default function Home() {
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="glassmorphism rounded-2xl p-12"
+              className="glassmorphism rounded-2xl p-8"
             >
               <h1 className="text-5xl lg:text-6xl font-bold text-primary mb-4 font-display">
                 {data.home.hero.name}
