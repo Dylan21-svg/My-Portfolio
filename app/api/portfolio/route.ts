@@ -17,15 +17,15 @@ const ensureDataDir = () => {
 const getDefaultData = () => ({
   home: {
     hero: {
-      name: 'DYLAN SPARKS',
+      name: 'CHE AMAH DILAND NGWA',
       title: 'SOFTWARE ENGINEER',
-      tagline: 'Building scalable solutions and innovative applications',
-      ctaText: 'DOWNLOAD RESUME',
-      profileImage: 'https://via.placeholder.com/300x300/1a7a7a/ffffff?text=Profile',
-      backgroundImage: 'https://via.placeholder.com/1920x1080/0d4d4d/1a7a7a?text=Hero+Background'
+      tagline: 'I specialize in backend architecture where speed, security, and scalability converge.',
+      ctaText: 'EXPLORE MY WORK',
+      profileImage: '/images/D21.jpeg',
+      backgroundImage: '/images/dylan.jpg'
     },
     cards: [
-      { id: '1', type: 'profile', title: 'A SOFTWARE ENGINEER', content: 'Dylan Sparks\nSan Francisco, CA' },
+      { id: '1', type: 'profile', title: 'A SOFTWARE ENGINEER', content: 'Che Amah Diland Ngwa\nBuea, Cameroon' },
       { id: '2', type: 'tech-stack', title: 'Tech Stack' },
       { id: '3', type: 'credentials', title: 'Credentials', content: 'AWS Certified Developer\nReact Certified' },
       { id: '4', type: 'projects', title: 'Projects' },
@@ -40,9 +40,9 @@ const getDefaultData = () => ({
   },
   about: {
     profile: {
-      name: 'DYLAN SPARKS',
-      bio: 'Passionate software engineer with 4+ years of experience in full-stack development. Specialized in React, Next.js, and Node.js. Committed to creating efficient, scalable solutions and delivering exceptional user experiences.',
-      image: 'https://via.placeholder.com/200x200/1a7a7a/ffffff?text=Profile'
+      name: 'CHE AMAH DILAND NGWA',
+      bio: 'Software Engineer and COO at SAMITECH Corporation, focused on building high-impact, scalable solutions.',
+      image: '/images/D21.jpeg'
     },
     experience: [
       {

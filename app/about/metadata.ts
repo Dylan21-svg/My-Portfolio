@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'About | Dylan Sparks - Software Engineer',
-  description: 'Learn about Dylan Sparks, a passionate software engineer with 4+ years of experience in full-stack development.',
+  title: 'About | Che Amah Diland Ngwa - Software Engineer',
+  description: 'Learn about Che Amah Diland Ngwa, a passionate software engineer with experience in backend development and operational leadership.',
   openGraph: {
-    title: 'About Dylan Sparks',
+    title: 'About Che Amah Diland Ngwa',
     description: 'Learn more about my background, experience, and expertise',
   },
 }

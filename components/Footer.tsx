@@ -7,12 +7,12 @@ export default function Footer() {
         <div className="grid md:grid-cols-3 gap-8">
           {/* Top Section */}
           <div className="text-center md:text-left">
-            <p className="text-text-gray mb-2">www.dylansparks.com</p>
+            <p className="text-text-gray mb-2">www.cheamahdiland.me</p>
           </div>
 
           {/* Middle Section */}
           <div className="text-center">
-            <h3 className="text-xl font-bold text-primary mb-4">Dylan Sparks</h3>
+            <h3 className="text-xl font-bold text-primary mb-4">Che Amah Diland Ngwa</h3>
             <div className="flex justify-center space-x-6">
               <Link href="/" className="text-text-gray hover:text-primary transition-colors">
                 Home
@@ -32,7 +32,7 @@ export default function Footer() {
           {/* Bottom Section */}
           <div className="text-center md:text-right">
             <p className="text-text-gray">
-              © All rights reserved by Dylan Sparks
+              © All rights reserved by Che Amah Diland Ngwa
             </p>
             <p className="text-sm text-text-gray mt-2">
               Built with{' '}

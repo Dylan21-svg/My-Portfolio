@@ -38,7 +38,7 @@ export default function Navigation() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="text-2xl font-bold text-primary font-display">
-            Dylan Sparks
+            Che Amah Diland Ngwa
           </Link>
 
           {/* Desktop Navigation */}

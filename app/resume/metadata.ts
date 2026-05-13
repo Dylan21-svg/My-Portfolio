@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Resume | Dylan Sparks - Software Engineer',
+  title: 'Resume | Che Amah Diland Ngwa - Software Engineer',
   description: 'Download or view my professional resume to see my qualifications and experience.',
   openGraph: {
     title: 'My Resume',

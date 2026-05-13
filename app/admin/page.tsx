@@ -58,15 +58,15 @@ interface PageData {
 const defaultData: PageData = {
   home: {
     hero: {
-      name: 'DYLAN SPARKS',
+      name: 'CHE AMAH DILAND NGWA',
       title: 'SOFTWARE ENGINEER',
-      tagline: 'Building scalable solutions and innovative applications',
+      tagline: 'I specialize in backend architecture where speed, security, and scalability converge.',
       ctaText: 'VIEW MY WORK',
       profileImage: '/images/profile.jpg',
       backgroundImage: '/images/hero-bg.jpg'
     },
     cards: [
-      { id: '1', type: 'profile', title: 'A SOFTWARE ENGINEER', content: 'Dylan Sparks\nSan Francisco, CA' },
+      { id: '1', type: 'profile', title: 'A SOFTWARE ENGINEER', content: 'Che Amah Diland Ngwa\nBuea, Cameroon' },
       { id: '2', type: 'tech-stack', title: 'Tech Stack' },
       { id: '3', type: 'credentials', title: 'Credentials', content: 'AWS Certified Developer\nReact Certified' },
       { id: '4', type: 'projects', title: 'Projects' },
@@ -81,9 +81,9 @@ const defaultData: PageData = {
   },
   about: {
     profile: {
-      name: 'DYLAN SPARKS',
-      bio: 'Passionate software engineer with 4+ years of experience...',
-      image: '/images/profile.jpg'
+      name: 'CHE AMAH DILAND NGWA',
+      bio: 'Software Engineer and COO at SAMITECH Corporation...',
+      image: '/images/D21.jpeg'
     },
     experience,
     education

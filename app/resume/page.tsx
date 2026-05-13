@@ -33,7 +33,7 @@ export default function Resume() {
             <div className="mb-8">
               <FileText className="w-24 h-24 text-primary mx-auto mb-4" />
               <h2 className="text-2xl font-bold text-primary mb-2">
-                Dylan Sparks - Resume
+                Che Amah Diland Ngwa - Resume
               </h2>
               <p className="text-text-gray mb-6">
                 Software Engineer | Full-Stack Developer
