@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Github, GitCommit, GitPullRequest, Star } from 'lucide-react'
+import { Github, GitCommit, GitPullRequest, Star, Plus } from 'lucide-react'
 
 import { useState, useEffect } from 'react'
 
