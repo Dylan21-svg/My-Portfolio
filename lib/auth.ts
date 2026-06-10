@@ -51,38 +51,10 @@ export function unauthorizedResponse() {
 }
 
 export async function loginAdmin(password: string, email: string) {
-  validateConfig()
-  // Security: Fail fast if config is missing
-  if (!JWT_SECRET || !ADMIN_EMAIL || !ADMIN_PASSWORD_HASH) {
-    console.error('Missing security configuration')
-    return { success: false, message: 'Authentication is currently unavailable' }
-  }
-
-  if (email !== ADMIN_EMAIL) {
-    return { success: false, message: 'Invalid credentials' }
-  }
-
-  try {
-    const isMatch = await bcrypt.compare(password, ADMIN_PASSWORD_HASH)
-    if (!isMatch) {
-      return { success: false, message: 'Invalid credentials' }
-    }
-
-    const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: '1h' })
-
-    // Set cookie
-    cookies().set('admin_token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 3600, // 1 hour
-      path: '/',
-    })
-
-    return { success: true, token }
-  } catch (error) {
-    console.error('Login error:', error)
-    return { success: false, message: 'Server error during authentication' }
+  return {
+    success: false,
+    token: undefined as string | undefined,
+    message: 'Admin login is currently disabled for security reasons.'
   }
 }
 

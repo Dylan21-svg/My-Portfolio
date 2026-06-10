@@ -52,7 +52,13 @@ export default function AdminLogin() {
             <p className="text-text-gray">Secure dashboard access</p>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-6">
+          <div className="bg-red-400/10 border border-red-400/20 rounded-xl p-4 mb-6 text-center">
+            <p className="text-red-400 text-sm font-medium">
+              Admin login is currently disabled for security reasons.
+            </p>
+          </div>
+
+          <form onSubmit={handleLogin} className="space-y-6 opacity-50 pointer-events-none">
             <div className="space-y-2">
               <label className="text-sm font-medium text-text-gray block ml-1">Email Address</label>
               <div className="relative">
@@ -60,6 +66,7 @@ export default function AdminLogin() {
                 <input
                   type="email"
                   required
+                  disabled
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full bg-background-medium/50 border border-primary/20 rounded-xl px-10 py-3 text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
@@ -75,6 +82,7 @@ export default function AdminLogin() {
                 <input
                   type={showPassword ? 'text' : 'password'}
                   required
+                  disabled
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full bg-background-medium/50 border border-primary/20 rounded-xl px-10 py-3 text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
@@ -82,6 +90,7 @@ export default function AdminLogin() {
                 />
                 <button
                   type="button"
+                  disabled
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-text-gray/50 hover:text-primary transition-colors p-1"
                 >
@@ -102,17 +111,13 @@ export default function AdminLogin() {
 
             <button
               type="submit"
-              disabled={isLoading}
+              disabled
               className="w-full bg-primary hover:bg-secondary text-white font-bold py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 group disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              {isLoading ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
-              ) : (
-                <>
-                  Connect Securely
-                  <span className="group-hover:translate-x-1 transition-transform">→</span>
-                </>
-              )}
+              <>
+                Connect Securely
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
+              </>
             </button>
           </form>
         </div>
