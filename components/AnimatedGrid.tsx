@@ -1,26 +1,29 @@
 'use client'
 
-import { motion, useScroll, useTransform } from 'framer-motion'
-import { useEffect, useRef, useState } from 'react'
+import { motion, useScroll, useTransform, useMotionValue } from 'framer-motion'
+import { useEffect, useRef } from 'react'
 
 export default function AnimatedGrid() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const mouseX = useMotionValue(0)
+  const mouseY = useMotionValue(0)
   const gridRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({
-        x: e.clientX,
-        y: e.clientY,
-      })
+      mouseX.set(e.clientX)
+      mouseY.set(e.clientY)
     }
 
     window.addEventListener('mousemove', handleMouseMove)
     return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [])
+  }, [mouseX, mouseY])
 
   const { scrollY } = useScroll()
   const opacity = useTransform(scrollY, [0, 500], [0.15, 0])
+
+  // Optimization: useMotionValue + useTransform avoids React re-renders on every mouse move
+  const translateX = useTransform(mouseX, (x) => (x - 500) * 0.02)
+  const translateY = useTransform(mouseY, (y) => (y - 500) * 0.02)
 
   return (
     <motion.div
@@ -28,7 +31,7 @@ export default function AnimatedGrid() {
       className="absolute inset-0 z-0 pointer-events-none overflow-hidden"
       style={{ opacity }}
     >
-      <div
+      <motion.div
         className="absolute inset-0"
         style={{
           backgroundImage: `
@@ -37,8 +40,8 @@ export default function AnimatedGrid() {
           `,
           backgroundSize: '40px 40px',
           maskImage: 'radial-gradient(circle at center, black, transparent 80%)',
-          transform: `translate(${(mousePosition.x - 500) * 0.02}px, ${(mousePosition.y - 500) * 0.02}px)`,
-          transition: 'transform 0.1s ease-out',
+          translateX,
+          translateY,
         }}
       />
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background-dark/50 to-background-dark" />
