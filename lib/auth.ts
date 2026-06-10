@@ -3,15 +3,31 @@ import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 import { cookies } from 'next/headers'
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-default-secret-key-at-least-32-chars'
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@example.com'
+const JWT_SECRET = process.env.JWT_SECRET || (process.env.NODE_ENV === 'production' ? '' : 'your-default-secret-key-at-least-32-chars')
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || (process.env.NODE_ENV === 'production' ? '' : 'admin@example.com')
 const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH || process.env.SECURE_ADMIN_HASH || ''
 
+// Security check: Ensure essential environment variables are set in production
+const validateConfig = () => {
+  if (process.env.NODE_ENV === 'production') {
+    if (!JWT_SECRET || JWT_SECRET === 'your-default-secret-key-at-least-32-chars') {
+      throw new Error('JWT_SECRET environment variable is required in production')
+    }
+    if (!ADMIN_EMAIL || ADMIN_EMAIL === 'admin@example.com') {
+      throw new Error('ADMIN_EMAIL environment variable is required in production')
+    }
+    if (!ADMIN_PASSWORD_HASH) {
+      throw new Error('ADMIN_PASSWORD_HASH environment variable is required in production')
+    }
+  }
+}
+
 export async function authenticate(request: NextRequest) {
+  validateConfig()
   const cookieStore = cookies()
   const token = cookieStore.get('admin_token')?.value
 
-  if (!token) {
+  if (!token || !JWT_SECRET) {
     return false
   }
 
@@ -19,7 +35,10 @@ export async function authenticate(request: NextRequest) {
     const decoded = jwt.verify(token, JWT_SECRET) as { email: string }
     return decoded.email === ADMIN_EMAIL
   } catch (error) {
-    console.error('JWT verification failed:', error)
+    // Don't leak error details in logs in production
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('JWT verification failed:', error)
+    }
     return false
   }
 }
@@ -32,23 +51,20 @@ export function unauthorizedResponse() {
 }
 
 export async function loginAdmin(password: string, email: string) {
-  // Debug logs for environment variables
-  if (process.env.NODE_ENV === 'development') {
-    console.log('Login attempt:', { email })
-    console.log('Stored Admin Email:', ADMIN_EMAIL)
-    console.log('Stored Hash Length:', ADMIN_PASSWORD_HASH?.length)
-    console.log('Stored Hash Start:', ADMIN_PASSWORD_HASH?.substring(0, 10))
+  validateConfig()
+  // Security: Fail fast if config is missing
+  if (!JWT_SECRET || !ADMIN_EMAIL || !ADMIN_PASSWORD_HASH) {
+    console.error('Missing security configuration')
+    return { success: false, message: 'Authentication is currently unavailable' }
   }
 
   if (email !== ADMIN_EMAIL) {
-    if (process.env.NODE_ENV === 'development') console.log('Email mismatch')
     return { success: false, message: 'Invalid credentials' }
   }
 
   try {
     const isMatch = await bcrypt.compare(password, ADMIN_PASSWORD_HASH)
     if (!isMatch) {
-      if (process.env.NODE_ENV === 'development') console.log('Password hash mismatch')
       return { success: false, message: 'Invalid credentials' }
     }
 

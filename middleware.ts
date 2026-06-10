@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import * as jose from 'jose'
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-default-secret-key-at-least-32-chars'
+const JWT_SECRET = process.env.JWT_SECRET || (process.env.NODE_ENV === 'production' ? '' : 'your-default-secret-key-at-least-32-chars')
 
 export async function middleware(request: NextRequest) {
   const isApiAdminRoute = request.nextUrl.pathname.startsWith('/api/admin')
@@ -18,7 +18,10 @@ export async function middleware(request: NextRequest) {
   if (isApiAdminRoute || isAdminPageRoute) {
     const token = request.cookies.get('admin_token')?.value
 
-    if (!token) {
+    if (!token || !JWT_SECRET) {
+      if (!JWT_SECRET) {
+        console.error('JWT_SECRET is not configured')
+      }
       if (isAdminPageRoute) {
         return NextResponse.redirect(new URL('/admin/login', request.url))
       }
@@ -30,7 +33,9 @@ export async function middleware(request: NextRequest) {
       await jose.jwtVerify(token, secret)
       return NextResponse.next()
     } catch (error) {
-      console.error('Middleware JWT verification failed:', error)
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('Middleware JWT verification failed:', error)
+      }
       if (isAdminPageRoute) {
         return NextResponse.redirect(new URL('/admin/login', request.url))
       }
