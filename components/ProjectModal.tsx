@@ -56,6 +56,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
           <button
             onClick={onClose}
             className="absolute top-4 right-4 z-20 w-10 h-10 bg-black/50 rounded-full flex items-center justify-center text-white hover:bg-primary transition-all duration-300"
+            aria-label="Close project modal"
           >
             <X className="w-5 h-5" />
           </button>
