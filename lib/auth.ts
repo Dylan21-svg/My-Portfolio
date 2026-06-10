@@ -4,8 +4,8 @@ import bcrypt from 'bcryptjs'
 import { cookies } from 'next/headers'
 
 const JWT_SECRET = process.env.JWT_SECRET || (process.env.NODE_ENV === 'production' ? '' : 'your-default-secret-key-at-least-32-chars')
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || (process.env.NODE_ENV === 'production' ? '' : 'admin@example.com')
-const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH || process.env.SECURE_ADMIN_HASH || ''
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || (process.env.NODE_ENV === 'production' ? 'ngwadiland68@gmail.com' : 'ngwadiland68@gmail.com')
+const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH || process.env.SECURE_ADMIN_HASH || '$2b$10$pAg.ny2bg54PhKkkWTvuZe2kwVykiRqawqfIgw/vqbQo6ozmn9zZC'
 
 // Security check: Ensure essential environment variables are set in production
 const validateConfig = () => {
@@ -51,10 +51,36 @@ export function unauthorizedResponse() {
 }
 
 export async function loginAdmin(password: string, email: string) {
+  validateConfig()
+
+  if (email !== ADMIN_EMAIL) {
+    return { success: false, message: 'Invalid credentials' }
+  }
+
+  const isPasswordCorrect = await bcrypt.compare(password, ADMIN_PASSWORD_HASH)
+
+  if (!isPasswordCorrect) {
+    return { success: false, message: 'Invalid credentials' }
+  }
+
+  if (!JWT_SECRET) {
+    return { success: false, message: 'Server configuration error' }
+  }
+
+  const token = jwt.sign({ email: ADMIN_EMAIL }, JWT_SECRET, { expiresIn: '24h' })
+
+  cookies().set('admin_token', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    maxAge: 60 * 60 * 24, // 24 hours
+    path: '/',
+  })
+
   return {
-    success: false,
-    token: undefined as string | undefined,
-    message: 'Admin login is currently disabled for security reasons.'
+    success: true,
+    token,
+    message: 'Login successful'
   }
 }
 
