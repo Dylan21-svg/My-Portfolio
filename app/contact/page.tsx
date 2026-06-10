@@ -1,9 +1,11 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Mail, Phone, MapPin, Github, Linkedin, Twitter, Globe, Instagram, Facebook, Youtube } from 'lucide-react'
+import { Mail, Phone, MapPin, Github, Linkedin, Twitter, Globe, Instagram, Facebook, Youtube, Check, Copy } from 'lucide-react'
 import ContactForm from '@/components/ContactForm'
 import { usePortfolioData } from '@/lib/data'
+import { useState } from 'react'
+import { copyToClipboard } from '@/lib/utils'
 
 const getSocialIcon = (platform: string) => {
   const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -22,6 +24,24 @@ const getSocialIcon = (platform: string) => {
 
 export default function Contact() {
   const data = usePortfolioData()
+  const [copiedEmail, setCopiedEmail] = useState(false)
+  const [copiedPhone, setCopiedPhone] = useState(false)
+
+  const handleCopyEmail = async () => {
+    const success = await copyToClipboard(data.contact.info.email)
+    if (success) {
+      setCopiedEmail(true)
+      setTimeout(() => setCopiedEmail(false), 2000)
+    }
+  }
+
+  const handleCopyPhone = async () => {
+    const success = await copyToClipboard(data.contact.info.phone)
+    if (success) {
+      setCopiedPhone(true)
+      setTimeout(() => setCopiedPhone(false), 2000)
+    }
+  }
 
   return (
     <div className="min-h-screen py-20">
@@ -36,19 +56,37 @@ export default function Contact() {
             <h2 className="text-3xl font-bold text-primary mb-8 font-display">CONTACT INFO</h2>
 
             {/* Email */}
-            <div className="glassmorphism rounded-2xl p-6">
-              <div className="flex items-center mb-4">
-                <Mail className="w-6 h-6 text-primary mr-3" />
-                <h3 className="text-lg font-semibold">MAIL US</h3>
+            <div className="glassmorphism rounded-2xl p-6 relative group">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center">
+                  <Mail className="w-6 h-6 text-primary mr-3" />
+                  <h3 className="text-lg font-semibold">MAIL US</h3>
+                </div>
+                <button
+                  onClick={handleCopyEmail}
+                  className="p-2 hover:bg-primary/20 rounded-lg transition-colors text-text-gray hover:text-primary"
+                  aria-label={copiedEmail ? "Email copied to clipboard" : "Copy email to clipboard"}
+                >
+                  {copiedEmail ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+                </button>
               </div>
               <p className="text-text-gray">{data.contact.info.email}</p>
             </div>
 
             {/* Phone */}
-            <div className="glassmorphism rounded-2xl p-6">
-              <div className="flex items-center mb-4">
-                <Phone className="w-6 h-6 text-primary mr-3" />
-                <h3 className="text-lg font-semibold">CONTACT US</h3>
+            <div className="glassmorphism rounded-2xl p-6 relative group">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center">
+                  <Phone className="w-6 h-6 text-primary mr-3" />
+                  <h3 className="text-lg font-semibold">CONTACT US</h3>
+                </div>
+                <button
+                  onClick={handleCopyPhone}
+                  className="p-2 hover:bg-primary/20 rounded-lg transition-colors text-text-gray hover:text-primary"
+                  aria-label={copiedPhone ? "Phone number copied to clipboard" : "Copy phone number to clipboard"}
+                >
+                  {copiedPhone ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+                </button>
               </div>
               <p className="text-text-gray">{data.contact.info.phone}</p>
             </div>
@@ -75,6 +113,7 @@ export default function Contact() {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition-colors"
+                      aria-label={`Visit our ${social.platform} page`}
                     >
                       <IconComponent className="w-5 h-5" />
                     </a>

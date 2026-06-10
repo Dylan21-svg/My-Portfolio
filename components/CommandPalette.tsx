@@ -52,6 +52,7 @@ export default function CommandPalette() {
         <button
           onClick={toggle}
           className="glassmorphism p-3 rounded-full hover:shadow-teal-glow transition-all duration-300 flex items-center gap-2 group"
+          aria-label="Open command palette"
         >
           <Command className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
           <span className="text-xs font-bold text-text-gray">K</span>
@@ -83,8 +84,12 @@ export default function CommandPalette() {
                   className="w-full bg-transparent border-none outline-none text-white placeholder-text-gray/50 text-lg"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
+                  aria-label="Search commands"
                 />
-                <button onClick={() => setIsOpen(false)}>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  aria-label="Close command palette"
+                >
                   <X className="w-5 h-5 text-text-gray hover:text-white" />
                 </button>
               </div>
