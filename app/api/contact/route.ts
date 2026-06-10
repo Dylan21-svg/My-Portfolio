@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { sendMail } from '@/lib/mail'
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,18 +24,28 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // TODO: Implement actual email sending service here
-    // Examples:
-    // - SendGrid: https://sendgrid.com
-    // - Resend: https://resend.com
-    // - EmailJS: https://www.emailjs.com
-    // - Nodemailer with SMTP
+    // Implement actual email sending service here
+    const mailResult = await sendMail({
+      variables: {
+        name,
+        email,
+        subject,
+        message
+      }
+    })
 
-    console.log('Contact form submission:', {
+    if (!mailResult.success) {
+      console.error('Failed to send contact email:', mailResult.error)
+      return NextResponse.json(
+        { success: false, error: 'Failed to send email' },
+        { status: 500 }
+      )
+    }
+
+    console.log('Contact form submission sent via email:', {
       name,
       email,
       subject,
-      message,
       timestamp: new Date().toISOString(),
     })
 
