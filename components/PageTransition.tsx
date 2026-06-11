@@ -36,7 +36,7 @@ export default function PageTransition({ children }: { children: ReactNode }) {
   }, [])
 
   if (!isMounted) {
-    return <>{children}</>
+    return <div className="min-h-screen">{children}</div>
   }
 
   return (
@@ -47,6 +47,7 @@ export default function PageTransition({ children }: { children: ReactNode }) {
         animate="enter"
         exit="exit"
         variants={variants}
+        className="min-h-screen"
       >
         {/* Shutter Effect Overlay */}
         <motion.div

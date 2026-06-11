@@ -18,23 +18,21 @@ export default function CustomCursor() {
       cursorY.set(e.clientY)
     }
 
-    const handleHoverStart = () => setIsHovering(true)
-    const handleHoverEnd = () => setIsHovering(false)
+    const handleMouseOver = (e: MouseEvent) => {
+      const target = e.target as HTMLElement
+      if (target.closest('a, button, [role="button"]')) {
+        setIsHovering(true)
+      } else {
+        setIsHovering(false)
+      }
+    }
 
     window.addEventListener('mousemove', moveCursor)
-
-    const interactiveElements = document.querySelectorAll('a, button, [role="button"]')
-    interactiveElements.forEach((el) => {
-      el.addEventListener('mouseenter', handleHoverStart)
-      el.addEventListener('mouseleave', handleHoverEnd)
-    })
+    window.addEventListener('mouseover', handleMouseOver)
 
     return () => {
       window.removeEventListener('mousemove', moveCursor)
-      interactiveElements.forEach((el) => {
-        el.removeEventListener('mouseenter', handleHoverStart)
-        el.removeEventListener('mouseleave', handleHoverEnd)
-      })
+      window.removeEventListener('mouseover', handleMouseOver)
     }
   }, [cursorX, cursorY])
 
