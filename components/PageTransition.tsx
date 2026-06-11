@@ -40,7 +40,7 @@ export default function PageTransition({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AnimatePresence mode="wait" initial={false}>
+    <AnimatePresence mode="popLayout" initial={false}>
       <motion.div
         key={pathname}
         initial="initial"

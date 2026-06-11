@@ -19,13 +19,17 @@ export async function middleware(request: NextRequest) {
     const token = request.cookies.get('admin_token')?.value
 
     if (!token || !JWT_SECRET) {
-      if (!JWT_SECRET) {
-        console.error('JWT_SECRET is not configured')
+      if (!JWT_SECRET && process.env.NODE_ENV === 'production') {
+        console.error('CRITICAL: JWT_SECRET is not configured in production environment')
       }
       if (isAdminPageRoute) {
-        return NextResponse.redirect(new URL('/admin/login', request.url))
+        const loginUrl = new URL('/admin/login', request.url)
+        return NextResponse.redirect(loginUrl)
       }
-      return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 })
+      return NextResponse.json({
+        success: false,
+        message: !JWT_SECRET ? 'Server configuration error' : 'Unauthorized'
+      }, { status: 401 })
     }
 
     try {

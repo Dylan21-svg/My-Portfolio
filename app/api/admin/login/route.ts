@@ -27,10 +27,11 @@ export async function POST(request: NextRequest) {
         message: message || 'Invalid credentials' 
       }, { status: 401 })
     }
-  } catch (error) {
+  } catch (error: any) {
+    console.error('Login API error:', error)
     return NextResponse.json({ 
       success: false, 
-      message: 'Server error' 
+      message: 'Internal server error. Please check your deployment configuration.'
     }, { status: 500 })
   }
 }

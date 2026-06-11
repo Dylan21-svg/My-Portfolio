@@ -10,14 +10,21 @@ const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH || process.env.SECUR
 // Security check: Ensure essential environment variables are set in production
 const validateConfig = () => {
   if (process.env.NODE_ENV === 'production') {
+    const missingVars = []
     if (!JWT_SECRET || JWT_SECRET === 'your-default-secret-key-at-least-32-chars') {
-      throw new Error('JWT_SECRET environment variable is required in production')
+      missingVars.push('JWT_SECRET')
     }
     if (!ADMIN_EMAIL || ADMIN_EMAIL === 'admin@example.com') {
-      throw new Error('ADMIN_EMAIL environment variable is required in production')
+      missingVars.push('ADMIN_EMAIL')
     }
     if (!ADMIN_PASSWORD_HASH) {
-      throw new Error('ADMIN_PASSWORD_HASH environment variable is required in production')
+      missingVars.push('ADMIN_PASSWORD_HASH')
+    }
+
+    if (missingVars.length > 0) {
+      const errorMsg = `Production configuration error: Missing or invalid environment variables: ${missingVars.join(', ')}. Please set these in Vercel project settings.`
+      console.error(errorMsg)
+      throw new Error(errorMsg)
     }
   }
 }
