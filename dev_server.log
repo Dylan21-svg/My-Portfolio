@@ -1,0 +1,19 @@
+
+> portfolio@0.1.0 dev
+> next dev
+
+   ▲ Next.js 14.0.0
+   - Local:        http://localhost:3000
+
+ ✓ Ready in 2s
+ ○ Compiling /middleware ...
+ ✓ Compiled /middleware in 731ms (110 modules)
+ ○ Compiling /admin/login/page ...
+ ✓ Compiled /admin/login/page in 5.9s (1145 modules)
+ ✓ Compiled in 678ms (572 modules)
+ ○ Compiling /api/admin/login/route ...
+ ✓ Compiled /api/admin/login/route in 958ms (665 modules)
+API login receiving: { email: 'ngwadiland68@gmail.com', passwordLength: 9 }
+ ○ Compiling /admin/page ...
+ ✓ Compiled /admin/page in 534ms (1239 modules)
+ ✓ Compiled /api/admin/verify/route in 148ms (676 modules)

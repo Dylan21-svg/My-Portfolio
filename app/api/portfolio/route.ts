@@ -4,14 +4,20 @@ export const dynamic = 'force-dynamic'
 import fs from 'fs'
 import path from 'path'
 import { authenticate, unauthorizedResponse } from '@/lib/auth'
+import { kv } from '@vercel/kv'
 
 const DATA_FILE = path.join(process.cwd(), 'data', 'portfolio-data.json')
+const KV_KEY = 'portfolio_data'
 
-// Ensure data directory exists
+// Ensure data directory exists (for local dev)
 const ensureDataDir = () => {
   const dataDir = path.join(process.cwd(), 'data')
   if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true })
+    try {
+      fs.mkdirSync(dataDir, { recursive: true })
+    } catch (err) {
+      // Ignore directory creation errors in production/readonly environments
+    }
   }
 }
 
@@ -150,33 +156,63 @@ const getDefaultData = () => ({
   }
 })
 
-const readData = () => {
+const readData = async () => {
+  // Try KV first
+  try {
+    const kvData = await kv.get(KV_KEY)
+    if (kvData) {
+      console.log('Data loaded from Vercel KV')
+      return kvData
+    }
+  } catch (error) {
+    console.error('Error reading from Vercel KV:', error)
+  }
+
+  // Fallback to local file
   try {
     ensureDataDir()
     if (fs.existsSync(DATA_FILE)) {
       const data = fs.readFileSync(DATA_FILE, 'utf8')
+      console.log('Data loaded from local file')
       return JSON.parse(data)
     }
   } catch (error) {
     console.error('Error reading data file:', error)
   }
+
   return getDefaultData()
 }
 
-const writeData = (data: any) => {
+const writeData = async (data: any) => {
+  let kvSuccess = false
+  let fsSuccess = false
+
+  // Try saving to KV
+  try {
+    await kv.set(KV_KEY, data)
+    console.log('Data saved to Vercel KV')
+    kvSuccess = true
+  } catch (error) {
+    console.error('Error writing to Vercel KV:', error)
+  }
+
+  // Try saving to local file (mostly for local development)
   try {
     ensureDataDir()
     fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2))
-    return true
+    console.log('Data saved to local file')
+    fsSuccess = true
   } catch (error) {
-    console.error('Error writing data file:', error)
-    return false
+    // This is expected to fail on Vercel production
+    console.warn('Error writing to data file (expected on Vercel):', error)
   }
+
+  return kvSuccess || fsSuccess
 }
 
 export async function GET() {
   try {
-    const data = readData()
+    const data = await readData()
     return NextResponse.json(data)
   } catch (error) {
     console.error('Error in GET /api/portfolio:', error)
@@ -201,10 +237,13 @@ export async function POST(request: NextRequest) {
     // Merge with defaults to ensure all required properties exist
     const mergedData = { ...getDefaultData(), ...body }
 
-    if (writeData(mergedData)) {
+    if (await writeData(mergedData)) {
       return NextResponse.json({ success: true, message: 'Data saved successfully' })
     } else {
-      return NextResponse.json({ error: 'Failed to save data' }, { status: 500 })
+      return NextResponse.json({
+        error: 'Failed to save data. Please ensure Vercel KV is configured for production persistence.',
+        details: 'Check server logs for more information.'
+      }, { status: 500 })
     }
   } catch (error) {
     console.error('Error in POST /api/portfolio:', error)

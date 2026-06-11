@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const fs = require('fs');
 const password = '#Dawson21';
 bcrypt.hash(password, 10, (err, hash) => {

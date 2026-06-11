@@ -165,6 +165,8 @@ export default function Admin() {
         body: JSON.stringify(data),
       })
 
+      const result = await response.json()
+
       if (response.ok) {
         // Also save to localStorage as backup
         localStorage.setItem('portfolioData', JSON.stringify(data))
@@ -174,16 +176,21 @@ export default function Admin() {
 
         alert('Data saved successfully! Changes will be reflected on the main site.')
       } else {
-        throw new Error('API save failed')
+        throw new Error(result.error || 'API save failed')
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving data:', error)
 
       // Fallback to localStorage only
       try {
         localStorage.setItem('portfolioData', JSON.stringify(data))
         window.dispatchEvent(new CustomEvent('portfolioDataUpdate'))
-        alert('Data saved to local storage only. API unavailable - changes may not persist across devices.')
+
+        if (error.message && error.message.includes('Vercel KV')) {
+          alert(`API Error: ${error.message}\n\nData has been saved to your browser's local storage temporarily.`)
+        } else {
+          alert('Data saved to local storage only. API unavailable - changes may not persist across devices.')
+        }
       } catch (localError) {
         console.error('Error saving to localStorage:', localError)
         alert('Error saving data. Please try again.')
