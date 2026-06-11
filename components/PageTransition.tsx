@@ -7,21 +7,21 @@ import { ReactNode, useState, useEffect } from 'react'
 const variants = {
   initial: {
     opacity: 0,
-    y: 20,
+    y: 10,
   },
   enter: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.5,
+      duration: 0.4,
       ease: [0.61, 1, 0.88, 1],
     },
   },
   exit: {
     opacity: 0,
-    y: 20,
+    y: -10,
     transition: {
-      duration: 0.5,
+      duration: 0.3,
       ease: [0.61, 1, 0.88, 1],
     },
   },
@@ -36,7 +36,7 @@ export default function PageTransition({ children }: { children: ReactNode }) {
   }, [])
 
   if (!isMounted) {
-    return <>{children}</>
+    return <div className="opacity-0">{children}</div>
   }
 
   return (
@@ -47,22 +47,8 @@ export default function PageTransition({ children }: { children: ReactNode }) {
         animate="enter"
         exit="exit"
         variants={variants}
+        className="w-full"
       >
-        {/* Shutter Effect Overlay */}
-        <motion.div
-          initial={{ scaleY: 0 }}
-          animate={{ scaleY: 0 }}
-          exit={{ scaleY: 1 }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="fixed inset-0 bg-primary z-[100] origin-bottom pointer-events-none"
-        />
-        <motion.div
-          initial={{ scaleY: 1 }}
-          animate={{ scaleY: 0 }}
-          exit={{ scaleY: 0 }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="fixed inset-0 bg-primary z-[100] origin-top pointer-events-none"
-        />
         {children}
       </motion.div>
     </AnimatePresence>

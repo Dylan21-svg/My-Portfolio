@@ -1,5 +1,5 @@
 import { projects, skills, experience, education } from './constants'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 export interface PageData {
   home: {
@@ -115,60 +115,52 @@ export function usePortfolioData(): PageData {
   const [data, setData] = useState<PageData>(defaultData)
   const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        // Try to load from API first (server-side storage)
-        const response = await fetch('/api/portfolio')
-        if (response.ok) {
-          const serverData = await response.json()
-          setData({ ...defaultData, ...serverData })
-        } else {
-          // Fallback to localStorage
-          const saved = localStorage.getItem('portfolioData')
-          if (saved) {
-            const parsed = JSON.parse(saved)
-            // Deep merge home and other sections to ensure new defaults are kept
-            const merged = {
-              ...defaultData,
-              ...parsed,
-              home: { ...defaultData.home, ...(parsed.home || {}) },
-              about: { ...defaultData.about, ...(parsed.about || {}) },
-              contact: { ...defaultData.contact, ...(parsed.contact || {}) }
-            }
-            setData(merged)
-          } else {
-            setData(defaultData)
-          }
-        }
-      } catch (error) {
-        console.error('Error loading data:', error)
+  const loadData = useCallback(async () => {
+    try {
+      // Try to load from API first (server-side storage)
+      const response = await fetch('/api/portfolio', { cache: 'no-store' })
+      if (response.ok) {
+        const serverData = await response.json()
+        setData(prev => ({ ...prev, ...serverData }))
+      } else {
         // Fallback to localStorage
         const saved = localStorage.getItem('portfolioData')
         if (saved) {
-          try {
-            setData({ ...defaultData, ...JSON.parse(saved) })
-          } catch {
-            setData(defaultData)
+          const parsed = JSON.parse(saved)
+          const merged = {
+            ...defaultData,
+            ...parsed,
+            home: { ...defaultData.home, ...(parsed.home || {}) },
+            about: { ...defaultData.about, ...(parsed.about || {}) },
+            contact: { ...defaultData.contact, ...(parsed.contact || {}) }
           }
-        } else {
-          setData(defaultData)
+          setData(merged)
         }
-      } finally {
-        setIsLoading(false)
       }
+    } catch (error) {
+      console.error('Error loading data:', error)
+      const saved = localStorage.getItem('portfolioData')
+      if (saved) {
+        try {
+          setData(prev => ({ ...prev, ...JSON.parse(saved) }))
+        } catch {
+          // Keep defaultData
+        }
+      }
+    } finally {
+      setIsLoading(false)
     }
+  }, [])
 
+  useEffect(() => {
     loadData()
 
-    // Listen for storage changes (when admin panel saves data)
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'portfolioData') {
         loadData()
       }
     }
 
-    // Also listen for custom events from admin panel
     const handleDataUpdate = () => loadData()
 
     window.addEventListener('storage', handleStorageChange)
@@ -178,7 +170,7 @@ export function usePortfolioData(): PageData {
       window.removeEventListener('storage', handleStorageChange)
       window.removeEventListener('portfolioDataUpdate', handleDataUpdate)
     }
-  }, [])
+  }, [loadData])
 
   return data
 }
