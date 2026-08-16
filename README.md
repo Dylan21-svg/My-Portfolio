@@ -1,0 +1,254 @@
+# Dylan Sparks - Software Engineer Portfolio
+
+A modern, responsive portfolio website built with Next.js 14, TypeScript, and Tailwind CSS featuring advanced animations, dynamic content management, and SEO optimization.
+
+## Features
+
+- **Modern Design**: Glassmorphism effects, dark teal theme, smooth animations with Framer Motion
+- **Responsive**: Mobile-first approach with adaptive breakpoints for all screen sizes
+- **Interactive**: Carousel navigation, modal views, smooth page transitions
+- **Performance**: Optimized with Next.js Image component, lazy loading, and code splitting
+- **Admin Dashboard**: Built-in CMS to edit all content dynamically with localStorage persistence
+- **SEO Optimized**: Meta tags, sitemap, robots.txt, structured data support
+- **Accessibility**: ARIA labels, semantic HTML, keyboard navigation support
+- **Error Handling**: Custom error pages (404, error boundary), graceful error recovery
+- **Form Validation**: React Hook Form with Zod schema validation
+- **Email Ready**: Contact form with email service integration ready (SendGrid, Resend, EmailJS)
+
+## Tech Stack
+
+- **Framework**: Next.js 14 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS with custom utilities
+- **Animations**: Framer Motion
+- **Components**: 
+  - Swiper for carousels
+  - Lucide React for icons
+  - React Hook Form + Zod for forms
+- **Development**: ESLint, TypeScript strict mode
+
+## Getting Started
+
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn
+
+### Installation
+
+1. Clone the repository
+```bash
+git clone https://github.com/yourusername/portfolio.git
+cd portfolio
+```
+
+2. Install dependencies
+```bash
+npm install
+```
+
+3. Set up environment variables
+```bash
+cp .env.example .env.local
+# Edit .env.local with your configuration
+```
+
+4. Run the development server
+```bash
+npm run dev
+```
+
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+## Project Structure
+
+```
+app/
+├── layout.tsx              # Root layout with Navigation
+├── page.tsx                # Landing page with hero and portfolio grid
+├── globals.css             # Global styles with Tailwind
+├── error.tsx               # Error boundary component
+├── not-found.tsx           # 404 page
+├── sitemap.ts              # SEO sitemap
+├── robots.ts               # SEO robots.txt
+├── api/
+│   └── contact/route.ts    # Contact form API endpoint
+├── about/
+│   ├── page.tsx            # About/Self-summary page
+│   └── metadata.ts         # Page-specific metadata
+├── works/
+│   ├── page.tsx            # Projects carousel page
+│   └── metadata.ts         # Page metadata
+├── contact/
+│   ├── page.tsx            # Contact form page
+│   └── metadata.ts         # Page metadata
+├── resume/
+│   ├── page.tsx            # Resume download page
+│   └── metadata.ts         # Page metadata
+└── admin/
+    └── page.tsx            # Admin dashboard (password protected)
+
+components/
+├── Navigation.tsx          # Sticky navbar with mobile menu
+├── Footer.tsx              # Site footer with links
+├── ContactForm.tsx         # Contact form with validation
+├── ProjectModal.tsx        # Project details modal with animations
+└── LoadingSpinner.tsx      # Loading indicator component
+
+lib/
+├── constants.ts            # Sample data and default content
+├── data.ts                 # Data management with hooks
+├── email.ts                # Email service utilities
+├── utils.ts                # Common utility functions
+├── hooks.ts                # Custom React hooks
+└── ...
+
+public/
+└── images/                 # Image assets (add your images here)
+```
+
+## Admin Dashboard
+
+Access the admin panel at `/admin` to edit all content:
+
+- **Home Page**: Edit hero section, manage cards, update statistics
+- **About Page**: Modify profile info, experience, education
+- **Works Page**: Manage project data
+- **Contact Page**: Update contact information and social links
+- **Resume**: Configure resume download URL
+
+### Data Persistence
+
+The portfolio now uses a hybrid storage system:
+- **Primary**: Server-side JSON file storage (persistent across sessions/devices)
+- **Fallback**: localStorage (for offline functionality)
+- **Sync**: Real-time updates across all open tabs/windows
+
+Changes are automatically saved and reflected immediately on the main site.
+
+**Default Password**: `admin123` (Change this in `.env.local` for production)
+
+## Customization
+
+### Via Admin Dashboard
+The easiest way - use `/admin` to dynamically edit all content
+
+### Direct Code Edits
+- **Default Data**: Modify `lib/constants.ts`
+- **Styling**: Update colors and fonts in `tailwind.config.js` and `app/globals.css`
+- **Images**: Add images to `public/images/` and update URLs in admin
+- **Components**: Customize React components in `components/`
+
+## Email Service Setup
+
+The contact form is ready to integrate with email services. Choose one:
+
+### SendGrid
+1. Sign up at [sendgrid.com](https://sendgrid.com)
+2. Get API key from dashboard
+3. Add to `.env.local`: `NEXT_PUBLIC_SENDGRID_API_KEY=xxx`
+
+### Resend
+1. Sign up at [resend.com](https://resend.com)
+2. Get API key
+3. Add to `.env.local`: `NEXT_PUBLIC_RESEND_API_KEY=xxx`
+
+### EmailJS (Client-side)
+1. Sign up at [emailjs.com](https://www.emailjs.com)
+2. Set up service, template, and get credentials
+3. Add to `.env.local`:
+   ```
+   NEXT_PUBLIC_EMAILJS_SERVICE_ID=xxx
+   NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=xxx
+   NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=xxx
+   ```
+
+### Mail Console (Server-side)
+1. Use the production Mail Console API: `https://api.mailconsole.io/v1/send`
+2. Add to `.env.local`:
+   ```
+   MAIL_CONSOLE_API_KEY=your_api_key
+   MAIL_CONSOLE_TEMPLATE_ID=your_template_id
+   MAIL_CONSOLE_API_URL=https://api.mailconsole.io/v1/send
+   MAIL_CONSOLE_MOCK=false
+   ```
+3. Enable `MAIL_CONSOLE_MOCK=true` for local testing/development to log payloads without sending actual emails.
+
+Update the `sendMail` function in `lib/mail.ts` to use your chosen service.
+
+## Images
+
+Add the following images to `public/images/`:
+- `profile.jpg` - Your professional headshot (200x200px recommended)
+- `hero-bg.jpg` - Hero section background (1920x1080px recommended)
+- `project1.jpg`, `project2.jpg`, etc. - Project screenshots (800x600px recommended)
+
+Images can also be managed via the admin dashboard using external URLs.
+
+## Deployment
+
+### Vercel (Recommended)
+1. Push code to GitHub
+2. Connect repository to Vercel
+3. Set environment variables in Vercel dashboard
+4. Deploy automatically on push
+
+### Other Platforms
+```bash
+# Build for production
+npm run build
+
+# Start production server
+npm start
+```
+
+Then deploy to Netlify, Railway, Heroku, or your preferred host.
+
+## Performance Optimization
+
+- Images are optimized with Next.js Image component
+- CSS-in-JS animations are GPU-accelerated
+- Lazy loading for images and modals
+- Code splitting with dynamic imports
+- Responsive images with srcset
+- Minified CSS and JavaScript in production
+
+## Browser Support
+
+- Chrome/Edge: Latest 2 versions
+- Firefox: Latest 2 versions
+- Safari: Latest 2 versions
+- Mobile browsers: iOS Safari 12+, Chrome for Android
+
+## Accessibility
+
+- Semantic HTML structure
+- ARIA labels and attributes
+- Keyboard navigation support
+- Focus indicators
+- Color contrast compliance
+- Screen reader friendly
+
+## SEO
+
+- Meta tags for all pages
+- Open Graph support for social sharing
+- Sitemap auto-generation
+- Robots.txt for search engines
+- Structured data ready
+- Mobile-friendly design
+
+## Contributing
+
+Feel free to fork and customize this portfolio for your own use!
+
+## License
+
+Built by Dylan Sparks - Feel free to use and modify for your own portfolio.
+
+## Support
+
+For issues, feature requests, or questions, please open an issue on GitHub.
+
+---
+
+**Last Updated**: January 2026# My-Portfolio

@@ -1,0 +1,712 @@
+{
+  "home": {
+    "hero": {
+      "name": "Che Amah Diland Ngwa",
+      "title": "Software Engineer",
+      "tagline": "I specialize in backend architecture where speed, security, and scalability converge. With a deep focus on the Python ecosystem, I build distributed systems designed to handle the heavy lifting of modern web apps and enterprise solutions.",
+      "ctaText": "VIEW MY WORK",
+      "profileImage": "/images/D21.jpeg",
+      "backgroundImage": "/images/dylan.jpg"
+    },
+    "cards": [
+      {
+        "id": "1",
+        "type": "profile",
+        "title": "A BACKEND-SOFTWARE ENGINEER",
+        "content": "Che Amah Diland Ngwa (Dylan Sparks)\nBuea, Cameroon"
+      },
+      {
+        "id": "2",
+        "type": "tech-stack",
+        "title": "Tech Stack",
+        "content": ""
+      },
+      {
+        "id": "3",
+        "type": "credentials",
+        "title": "Credentials",
+        "content": ""
+      },
+      {
+        "id": "4",
+        "type": "projects",
+        "title": "Projects"
+      },
+      {
+        "id": "5",
+        "type": "services",
+        "title": "Services Offering",
+        "content": "Custom API Development (REST, GraphQL, WebSockets)\n\nDatabase Design & Schema Architecting\n\nSaaS Backend Infrastructure\n\nThird-Party API Integrations (Payments, CRM, Auth)\n\nServer-Side Logic & Business Workflow Automation\n\nLegacy Code Refactoring & Python Version Upgrades\n\nDatabase Query Optimization & Performance Tuning\n\nCloud Deployment & Infrastructure Management (AWS, GCP, Heroku)\n\nContainerization & DevOps Pipelines (Docker, CI/CD)\n\nBackground Task Processing & Job Queues\n\nAuthentication & Authorization Systems (OAuth2, JWT, RBAC)\n\nUnit, Integration, and Load Testing"
+      },
+      {
+        "id": "6",
+        "type": "profiles",
+        "title": "Profiles",
+        "content": "LinkedIn\nGithub\nTikTok"
+      }
+    ],
+    "stats": [
+      {
+        "number": "04",
+        "label": "YEARS EXPERIENCE"
+      },
+      {
+        "number": "+20",
+        "label": "CLIENTS WORLDWIDE"
+      },
+      {
+        "number": "+30",
+        "label": "TOTAL PROJECTS"
+      }
+    ]
+  },
+  "about": {
+    "profile": {
+      "name": "CHE AMAH DILAND NGWA",
+      "bio": "I am a Software Engineer and Chief Operating Officer at SAMITECH Corporation, focused on building high-impact, scalable solutions. Currently pursuing my Higher National Diploma in Software Engineering, I specialize in bridging technical execution with efficient operational strategy.\n\nMy expertise is rooted in the Python ecosystem, where I develop robust backend infrastructures and SaaS platforms. I am particularly interested in architectural challenges like data synchronization and system resilience. My design philosophy balances clean, logic-driven interfaces with high-performance server-side logic, turning conceptual ideas into market-ready products.",
+      "image": "/images/dylan1.jpg"
+    },
+    "experience": [
+      {
+        "period": "2022 - Present",
+        "title": "Senior Backend & Distributed Systems Engineer",
+        "company": "SAMITECH Corporation",
+        "description": "Architecting resilient asynchronous event pipelines, multi-tenant databases, and high-concurrency microservices with Python and Docker.",
+        "skills": ["Python", "FastAPI", "PostgreSQL", "Redis", "Docker", "RabbitMQ"],
+        "highlights": [
+          "Engineered distributed queuing architecture handling 50,000+ jobs/min with 99.98% uptime SLA.",
+          "Cut database query P99 latency by 64% through index re-architecting, read-replicas, and Redis caching.",
+          "Implemented zero-trust OAuth2/JWT security boundaries and role-based access control across 15+ microservices."
+        ]
+      },
+      {
+        "period": "2020 - 2022",
+        "title": "Full Stack Backend Developer",
+        "company": "StartupXYZ / Freelance",
+        "description": "Designed and deployed backend infrastructure and APIs for 5+ early-stage MVPs across fintech, logistics, and education.",
+        "skills": ["Python", "Django", "Node.js", "PostgreSQL", "Celery", "AWS"],
+        "highlights": [
+          "Built real-time order tracking and settlement pipelines with Stripe and automated webhook dunning.",
+          "Designed relational schemas and wrote migration pipelines for over 250,000 active records.",
+          "Automated CI/CD workflows reducing feature deployment lead time from 3 days to 45 minutes."
+        ]
+      },
+      {
+        "period": "2018 - 2020",
+        "title": "Junior Software Developer",
+        "company": "WebSolutions Ltd.",
+        "description": "Maintained legacy backend services, integrated third-party REST APIs, and authored comprehensive unit test suites.",
+        "skills": ["Python", "Flask", "MySQL", "Git", "REST APIs"],
+        "highlights": [
+          "Refactored legacy monolithic endpoints into modular blueprints, improving test coverage from 35% to 88%.",
+          "Automated daily database backups and transactional snapshot validation routines."
+        ]
+      }
+    ],
+    "education": [
+      {
+        "period": "2022 - 2024",
+        "degree": "Higher National Diploma in Software Engineering",
+        "institution": "University of Buea / SAMITECH Institute",
+        "description": "Advanced coursework in Distributed Systems, Relational Database Theory, Algorithm Complexity, and Network Protocols."
+      },
+      {
+        "period": "2018 - 2022",
+        "degree": "Bachelor of Science in Computer Science",
+        "institution": "University of Technology",
+        "description": "Foundation in Computer Architecture, Data Structures, Operating Systems, and Concurrent Programming."
+      }
+    ]
+  },
+  "works": {
+    "projects": [
+      {
+        "id": "codeforge",
+        "title": "CodeForge",
+        "tagline": "Distributed Offline-First Code Execution & Sync Engine",
+        "category": "Backend Development",
+        "role": "Lead Backend Architect",
+        "timeline": "2023 - 2024",
+        "status": "Production",
+        "description": "A resilient educational platform designed for low-connectivity environments, featuring a custom binary Delta synchronization engine and sandboxed code execution pipeline.",
+        "challenge": "Students and developers in emerging regions with erratic bandwidth faced high packet loss, multi-second feedback loops, and broken data synchronization states.",
+        "solution": "Architected a deterministic Priority-Queue delta sync protocol over WebSockets with Conflict-Free Replicated Data Types (CRDTs) and local IndexedDB fallback, paired with a containerized Python/Wasm runtime.",
+        "architecture": "FastAPI microservices gateway with PostgreSQL write-ahead delta logs, Redis cache layer for active session state, and Dockerized worker pools for isolated code execution.",
+        "metrics": [
+          { "label": "Data Overhead Reduction", "value": "98%", "change": "vs standard REST" },
+          { "label": "P99 Execution Latency", "value": "<28ms", "change": "offline evaluation" },
+          { "label": "Zero-Collision Sync", "value": "100%", "change": "CRDT verified" }
+        ],
+        "image": "/images/D1.jpeg",
+        "images": [
+          "/images/D1.jpeg",
+          "/images/D2.jpeg",
+          "/images/D3.jpeg"
+        ],
+        "technologies": [
+          "Python",
+          "FastAPI",
+          "PostgreSQL",
+          "WebSockets",
+          "CRDTs",
+          "Docker",
+          "Redis"
+        ],
+        "features": [
+          "Priority-Queue delta synchronization protocol with automatic backoff",
+          "Sandboxed code execution runtime with memory & CPU quotas",
+          "Sub-30ms offline evaluation with bidirectional state merging",
+          "Scalable async worker architecture handling 5,000+ concurrent runs",
+          "Automated telemetry & edge-node health monitoring"
+        ],
+        "endpoints": [
+          {
+            "method": "POST",
+            "path": "/api/v1/sync/delta",
+            "description": "Batch sync offline state changes with CRDT vector clocks",
+            "requestPayload": "{\n  \"clientId\": \"usr_8f92a1\",\n  \"vectorClock\": { \"nodeA\": 14, \"nodeB\": 22 },\n  \"deltas\": [\n    { \"op\": \"insert\", \"pos\": 128, \"val\": \"def sync_state(): pass\" }\n  ]\n}",
+            "responsePayload": "{\n  \"status\": \"synchronized\",\n  \"serverVector\": { \"nodeA\": 15, \"nodeB\": 22 },\n  \"appliedOps\": 1,\n  \"latencyMs\": 14.2,\n  \"conflictResolved\": false\n}",
+            "status": 200,
+            "latency": "14ms"
+          },
+          {
+            "method": "POST",
+            "path": "/api/v1/sandbox/execute",
+            "description": "Run untrusted Python script in isolated micro-VM",
+            "requestPayload": "{\n  \"language\": \"python3.11\",\n  \"code\": \"print(sum([x**2 for x in range(100)]))\",\n  \"timeoutSec\": 2.0\n}",
+            "responsePayload": "{\n  \"stdout\": \"328350\\n\",\n  \"stderr\": \"\",\n  \"exitCode\": 0,\n  \"durationMs\": 24.8,\n  \"memoryUsedMb\": 6.4\n}",
+            "status": 200,
+            "latency": "25ms"
+          }
+        ],
+        "architectureNodes": [
+          {
+            "id": "client",
+            "label": "Client PWA (Offline IndexedDB)",
+            "type": "client",
+            "tech": "TypeScript / IndexedDB / WebWorker",
+            "description": "Buffers local operations, computes CRDT deltas, and updates local state optimistically with zero network wait.",
+            "latency": "0.4ms",
+            "connections": ["gateway"]
+          },
+          {
+            "id": "gateway",
+            "label": "API Gateway & WebSocket Hub",
+            "type": "gateway",
+            "tech": "FastAPI / Uvicorn (Async ASGI)",
+            "description": "Terminates bidirectional WebSocket connections, handles token verification, and broadcasts state deltas.",
+            "throughput": "18,000 req/s",
+            "latency": "2.1ms",
+            "connections": ["redis_state", "delta_service"]
+          },
+          {
+            "id": "redis_state",
+            "label": "Redis Session Vector Store",
+            "type": "cache",
+            "tech": "Redis Cluster 7.x",
+            "description": "Maintains active vector clocks and connection state for instant delta diffing across connected peers.",
+            "throughput": "120,000 ops/s",
+            "latency": "0.8ms",
+            "connections": []
+          },
+          {
+            "id": "delta_service",
+            "label": "Delta Merging & Conflict Engine",
+            "type": "service",
+            "tech": "Python 3.11 / Rust FFI",
+            "description": "Applies commutative CRDT merge operations, resolves concurrent vector timestamps, and computes canonical AST.",
+            "latency": "6.2ms",
+            "connections": ["pg_deltas", "sandbox_queue"]
+          },
+          {
+            "id": "pg_deltas",
+            "label": "PostgreSQL Write-Ahead Log",
+            "type": "database",
+            "tech": "PostgreSQL 16 (Timescale Delta Partitioning)",
+            "description": "Immutable append-only log of delta operations with snapshot checkpoints for deterministic replay.",
+            "throughput": "4,500 writes/s",
+            "latency": "4.5ms",
+            "connections": []
+          },
+          {
+            "id": "sandbox_queue",
+            "label": "Execution Job Queue",
+            "type": "queue",
+            "tech": "RabbitMQ Priority Queue",
+            "description": "Routes user code execution requests to isolated worker pools with per-tenant rate-limiting and priority QoS.",
+            "throughput": "8,000 msgs/s",
+            "connections": ["docker_workers"]
+          },
+          {
+            "id": "docker_workers",
+            "label": "Sandboxed Execution Pool",
+            "type": "worker",
+            "tech": "gVisor / Docker Container Jail",
+            "description": "Executes untrusted code in hardened, resource-capped container jails with strict network isolation.",
+            "latency": "24ms",
+            "connections": []
+          }
+        ],
+        "schemaTables": [
+          {
+            "tableName": "sync_deltas",
+            "description": "Append-only distributed log storing serialized CRDT state transitions per workspace.",
+            "columns": [
+              { "name": "id", "type": "UUID PRIMARY KEY", "constraints": "DEFAULT gen_random_uuid()", "description": "Global unique delta identifier" },
+              { "name": "workspace_id", "type": "UUID NOT NULL", "constraints": "REFERENCES workspaces(id) ON DELETE CASCADE", "description": "Foreign key to active workspace" },
+              { "name": "client_id", "type": "VARCHAR(64) NOT NULL", "description": "Originating client actor ID" },
+              { "name": "vector_clock", "type": "JSONB NOT NULL", "description": "Lamport/Vector timestamp map for causality ordering" },
+              { "name": "operation_payload", "type": "BYTEA NOT NULL", "description": "Binary-encoded Protobuf CRDT operation payload" },
+              { "name": "created_at", "type": "TIMESTAMPTZ NOT NULL", "constraints": "DEFAULT NOW()", "description": "Server ingest timestamp" }
+            ],
+            "indexes": [
+              "CREATE INDEX idx_deltas_workspace_clock ON sync_deltas (workspace_id, created_at DESC)",
+              "CREATE INDEX idx_deltas_client ON sync_deltas (client_id)"
+            ]
+          },
+          {
+            "tableName": "execution_audits",
+            "description": "Telemetry and security logs for containerized code execution workloads.",
+            "columns": [
+              { "name": "job_id", "type": "UUID PRIMARY KEY", "description": "Task execution UUID" },
+              { "name": "user_id", "type": "UUID NOT NULL", "description": "Submitting user account" },
+              { "name": "runtime_lang", "type": "VARCHAR(32)", "description": "e.g. python3.11, rust1.75" },
+              { "name": "execution_time_ms", "type": "REAL NOT NULL", "description": "Total CPU execution time in ms" },
+              { "name": "memory_peak_kb", "type": "INTEGER NOT NULL", "description": "Peak RSS memory usage" },
+              { "name": "exit_code", "type": "SMALLINT NOT NULL", "description": "Sandbox exit status code (0 = success)" }
+            ],
+            "indexes": [
+              "CREATE INDEX idx_exec_user_time ON execution_audits (user_id, execution_time_ms)"
+            ]
+          }
+        ],
+        "concurrencyTradeoffs": [
+          {
+            "approach": "CRDTs (State-based Commutative Merges) + Vector Clocks",
+            "status": "chosen",
+            "reason": "Eliminates server-side lock contention entirely. Clients merge state offline deterministically without ever throwing merge conflicts or locking server threads.",
+            "benefits": [
+              "Zero network blocking on keystrokes",
+              "100% mathematical convergence across intermittent mobile drops",
+              "Drastic reduction in server CPU utilization during heavy editing spikes"
+            ],
+            "tradeoffs": [
+              "Slightly higher storage metadata overhead for vector clock history",
+              "Complex binary serialization logic required in both client and server runtimes"
+            ]
+          },
+          {
+            "approach": "Operational Transformation (OT) with Centralized Coordinator",
+            "status": "rejected",
+            "reason": "Requires high-frequency synchronous round-trips to an authoritative coordinator. In emerging markets with 300ms+ jitter and 15% packet loss, user typing stalled constantly.",
+            "benefits": ["Slightly smaller payload footprints"],
+            "tradeoffs": ["Severely degraded UX on slow networks", "Central coordinator becomes single point of failure under load"]
+          }
+        ],
+        "postMortem": [
+          {
+            "incident": "WebSocket connection storm following regional ISP reconnection",
+            "impact": "Gateway CPU surged to 92% as 4,000 mobile clients reconnected simultaneously within a 3-second window.",
+            "rootCause": "Clients reconnected immediately without randomized jitter, creating an synchronized thundering herd against the Redis vector store.",
+            "resolution": "Implemented exponential backoff with full jitter (Decorrelated Jitter algorithm) in the client SDK and added a token-bucket ingress rate limiter at the ASGI gateway.",
+            "takeaway": "Always assume clients in low-bandwidth regions will reconnect in synchronous waves after network outages."
+          }
+        ],
+        "liveUrl": "https://codeforge.dev",
+        "githubUrl": "https://github.com/Dylan21-svg/codeforge"
+      },
+      {
+        "id": "revenue-architect",
+        "title": "RevenueArchitect AI",
+        "tagline": "Automated SaaS Revenue Leak Detection & Recovery Pipeline",
+        "category": "SaaS Development",
+        "role": "Senior Distributed Systems Engineer",
+        "timeline": "2023 - 2024",
+        "status": "Enterprise",
+        "description": "An automated revenue intelligence and churn prevention infrastructure processing high-volume Stripe and billing events with predictive machine learning models.",
+        "challenge": "Mid-market SaaS platforms lost up to 14% of recurring revenue due to unhandled invoice failures, delayed webhook retries, and high subscriber churn blind spots.",
+        "solution": "Built an event-driven Celery & Redis pub/sub processing pipeline with automated dunning sequences, predictive churn classification, and idempotent Stripe webhook handlers.",
+        "architecture": "Event-driven asynchronous architecture: FastAPI API layer, Celery distributed worker cluster, Redis stream ingestion buffer, PostgreSQL analytical warehouse with Stripe & CRM connectors.",
+        "metrics": [
+          { "label": "Recovered Revenue", "value": "$1.4M+", "change": "across client tenants" },
+          { "label": "Event Ingestion Rate", "value": "45k/min", "change": "zero dropped webhooks" },
+          { "label": "Churn Prediction Accuracy", "value": "91.4%", "change": "ML AUC score" }
+        ],
+        "image": "/images/D2.jpeg",
+        "images": [
+          "/images/D2.jpeg",
+          "/images/D3.jpeg",
+          "/images/D4.jpeg"
+        ],
+        "technologies": [
+          "Python",
+          "Celery",
+          "Redis",
+          "PostgreSQL",
+          "Machine Learning",
+          "Stripe API",
+          "Docker"
+        ],
+        "features": [
+          "Idempotent webhook ingestion pipeline with exponential retry backoff",
+          "Real-time revenue leak forecasting with predictive cohort modeling",
+          "Distributed background task execution handling 45,000+ webhooks/minute",
+          "Multi-tenant data partitioning with strict role-based access control (RBAC)",
+          "Automated multi-channel dunning workflows with Stripe & SendGrid webhooks"
+        ],
+        "endpoints": [
+          {
+            "method": "POST",
+            "path": "/api/v1/webhooks/stripe/process",
+            "description": "Idempotently ingest and process Stripe invoice payment failure",
+            "requestPayload": "{\n  \"eventId\": \"evt_1Nq8K2LkdIwHu7ix\",\n  \"type\": \"invoice.payment_failed\",\n  \"customer\": \"cus_99axB\",\n  \"attemptCount\": 2,\n  \"amountDue\": 14900\n}",
+            "responsePayload": "{\n  \"queued\": true,\n  \"taskId\": \"tsk_8819ab294c\",\n  \"retrySchedule\": \"2026-08-15T04:00:00Z\",\n  \"dunningActionTriggered\": \"smart_card_update_sms\",\n  \"riskScore\": 0.84\n}",
+            "status": 202,
+            "latency": "18ms"
+          },
+          {
+            "method": "GET",
+            "path": "/api/v1/churn/predict?tenantId=org_alpha",
+            "description": "Predict 30-day churn risk scores for enterprise account cohorts",
+            "requestPayload": "",
+            "responsePayload": "{\n  \"tenantId\": \"org_alpha\",\n  \"atRiskAccounts\": 8,\n  \"predictedRevenueLoss\": 4200.00,\n  \"topFactor\": \"api_usage_drop_40pct\",\n  \"suggestedIntervention\": \"proactive_csm_outreach\"\n}",
+            "status": 200,
+            "latency": "32ms"
+          }
+        ],
+        "architectureNodes": [
+          {
+            "id": "stripe_webhooks",
+            "label": "Stripe & Billing Webhook Stream",
+            "type": "client",
+            "tech": "HTTPS Inbound Webhook Dispatcher",
+            "description": "High-volume billing events: invoices, disputes, subscriptions, and card expiration telemetry.",
+            "throughput": "45,000 events/min",
+            "connections": ["ingress_gateway"]
+          },
+          {
+            "id": "ingress_gateway",
+            "label": "Idempotent Webhook Ingress",
+            "type": "gateway",
+            "tech": "FastAPI Async Ingest Controller",
+            "description": "Validates cryptographic signatures (HMAC SHA-256) and performs atomic deduplication against Redis cache.",
+            "latency": "3.4ms",
+            "connections": ["redis_idempotency", "celery_broker"]
+          },
+          {
+            "id": "redis_idempotency",
+            "label": "Redis Deduplication Cache",
+            "type": "cache",
+            "tech": "Redis SETNX with 7-day TTL",
+            "description": "Guarantees exactly-once processing by locking unique event IDs before queuing background tasks.",
+            "latency": "0.6ms",
+            "connections": []
+          },
+          {
+            "id": "celery_broker",
+            "label": "Celery Task Broker & Streams",
+            "type": "queue",
+            "tech": "Redis Streams / Celery 5.3",
+            "description": "Dispatches asynchronous dunning workflows, payment retries, and customer notifications into priority queues.",
+            "throughput": "25,000 msgs/s",
+            "connections": ["celery_workers", "ml_pipeline"]
+          },
+          {
+            "id": "celery_workers",
+            "label": "Dunning Execution Workers",
+            "type": "worker",
+            "tech": "Python Multiprocessing Workers",
+            "description": "Executes smart retry schedules, generates custom recovery invoices, and interfaces with SMS/email gateways.",
+            "connections": ["postgres_warehouse"]
+          },
+          {
+            "id": "ml_pipeline",
+            "label": "Churn Classification Engine",
+            "type": "service",
+            "tech": "Scikit-Learn / XGBoost Daemon",
+            "description": "Calculates churn probability scores based on billing delinquency, product engagement, and support ticket sentiment.",
+            "latency": "45ms",
+            "connections": ["postgres_warehouse"]
+          },
+          {
+            "id": "postgres_warehouse",
+            "label": "PostgreSQL Analytics Warehouse",
+            "type": "database",
+            "tech": "PostgreSQL with Row-Level Security (RLS)",
+            "description": "Stores tenant billing history, recovery metrics, and audit records with strict multi-tenant isolation.",
+            "latency": "5.8ms",
+            "connections": []
+          }
+        ],
+        "schemaTables": [
+          {
+            "tableName": "billing_events",
+            "description": "Immutable ledger of all received billing webhooks with processing status and retry metadata.",
+            "columns": [
+              { "name": "id", "type": "UUID PRIMARY KEY", "constraints": "DEFAULT gen_random_uuid()" },
+              { "name": "event_id", "type": "VARCHAR(128) UNIQUE NOT NULL", "description": "Stripe/Provider unique event ID for idempotency" },
+              { "name": "tenant_id", "type": "UUID NOT NULL", "description": "Tenant owner organization" },
+              { "name": "event_type", "type": "VARCHAR(64) NOT NULL", "description": "e.g. invoice.payment_failed" },
+              { "name": "payload", "type": "JSONB NOT NULL", "description": "Sanitized raw JSON payload" },
+              { "name": "status", "type": "VARCHAR(32) NOT NULL", "description": "queued | processed | failed" },
+              { "name": "retry_count", "type": "INTEGER DEFAULT 0" }
+            ],
+            "indexes": [
+              "CREATE UNIQUE INDEX idx_billing_event_id ON billing_events (event_id)",
+              "CREATE INDEX idx_billing_tenant_status ON billing_events (tenant_id, status)"
+            ]
+          },
+          {
+            "tableName": "churn_forecasts",
+            "description": "ML-generated churn risk scores and recommended recovery interventions.",
+            "columns": [
+              { "name": "id", "type": "UUID PRIMARY KEY" },
+              { "name": "tenant_id", "type": "UUID NOT NULL" },
+              { "name": "customer_id", "type": "VARCHAR(64) NOT NULL" },
+              { "name": "churn_risk_score", "type": "NUMERIC(4,3) NOT NULL", "description": "Probability score 0.000 to 1.000" },
+              { "name": "expected_loss_usd", "type": "NUMERIC(10,2) NOT NULL" },
+              { "name": "recommended_action", "type": "TEXT" }
+            ],
+            "indexes": [
+              "CREATE INDEX idx_churn_tenant_score ON churn_forecasts (tenant_id, churn_risk_score DESC)"
+            ]
+          }
+        ],
+        "concurrencyTradeoffs": [
+          {
+            "approach": "Redis SETNX Idempotency Key Lock + Celery Task ID Deduplication",
+            "status": "chosen",
+            "reason": "Guarantees zero duplicate invoices or multiple SMS notifications sent to customers even when Stripe retries webhooks 10+ times in rapid succession.",
+            "benefits": [
+              "Eliminates duplicate charge risks",
+              "Handles burst traffic without database table lock spikes",
+              "Linear scalability with added worker containers"
+            ],
+            "tradeoffs": [
+              "Requires managing TTL expirations across distributed cache nodes"
+            ]
+          },
+          {
+            "approach": "Synchronous Database Unique Key Constraint Handling",
+            "status": "rejected",
+            "reason": "Caused database lock waits and deadlock errors during large batch billing events at the start of each month.",
+            "benefits": ["Simpler code structure"],
+            "tradeoffs": ["High DB connection pool exhaustion under 10k+ concurrent webhook bursts"]
+          }
+        ],
+        "postMortem": [
+          {
+            "incident": "Stripe webhook retry storm during worker deployment",
+            "impact": "Celery queue backed up by 120,000 tasks over 15 minutes.",
+            "rootCause": "Old workers shut down without graceful drain, causing in-flight unacknowledged tasks to be requeued multiple times.",
+            "resolution": "Configured Celery `worker_cancel_long_running_tasks_on_connection_loss` and set up graceful SIGTERM warm shutdowns in Docker entrypoint.",
+            "takeaway": "Always pair task acknowledgments (late acks) with idempotent handlers and graceful worker drainage."
+          }
+        ],
+        "liveUrl": "https://revenuearchitect.ai",
+        "githubUrl": "https://github.com/Dylan21-svg/revenue-architect"
+      },
+      {
+        "id": "velora-store",
+        "title": "VELORA Store",
+        "tagline": "High-Concurrency Distributed E-Commerce Backend",
+        "category": "High-Scale E-Commerce",
+        "role": "Principal Backend Engineer",
+        "timeline": "2024",
+        "status": "Production",
+        "description": "A high-throughput distributed e-commerce backend built to handle extreme flash-sale concurrency spikes without inventory race conditions or database deadlocks.",
+        "challenge": "Flash-sale drops triggered severe database row-locking contention and overselling race conditions under thousands of simultaneous checkout attempts.",
+        "solution": "Engineered distributed atomic inventory reservation in Redis via Lua scripts, backed by RabbitMQ asynchronous order queues and PostgreSQL read-replicas.",
+        "architecture": "Multi-tier microservices: Flask API gateway, Redis distributed lock manager, RabbitMQ message broker, PostgreSQL transactional cluster, and Prometheus/Grafana real-time metrics telemetry.",
+        "metrics": [
+          { "label": "Peak Throughput", "value": "12,500+", "change": "req/sec during flash sales" },
+          { "label": "Overselling Incidents", "value": "0", "change": "100% atomic locks" },
+          { "label": "P99 Checkout Latency", "value": "42ms", "change": "under max load" }
+        ],
+        "image": "/images/D3.jpeg",
+        "images": [
+          "/images/D3.jpeg",
+          "/images/D4.jpeg",
+          "/images/D1.jpeg"
+        ],
+        "technologies": [
+          "Python",
+          "Flask",
+          "RabbitMQ",
+          "Redis (Lua)",
+          "PostgreSQL",
+          "Docker",
+          "Prometheus"
+        ],
+        "features": [
+          "Atomic inventory allocation using Redis Lua scripts preventing all race conditions",
+          "Distributed asynchronous order processing pipeline with RabbitMQ queues",
+          "Audit trail logging with immutable write-ahead event streams",
+          "PCI-compliant tokenized payment gateway integration",
+          "Horizontal auto-scaling container architecture with zero downtime deployments"
+        ],
+        "endpoints": [
+          {
+            "method": "POST",
+            "path": "/api/v1/checkout/reserve-stock",
+            "description": "Atomic stock reservation with TTL lock lease",
+            "requestPayload": "{\n  \"skuId\": \"SKU-9921-BLACK\",\n  \"quantity\": 2,\n  \"cartId\": \"crt_7710bc\",\n  \"leaseDurationSec\": 300\n}",
+            "responsePayload": "{\n  \"reservationId\": \"resv_a019ff\",\n  \"status\": \"reserved\",\n  \"expiresAt\": \"2026-08-15T03:45:00Z\",\n  \"remainingStock\": 48,\n  \"latencyMs\": 8.4\n}",
+            "status": 200,
+            "latency": "8ms"
+          },
+          {
+            "method": "POST",
+            "path": "/api/v1/orders/create",
+            "description": "Finalize order and dispatch async fulfillment event",
+            "requestPayload": "{\n  \"reservationId\": \"resv_a019ff\",\n  \"paymentToken\": \"tok_visa_valid\",\n  \"shippingAddressId\": \"addr_012\"\n}",
+            "responsePayload": "{\n  \"orderId\": \"ord_2026_9941\",\n  \"status\": \"confirmed\",\n  \"paymentStatus\": \"succeeded\",\n  \"fulfillmentQueue\": \"orders.high_priority\"\n}",
+            "status": 201,
+            "latency": "38ms"
+          }
+        ],
+        "architectureNodes": [
+          {
+            "id": "flash_clients",
+            "label": "Flash Sale Traffic Spikes",
+            "type": "client",
+            "tech": "Mobile & Web Shoppers",
+            "description": "Surges of up to 15,000 concurrent users clicking 'Buy Now' within 10 seconds of a drop.",
+            "throughput": "15,000 users",
+            "connections": ["api_gateway"]
+          },
+          {
+            "id": "api_gateway",
+            "label": "Flask API Cluster (Gunicorn)",
+            "type": "gateway",
+            "tech": "Python Flask / Gevent async workers",
+            "description": "Validates cart tokens, applies rate limits via token-bucket algorithm, and initiates inventory reservation.",
+            "latency": "4.2ms",
+            "connections": ["redis_lua", "rabbitmq_orders"]
+          },
+          {
+            "id": "redis_lua",
+            "label": "Redis Atomic Lock & Stock Engine",
+            "type": "cache",
+            "tech": "Redis 7.2 with Custom Lua Scripting",
+            "description": "Executes single-threaded atomic decrement of SKU quantity and issues a 5-minute reservation lease.",
+            "throughput": "85,000 ops/s",
+            "latency": "1.2ms",
+            "connections": []
+          },
+          {
+            "id": "rabbitmq_orders",
+            "label": "RabbitMQ Order Stream Broker",
+            "type": "queue",
+            "tech": "RabbitMQ Quorum Queues",
+            "description": "Buffers order creation payloads with persistent disk durability to decouple checkout from database writes.",
+            "throughput": "12,000 msgs/s",
+            "connections": ["order_workers"]
+          },
+          {
+            "id": "order_workers",
+            "label": "Order Persistence & Payment Workers",
+            "type": "worker",
+            "tech": "Python Async Task Workers",
+            "description": "Charges tokenized cards and writes finalized orders in batch transactions to PostgreSQL.",
+            "latency": "35ms",
+            "connections": ["postgres_orders"]
+          },
+          {
+            "id": "postgres_orders",
+            "label": "PostgreSQL Master & Read-Replicas",
+            "type": "database",
+            "tech": "PostgreSQL 16 (Primary + 2 Read Replicas)",
+            "description": "Stores authoritative order receipts, customer records, and ledger accounting balances.",
+            "latency": "6.5ms",
+            "connections": []
+          }
+        ],
+        "schemaTables": [
+          {
+            "tableName": "sku_inventory",
+            "description": "Authoritative database inventory balance synced with Redis cache buffers.",
+            "columns": [
+              { "name": "sku_id", "type": "VARCHAR(64) PRIMARY KEY", "description": "Unique product SKU code" },
+              { "name": "total_stock", "type": "INTEGER NOT NULL CHECK (total_stock >= 0)" },
+              { "name": "allocated_stock", "type": "INTEGER NOT NULL DEFAULT 0" },
+              { "name": "version", "type": "INTEGER NOT NULL DEFAULT 1", "description": "Optimistic concurrency control version tag" }
+            ],
+            "indexes": [
+              "CREATE INDEX idx_inventory_lookup ON sku_inventory (sku_id, allocated_stock)"
+            ]
+          },
+          {
+            "tableName": "orders",
+            "description": "Finalized order transactions with payment status and idempotency keys.",
+            "columns": [
+              { "name": "id", "type": "UUID PRIMARY KEY DEFAULT gen_random_uuid()" },
+              { "name": "cart_id", "type": "VARCHAR(64) UNIQUE NOT NULL" },
+              { "name": "total_cents", "type": "INTEGER NOT NULL" },
+              { "name": "payment_ref", "type": "VARCHAR(128) NOT NULL" },
+              { "name": "status", "type": "VARCHAR(32) NOT NULL DEFAULT 'confirmed'" },
+              { "name": "created_at", "type": "TIMESTAMPTZ DEFAULT NOW()" }
+            ],
+            "indexes": [
+              "CREATE INDEX idx_orders_created ON orders (created_at DESC)"
+            ]
+          }
+        ],
+        "concurrencyTradeoffs": [
+          {
+            "approach": "Redis Atomic Lua Scripting (Single-Threaded In-Memory Locks)",
+            "status": "chosen",
+            "reason": "Redis Lua executes completely atomically without yielding, guaranteeing that two concurrent requests for the last available item can NEVER both succeed.",
+            "benefits": [
+              "Guarantees 0 overselling incidents at 15,000+ req/sec",
+              "Sub-2ms execution time per reservation attempt",
+              "Protects PostgreSQL from catastrophic row-locking contention"
+            ],
+            "tradeoffs": [
+              "Requires a separate reconciliation daemon to sync Redis stock levels back to PostgreSQL master"
+            ]
+          },
+          {
+            "approach": "PostgreSQL 'SELECT ... FOR UPDATE' Row Locking",
+            "status": "rejected",
+            "reason": "Under 2,000+ concurrent requests on the same SKU, PostgreSQL transaction queues exploded, driving P99 checkout latency over 4,500ms and exhausting connection pools.",
+            "benefits": ["Single source of truth without caching"],
+            "tradeoffs": ["Severe database deadlocks and timeouts during high-traffic drops"]
+          }
+        ],
+        "postMortem": [
+          {
+            "incident": "Expired cart reservations left orphaned stock in Redis during network timeout",
+            "impact": "42 items appeared 'out of stock' for 30 minutes despite abandoned carts.",
+            "rootCause": "The TTL keyspace expiration event listener crashed silently, failing to return released reservation quantities back to the available pool.",
+            "resolution": "Replaced keyspace event dependence with deterministic Redis sorted sets (`ZSET`) scored by timestamp, paired with a cron-based release scrubber.",
+            "takeaway": "Never rely solely on Redis keyspace notifications for critical financial/inventory workflows, as pub/sub deliveries are fire-and-forget."
+          }
+        ],
+        "liveUrl": "https://velora-store.com",
+        "githubUrl": "https://github.com/Dylan21-svg/velora-store"
+      }
+    ]
+  },
+  "contact": {
+    "info": {
+      "email": "ngwadiland68@gmail.com",
+      "phone": "+237672344814",
+      "location": "Bonduma Gate, Buea"
+    },
+    "social": [
+      {
+        "platform": "GitHub",
+        "url": "https://github.com/Dylan21-svg"
+      },
+      {
+        "platform": "LinkedIn",
+        "url": "https://linkedin.com/in/dylansparks"
+      },
+      {
+        "platform": "Instagram",
+        "url": "https://twitter.com/dylansparks"
+      }
+    ]
+  }
+}
