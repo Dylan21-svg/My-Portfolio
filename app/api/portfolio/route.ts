@@ -259,6 +259,9 @@ export async function POST(request: NextRequest) {
     if (!isAuthenticated) {
       return unauthorizedResponse()
     }
+    if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) {
+      return NextResponse.json({ error: 'Vercel KV not configured. Set KV_REST_API_URL and KV_REST_API_TOKEN.' }, { status: 500 })
+    }
 
     const body = await request.json()
 
