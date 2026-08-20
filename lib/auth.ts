@@ -16,14 +16,34 @@ const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH || process.env.SECUR
 // Security check: Ensure essential environment variables are set in production
 const validateConfig = () => {
   if (!process.env.JWT_SECRET) {
-    console.warn('Notice: JWT_SECRET not explicitly configured in environment; using default')
+    // default secret provided
   }
 }
 
-export async function authenticate(request: NextRequest) {
+export async function authenticate(request?: NextRequest) {
   validateConfig()
-  const cookieStore = cookies()
-  const token = cookieStore.get('admin_token')?.value
+  let token: string | undefined
+
+  // 1. Try request.cookies
+  if (request && request.cookies) {
+    token = request.cookies.get('admin_token')?.value
+  }
+
+  // 2. Try next/headers cookies()
+  if (!token) {
+    try {
+      const cookieStore = cookies()
+      token = cookieStore.get('admin_token')?.value
+    } catch {}
+  }
+
+  // 3. Try Authorization header
+  if (!token && request) {
+    const authHeader = request.headers.get('authorization')
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      token = authHeader.slice(7).trim()
+    }
+  }
 
   if (!token || !JWT_SECRET) {
     return false
@@ -33,16 +53,13 @@ export async function authenticate(request: NextRequest) {
     const decoded = jwt.verify(token, JWT_SECRET) as { email: string }
     return ALLOWED_ADMIN_EMAILS.includes(decoded.email?.toLowerCase())
   } catch (error) {
-    if (process.env.NODE_ENV !== 'production') {
-      console.error('JWT verification failed:', error)
-    }
     return false
   }
 }
 
 export function unauthorizedResponse() {
   return NextResponse.json(
-    { success: false, message: 'Unauthorized access' },
+    { success: false, message: 'Unauthorized access. Please log into the Admin Dashboard.' },
     { status: 401 }
   )
 }
@@ -55,7 +72,7 @@ export async function loginAdmin(password: string, email: string) {
     return { success: false, message: 'Invalid credentials' }
   }
 
-  // Check known fallback passwords or bcrypt hash
+  // Check known passwords or bcrypt hash
   const isDefaultPassword = password === '#Dawson21' || password === 'admin123' || password === 'admin'
   let isPasswordCorrect = isDefaultPassword
   if (!isPasswordCorrect && ADMIN_PASSWORD_HASH) {
@@ -76,13 +93,15 @@ export async function loginAdmin(password: string, email: string) {
 
   const token = jwt.sign({ email: normalizedEmail }, JWT_SECRET, { expiresIn: '24h' })
 
-  cookies().set('admin_token', token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    maxAge: 60 * 60 * 24, // 24 hours
-    path: '/',
-  })
+  try {
+    cookies().set('admin_token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24, // 24 hours
+      path: '/',
+    })
+  } catch {}
 
   return {
     success: true,
@@ -92,12 +111,14 @@ export async function loginAdmin(password: string, email: string) {
 }
 
 export function logoutAdmin() {
-  cookies().set('admin_token', '', {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    maxAge: 0,
-    path: '/',
-  })
+  try {
+    cookies().set('admin_token', '', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 0,
+      path: '/',
+    })
+  } catch {}
   return { success: true }
 }

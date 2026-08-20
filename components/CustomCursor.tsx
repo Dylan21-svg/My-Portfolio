@@ -5,6 +5,9 @@ import { motion, useMotionValue, useSpring } from 'framer-motion'
 
 export default function CustomCursor() {
   const [isHovering, setIsHovering] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
+  const [isTouchDevice, setIsTouchDevice] = useState(true)
+  
   const cursorX = useMotionValue(-100)
   const cursorY = useMotionValue(-100)
 
@@ -13,28 +16,53 @@ export default function CustomCursor() {
   const cursorYSpring = useSpring(cursorY, springConfig)
 
   useEffect(() => {
+    // Check if device supports hover/fine pointer
+    const hasFinePointer = window.matchMedia('(pointer: fine)').matches
+    if (!hasFinePointer) {
+      setIsTouchDevice(true)
+      return
+    }
+    setIsTouchDevice(false)
+
     const moveCursor = (e: MouseEvent) => {
       cursorX.set(e.clientX)
       cursorY.set(e.clientY)
+      if (!isVisible) setIsVisible(true)
     }
 
     const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement
-      if (target.closest('a, button, [role="button"]')) {
+      if (target && target.closest('a, button, [role="button"], input, textarea, select')) {
         setIsHovering(true)
       } else {
         setIsHovering(false)
       }
     }
 
+    const handleMouseLeave = () => {
+      setIsVisible(false)
+    }
+
+    const handleMouseEnter = () => {
+      setIsVisible(true)
+    }
+
     window.addEventListener('mousemove', moveCursor)
     window.addEventListener('mouseover', handleMouseOver)
+    document.addEventListener('mouseleave', handleMouseLeave)
+    document.addEventListener('mouseenter', handleMouseEnter)
 
     return () => {
       window.removeEventListener('mousemove', moveCursor)
       window.removeEventListener('mouseover', handleMouseOver)
+      document.removeEventListener('mouseleave', handleMouseLeave)
+      document.removeEventListener('mouseenter', handleMouseEnter)
     }
-  }, [cursorX, cursorY])
+  }, [cursorX, cursorY, isVisible])
+
+  if (isTouchDevice || !isVisible) {
+    return null
+  }
 
   return (
     <motion.div
@@ -46,7 +74,7 @@ export default function CustomCursor() {
         top: -16,
       }}
       animate={{
-        scale: isHovering ? 2.5 : 1,
+        scale: isHovering ? 2.2 : 1,
         backgroundColor: isHovering ? 'rgba(31, 181, 173, 0.3)' : 'transparent',
       }}
     >

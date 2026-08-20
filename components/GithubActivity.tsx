@@ -167,7 +167,9 @@ export default function GithubActivity() {
           {Array.from({ length: 24 }).map((_, i) => (
             <div key={i} className="flex flex-col gap-1">
               {Array.from({ length: 7 }).map((_, j) => {
-                const opacity = Math.random() > 0.5 ? Math.random() : 0.1
+                // Deterministic pseudo-pattern based on grid coordinates to avoid SSR hydration mismatch
+                const pseudoSeed = ((i * 7 + j) * 17 + 23) % 100
+                const opacity = pseudoSeed > 65 ? (pseudoSeed / 100) : pseudoSeed > 35 ? 0.35 : 0.12
                 return (
                   <div
                     key={j}

@@ -21,15 +21,20 @@ export default function DistributedMeshCanvas() {
     if (!ctx) return
 
     let animationFrameId: number
-    let width = (canvas.width = canvas.parentElement?.clientWidth || window.innerWidth)
-    let height = (canvas.height = canvas.parentElement?.clientHeight || 600)
+    const container = canvas.parentElement || document.body
+    let width = (canvas.width = container.clientWidth || window.innerWidth)
+    let height = (canvas.height = container.clientHeight || 600)
 
-    const handleResize = () => {
-      if (!canvas || !canvas.parentElement) return
-      width = canvas.width = canvas.parentElement.clientWidth
-      height = canvas.height = canvas.parentElement.clientHeight
+    const updateSize = () => {
+      if (!canvas || !container) return
+      width = canvas.width = container.clientWidth || window.innerWidth
+      height = canvas.height = container.clientHeight || 600
     }
-    window.addEventListener('resize', handleResize)
+
+    const resizeObserver = new ResizeObserver(() => {
+      updateSize()
+    })
+    resizeObserver.observe(container)
 
     // Generate distributed graph nodes
     const nodeCount = Math.min(Math.floor(width / 32), 48)
@@ -56,7 +61,13 @@ export default function DistributedMeshCanvas() {
       mouseY = e.clientY - rect.top
     }
 
-    canvas.addEventListener('mousemove', handleMouseMove)
+    const handleMouseLeave = () => {
+      mouseX = -1000
+      mouseY = -1000
+    }
+
+    window.addEventListener('mousemove', handleMouseMove)
+    document.addEventListener('mouseleave', handleMouseLeave)
 
     const render = () => {
       ctx.clearRect(0, 0, width, height)
@@ -120,8 +131,9 @@ export default function DistributedMeshCanvas() {
     render()
 
     return () => {
-      window.removeEventListener('resize', handleResize)
-      canvas.removeEventListener('mousemove', handleMouseMove)
+      resizeObserver.disconnect()
+      window.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseleave', handleMouseLeave)
       cancelAnimationFrame(animationFrameId)
     }
   }, [])
@@ -129,7 +141,7 @@ export default function DistributedMeshCanvas() {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 pointer-events-auto opacity-60 z-0"
+      className="absolute inset-0 pointer-events-none opacity-60 z-0"
     />
   )
 }

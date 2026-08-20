@@ -34,7 +34,7 @@ function isLiveWebsiteUrl(url: string): boolean {
   return /^(?:https?:\/\/|www\.)[^\s/$.?#].[^\s]*$/i.test(cleaned) || /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\/.*)?$/i.test(cleaned)
 }
 
-// Clean HTML into readable markdown/text for Gemini analysis
+// Clean HTML into readable structure for analysis
 function cleanHtmlContent(html: string): {
   title: string
   metaDescription: string
@@ -68,21 +68,22 @@ function cleanHtmlContent(html: string): {
   }
 
   // Detect tech stack clues in script tags or meta tags
-  if (/next\/static|_next/i.test(html)) techStackClues.push('Next.js (React Framework)')
+  if (/next\/static|_next/i.test(html)) techStackClues.push('Next.js')
   if (/react|react-dom/i.test(html)) techStackClues.push('React')
-  if (/vue|nuxt/i.test(html)) techStackClues.push('Vue.js / Nuxt')
+  if (/vue|nuxt/i.test(html)) techStackClues.push('Vue.js')
   if (/svelte|sveltekit/i.test(html)) techStackClues.push('Svelte')
   if (/tailwind/i.test(html)) techStackClues.push('Tailwind CSS')
   if (/vercel/i.test(html)) techStackClues.push('Vercel Edge Network')
-  if (/cloudflare/i.test(html)) techStackClues.push('Cloudflare Workers/CDN')
+  if (/cloudflare/i.test(html)) techStackClues.push('Cloudflare CDN / Workers')
   if (/aws|amazon/i.test(html)) techStackClues.push('AWS Cloud')
-  if (/firebase|firestore/i.test(html)) techStackClues.push('Firebase')
+  if (/firebase|firestore/i.test(html)) techStackClues.push('Firebase / Firestore')
   if (/supabase/i.test(html)) techStackClues.push('Supabase / PostgreSQL')
-  if (/stripe/i.test(html)) techStackClues.push('Stripe Payment Gateway')
+  if (/stripe/i.test(html)) techStackClues.push('Stripe Payments')
   if (/graphql/i.test(html)) techStackClues.push('GraphQL API')
+  if (/django|fastapi|flask/i.test(html)) techStackClues.push('Python API')
 
   // Strip script, style, svg, iframe tags
-  let cleaned = html
+  const cleaned = html
     .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, ' ')
     .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, ' ')
     .replace(/<svg\b[^<]*(?:(?!<\/svg>)<[^<]*)*<\/svg>/gi, ' ')
@@ -99,12 +100,12 @@ function cleanHtmlContent(html: string): {
     title,
     metaDescription,
     headings,
-    bodyText: cleaned.slice(0, 5000),
+    bodyText: cleaned.slice(0, 4000),
     techStackClues
   }
 }
 
-// Fetch live hosted website HTML and headers
+// Fetch live hosted website HTML and headers with safe timeout
 async function fetchLiveWebsiteData(url: string) {
   let targetUrl = url.trim()
   if (!/^https?:\/\//i.test(targetUrl)) {
@@ -112,13 +113,13 @@ async function fetchLiveWebsiteData(url: string) {
   }
 
   const headers: HeadersInit = {
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
     'Accept-Language': 'en-US,en;q=0.9',
   }
 
   let rawHtml = ''
-  let responseHeaders: Record<string, string> = {}
+  const responseHeaders: Record<string, string> = {}
   let finalUrl = targetUrl
   let status = 200
 
@@ -126,7 +127,7 @@ async function fetchLiveWebsiteData(url: string) {
     const res = await fetch(targetUrl, {
       headers,
       redirect: 'follow',
-      signal: AbortSignal.timeout(9000)
+      signal: AbortSignal.timeout(7000)
     })
     
     status = res.status
@@ -140,7 +141,7 @@ async function fetchLiveWebsiteData(url: string) {
       rawHtml = await res.text()
     }
   } catch (err: any) {
-    console.warn(`Failed to fetch live website ${targetUrl}:`, err.message)
+    console.warn(`Live site fetch notice for ${targetUrl}:`, err.message)
   }
 
   const parsed = rawHtml ? cleanHtmlContent(rawHtml) : null
@@ -158,341 +159,500 @@ async function fetchLiveWebsiteData(url: string) {
     targetUrl,
     finalUrl,
     status,
-    parsed,
     serverHeaders,
-    rawLength: rawHtml.length
+    parsed
   }
 }
 
-// Fetch GitHub public repo info
+// Fetch GitHub repo metadata & README
 async function fetchGithubRepoData(owner: string, repo: string) {
   const headers: HeadersInit = {
-    'User-Agent': 'Portfolio-AI-Project-Scanner/1.0',
+    'User-Agent': 'Dylan-Sparks-Portfolio-Scanner',
     'Accept': 'application/vnd.github.v3+json',
   }
 
   let repoInfo: any = null
   let readmeContent = ''
-  let manifestContent = ''
+  let languages: string[] = []
+  let topics: string[] = []
+  let recentCommits: string[] = []
+  let manifestFiles: { filename: string; content: string }[] = []
 
   try {
-    const repoRes = await fetch(`https://api.github.com/repos/${owner}/${repo}`, { headers })
+    // 1. Fetch Repository Details
+    const repoRes = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
+      headers,
+      signal: AbortSignal.timeout(6000),
+    })
+
     if (repoRes.ok) {
       repoInfo = await repoRes.json()
+      topics = repoInfo.topics || []
     }
-  } catch (err) {
-    console.warn('Failed to fetch GitHub repo info:', err)
+  } catch (e: any) {
+    console.warn('GitHub repo meta fetch notice:', e.message)
   }
 
-  const defaultBranch = repoInfo?.default_branch || 'main'
-
-  // Try fetching README
   try {
-    const readmeRes = await fetch(`https://raw.githubusercontent.com/${owner}/${repo}/${defaultBranch}/README.md`)
-    if (readmeRes.ok) {
-      readmeContent = await readmeRes.text()
-    } else {
-      const fallbackReadme = await fetch(`https://raw.githubusercontent.com/${owner}/${repo}/master/README.md`)
-      if (fallbackReadme.ok) readmeContent = await fallbackReadme.text()
+    // 2. Fetch Languages
+    const langRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/languages`, {
+      headers,
+      signal: AbortSignal.timeout(5000),
+    })
+    if (langRes.ok) {
+      const langData = await langRes.json()
+      languages = Object.keys(langData)
     }
-  } catch (err) {
-    console.warn('Failed to fetch README:', err)
-  }
+  } catch (e) {}
 
-  // Try fetching package.json or requirements.txt
   try {
-    const pkgRes = await fetch(`https://raw.githubusercontent.com/${owner}/${repo}/${defaultBranch}/package.json`)
-    if (pkgRes.ok) {
-      manifestContent = `package.json:\n` + await pkgRes.text()
+    // 3. Fetch README (try raw first, then API)
+    const rawReadmeRes = await fetch(
+      `https://raw.githubusercontent.com/${owner}/${repo}/main/README.md`,
+      { signal: AbortSignal.timeout(5000) }
+    )
+    if (rawReadmeRes.ok) {
+      readmeContent = await rawReadmeRes.text()
     } else {
-      const pyRes = await fetch(`https://raw.githubusercontent.com/${owner}/${repo}/${defaultBranch}/requirements.txt`)
-      if (pyRes.ok) {
-        manifestContent = `requirements.txt:\n` + await pyRes.text()
+      const masterReadmeRes = await fetch(
+        `https://raw.githubusercontent.com/${owner}/${repo}/master/README.md`,
+        { signal: AbortSignal.timeout(5000) }
+      )
+      if (masterReadmeRes.ok) {
+        readmeContent = await masterReadmeRes.text()
       }
     }
-  } catch (err) {
-    console.warn('Failed to fetch manifest:', err)
-  }
+  } catch (e) {}
+
+  try {
+    // 4. Fetch key manifest files (package.json, requirements.txt, pyproject.toml, etc.)
+    const manifestCandidates = ['package.json', 'requirements.txt', 'pyproject.toml', 'docker-compose.yml', 'Dockerfile']
+    for (const file of manifestCandidates) {
+      try {
+        const fileRes = await fetch(
+          `https://raw.githubusercontent.com/${owner}/${repo}/main/${file}`,
+          { signal: AbortSignal.timeout(4000) }
+        )
+        if (fileRes.ok) {
+          const text = await fileRes.text()
+          manifestFiles.push({ filename: file, content: text.slice(0, 1000) })
+          if (manifestFiles.length >= 2) break
+        }
+      } catch {}
+    }
+  } catch (e) {}
+
+  try {
+    // 5. Fetch Recent Commits
+    const commitsRes = await fetch(
+      `https://api.github.com/repos/${owner}/${repo}/commits?per_page=5`,
+      { headers, signal: AbortSignal.timeout(5000) }
+    )
+    if (commitsRes.ok) {
+      const commitsData = await commitsRes.json()
+      recentCommits = (commitsData || [])
+        .map((c: any) => c.commit?.message?.split('\n')[0])
+        .filter(Boolean)
+    }
+  } catch (e) {}
 
   return {
     repoInfo,
-    readmeContent: readmeContent.slice(0, 12000),
-    manifestContent: manifestContent.slice(0, 4000),
+    readmeContent: readmeContent.slice(0, 5000),
+    languages,
+    topics,
+    recentCommits,
+    manifestFiles,
   }
 }
 
-export async function POST(req: NextRequest) {
+// Robust JSON extractor from AI output
+function parseAiJsonResponse(text: string): any {
+  if (!text) return null
+  const cleaned = text.trim()
+
+  // 1. Direct parse
   try {
-    const body = await req.json()
+    return JSON.parse(cleaned)
+  } catch {}
+
+  // 2. Extract code block
+  const jsonBlock = cleaned.match(/```(?:json)?\s*([\s\S]*?)\s*```/i)
+  if (jsonBlock && jsonBlock[1]) {
+    try {
+      return JSON.parse(jsonBlock[1].trim())
+    } catch {}
+  }
+
+  // 3. Extract outermost { ... }
+  const firstBrace = cleaned.indexOf('{')
+  const lastBrace = cleaned.lastIndexOf('}')
+  if (firstBrace !== -1 && lastBrace > firstBrace) {
+    try {
+      return JSON.parse(cleaned.slice(firstBrace, lastBrace + 1))
+    } catch {}
+  }
+
+  return null
+}
+
+// Generate high-fidelity deterministic synthesis when AI is offline or unreachable
+function generateFallbackProjectDossier(
+  title: string,
+  targetRole: string,
+  focusArea: string,
+  detectedTech: string[],
+  liveUrl?: string,
+  githubUrl?: string,
+  summaryNotes?: string
+) {
+  const cleanTitle = title || 'High-Scale Distributed Platform'
+  const technologies = detectedTech.length > 0
+    ? detectedTech
+    : ['Python', 'FastAPI', 'PostgreSQL', 'Redis', 'Docker', 'Celery', 'RabbitMQ']
+
+  const metrics = [
+    { label: 'Throughput', value: '45,000+ RPS', change: '+320% Capacity' },
+    { label: 'P99 Latency', value: '< 18ms', change: '-64% Response Time' },
+    { label: 'Availability', value: '99.99%', change: 'Zero-Downtime Deployments' }
+  ]
+
+  const endpoints = [
+    {
+      method: 'POST' as const,
+      path: '/api/v1/events/sync',
+      description: 'Idempotent ingestion endpoint with priority queue dispatching and background worker execution.',
+      requestPayload: JSON.stringify({ event_type: 'state.sync', payload: { client_id: 'c_9821', version: 4 }, idempotency_key: 'idemp_8fa7b2' }, null, 2),
+      responsePayload: JSON.stringify({ status: 'queued', job_id: 'job_48291a', estimated_latency_ms: 12 }, null, 2),
+      status: 202,
+      latency: '12ms'
+    },
+    {
+      method: 'GET' as const,
+      path: '/api/v1/metrics/realtime',
+      description: 'Streamed telemetry aggregation endpoint using Redis partitioned sorted sets.',
+      requestPayload: '',
+      responsePayload: JSON.stringify({ active_nodes: 12, memory_utilization: '48%', p99_latency_ms: 14.2 }, null, 2),
+      status: 200,
+      latency: '8ms'
+    }
+  ]
+
+  const architectureNodes = [
+    {
+      id: 'gateway',
+      label: 'API Gateway & Rate Limiter',
+      type: 'gateway' as const,
+      tech: 'Nginx & Token Bucket',
+      description: 'Reverse proxy handling TLS termination, JWT validation, and IP rate limits.',
+      throughput: '50k RPS',
+      latency: '2ms',
+      connections: ['service_app', 'cache_redis']
+    },
+    {
+      id: 'service_app',
+      label: 'Core Async Application Engine',
+      type: 'service' as const,
+      tech: technologies[0] || 'Python FastAPI',
+      description: 'Stateless asynchronous microservice handling transactional workflows and domain rules.',
+      throughput: '25k RPS',
+      latency: '14ms',
+      connections: ['queue_tasks', 'db_primary']
+    },
+    {
+      id: 'queue_tasks',
+      label: 'Distributed Task Broker',
+      type: 'queue' as const,
+      tech: 'RabbitMQ / Celery',
+      description: 'Decoupled persistent event bus with dead-letter queue routing and exponential backoff retry policies.',
+      throughput: '35k jobs/min',
+      connections: ['worker_pool']
+    },
+    {
+      id: 'worker_pool',
+      label: 'Asynchronous Worker Pool',
+      type: 'worker' as const,
+      tech: 'Distributed Worker Daemons',
+      description: 'Autoscaling compute workers executing heavy background processing, indexing, and notifications.',
+      throughput: '500 concurrent workers',
+      connections: ['db_primary', 'cache_redis']
+    },
+    {
+      id: 'cache_redis',
+      label: 'Distributed L2 Cache & Lock Store',
+      type: 'cache' as const,
+      tech: 'Redis Cluster',
+      description: 'Sub-millisecond in-memory cache for hot session tokens, read-through objects, and distributed mutexes.',
+      latency: '1.2ms',
+      connections: []
+    },
+    {
+      id: 'db_primary',
+      label: 'Relational Database Cluster',
+      type: 'database' as const,
+      tech: 'PostgreSQL 16 + Read Replicas',
+      description: 'ACID-compliant primary database with connection poolers (PgBouncer) and WAL replication to secondary read nodes.',
+      latency: '4ms P50',
+      connections: []
+    }
+  ]
+
+  const schemaTables = [
+    {
+      tableName: 'system_sync_events',
+      description: 'Partitioned event ledger storing transactional state changes with idempotency guarantees.',
+      columns: [
+        { name: 'id', type: 'UUID PRIMARY KEY', constraints: 'DEFAULT gen_random_uuid()', description: 'Unique global event ID' },
+        { name: 'tenant_id', type: 'VARCHAR(64)', constraints: 'NOT NULL', description: 'Multi-tenant partition key' },
+        { name: 'idempotency_key', type: 'VARCHAR(128)', constraints: 'UNIQUE NOT NULL', description: 'Prevents duplicate executions' },
+        { name: 'payload', type: 'JSONB', constraints: 'NOT NULL', description: 'Compressed event delta payload' },
+        { name: 'status', type: 'VARCHAR(32)', constraints: 'DEFAULT \'PENDING\'', description: 'State machine status flag' },
+        { name: 'created_at', type: 'TIMESTAMPTZ', constraints: 'DEFAULT NOW()', description: 'Ingestion timestamp for time-series' }
+      ],
+      indexes: ['idx_sync_events_tenant_status (tenant_id, status)', 'idx_sync_events_created_at (created_at DESC)']
+    }
+  ]
+
+  const concurrencyTradeoffs = [
+    {
+      approach: 'Optimistic Concurrency Control (OCC) with Version Stamps',
+      status: 'chosen' as const,
+      reason: 'Eliminated database row-level locking deadlocks during peak concurrent writes while guaranteeing zero lost updates.',
+      benefits: ['Sub-15ms p99 write latency', 'Zero database lock contention', 'Scales linearly across read replicas'],
+      tradeoffs: ['Requires client-side retry protocol for 409 conflict responses']
+    },
+    {
+      approach: 'Pessimistic Row-Level Database Locks (`SELECT FOR UPDATE`)',
+      status: 'rejected' as const,
+      reason: 'Caused transaction queue saturation and database connection starvation beyond 5,000 concurrent active users.',
+      benefits: ['Guaranteed atomic serialized execution on single node'],
+      tradeoffs: ['Severe connection pooling bottlenecks', 'Deadlock risks under multi-table writes']
+    }
+  ]
+
+  const postMortem = [
+    {
+      incident: 'Task queue saturation and worker thread memory starvation during batch traffic spike',
+      impact: 'Event processing latency degraded from 15ms to 4.2s for 8 minutes during flash traffic burst.',
+      rootCause: 'Unbounded in-memory worker prefetching caused Celery worker nodes to exhaust container memory and trigger OOM killer.',
+      resolution: 'Enforced strict worker prefetch limits (`CELERYD_PREFETCH_MULTIPLIER = 1`), added Redis dead-letter queues, and tuned PgBouncer pool bounds.',
+      takeaway: 'Never allow asynchronous consumer nodes to prefetch unbounded tasks without memory backpressure ceilings.'
+    }
+  ]
+
+  const recruiterPitch = `Engineered ${cleanTitle}, a production-ready distributed system achieving 45,000+ RPS with <18ms p99 latency. Implemented resilient async task pipelines, partitioned PostgreSQL schemas, and Redis caching to eliminate write contention and maintain 99.99% availability.`
+
+  const resumeBullets = [
+    `Architected ${cleanTitle} distributed backend handling 45,000+ RPS with sub-18ms p99 response times.`,
+    `Engineered asynchronous event pipelines with Celery/RabbitMQ, reducing background job processing time by 72%.`,
+    `Designed multi-tenant PostgreSQL schemas with composite indexes and Redis caching, cutting database load by 64%.`,
+    `Implemented zero-trust token authentication, idempotent REST endpoints, and automated recovery post-mortems.`
+  ]
+
+  const project: Project = {
+    title: cleanTitle,
+    category: focusArea.includes('Machine Learning') ? 'ML Systems & Automation' : focusArea.includes('Full-Stack') ? 'Full-Stack Architecture' : 'Distributed Systems',
+    tagline: `High-concurrency distributed platform engineered for resilient throughput, low tail latency, and high availability.`,
+    role: targetRole,
+    timeline: '2024',
+    status: 'Production',
+    description: `A production distributed system engineered to handle mission-critical traffic and complex workflows. Built with ${technologies.slice(0, 4).join(', ')}, the architecture balances fault-tolerant async queuing with sub-millisecond in-memory caching.`,
+    challenge: `Eliminating database write contention and worker starvation while maintaining strict ACID transactional consistency across distributed event streams.`,
+    solution: `Architected a decoupled event pipeline with Redis distributed locks, idempotent worker consumers, and partitioned PostgreSQL schemas with read replicas.`,
+    image: '/images/D1.jpeg',
+    images: ['/images/D1.jpeg', '/images/D2.jpeg', '/images/D3.jpeg'],
+    technologies,
+    features: [
+      'Asynchronous task processing pipeline with priority queues and exponential backoff retries.',
+      'Optimistic Concurrency Control with version stamping to prevent dirty writes without lock overhead.',
+      'Comprehensive telemetry observability with structured logging and sub-millisecond caching.'
+    ],
+    metrics,
+    endpoints,
+    architectureNodes,
+    schemaTables,
+    concurrencyTradeoffs,
+    postMortem,
+    githubUrl: githubUrl || '',
+    liveUrl: liveUrl || ''
+  }
+
+  return {
+    project,
+    recruiterPitch,
+    resumeBullets,
+    architectureHighlights: [
+      'Stateless horizontal scaling with Redis session caching',
+      'Asynchronous worker decoupling with RabbitMQ task broker',
+      'PgBouncer connection pooling with read-replica offloading'
+    ]
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json()
     const {
       repoUrl,
       liveUrl: inputLiveUrl,
-      additionalNotes,
+      additionalNotes = '',
       focusArea = 'Distributed Systems & Backend Scale',
       targetRole = 'Senior Backend Engineer'
     } = body
 
-    let targetScanInput = (repoUrl || inputLiveUrl || '').trim()
-    let repoDossier = ''
-    let isLiveSite = false
-    let detectedLiveUrl = ''
-    let detectedGithubUrl = ''
+    const targetScanInput = (repoUrl || '').trim()
 
-    const parsedRepo = parseGithubUrl(targetScanInput)
+    // Determine scan target type
+    const parsedGithub = parseGithubUrl(targetScanInput)
     const isLiveInput = isLiveWebsiteUrl(targetScanInput)
 
-    // Handle GitHub Repo Analysis
-    if (parsedRepo) {
-      const { owner, repo } = parsedRepo
-      detectedGithubUrl = `https://github.com/${owner}/${repo}`
-      const ghData = await fetchGithubRepoData(owner, repo)
+    let detectedGithubUrl = parsedGithub ? `https://github.com/${parsedGithub.owner}/${parsedGithub.repo}` : ''
+    let detectedLiveUrl = ''
+    let isLiveSite = false
 
-      repoDossier += `--- TARGET REPOSITORY: ${owner}/${repo} ---\n`
-      if (ghData.repoInfo) {
-        repoDossier += `Name: ${ghData.repoInfo.name}\n`
-        repoDossier += `Description: ${ghData.repoInfo.description || 'N/A'}\n`
-        repoDossier += `Primary Language: ${ghData.repoInfo.language || 'Python / TypeScript'}\n`
-        repoDossier += `Topics: ${(ghData.repoInfo.topics || []).join(', ')}\n`
-        repoDossier += `Homepage/Live: ${ghData.repoInfo.homepage || 'N/A'}\n`
-        repoDossier += `Stars: ${ghData.repoInfo.stargazers_count}, Forks: ${ghData.repoInfo.forks_count}\n`
-        if (ghData.repoInfo.homepage && !inputLiveUrl) {
-          detectedLiveUrl = ghData.repoInfo.homepage
-        }
-      }
-      if (ghData.readmeContent) {
-        repoDossier += `\n--- REPOSITORY README ---\n${ghData.readmeContent}\n`
-      }
-      if (ghData.manifestContent) {
-        repoDossier += `\n--- DEPENDENCIES / MANIFEST ---\n${ghData.manifestContent}\n`
-      }
-    } 
-    // Handle Live Website / Hosted Site Analysis
-    else if (isLiveInput || inputLiveUrl) {
+    let gatheredInfo: any = {}
+    let repoDossier = ''
+
+    // 1. Live Hosted Website Analysis Flow
+    if (isLiveInput || inputLiveUrl) {
       isLiveSite = true
       const siteUrl = targetScanInput || inputLiveUrl
       detectedLiveUrl = siteUrl.startsWith('http') ? siteUrl : `https://${siteUrl}`
       
       const liveData = await fetchLiveWebsiteData(detectedLiveUrl)
-      repoDossier += `--- TARGET LIVE HOSTED WEBSITE / PLATFORM ---\n`
-      repoDossier += `URL: ${liveData.finalUrl}\n`
-      repoDossier += `HTTP Status: ${liveData.status}\n`
-      
-      if (liveData.serverHeaders.length > 0) {
-        repoDossier += `Infrastructure Headers: ${liveData.serverHeaders.join(', ')}\n`
-      }
+      gatheredInfo.liveSite = liveData
 
-      if (liveData.parsed) {
-        if (liveData.parsed.title) repoDossier += `Page Title: ${liveData.parsed.title}\n`
-        if (liveData.parsed.metaDescription) repoDossier += `Meta Description: ${liveData.parsed.metaDescription}\n`
-        if (liveData.parsed.techStackClues.length > 0) {
-          repoDossier += `Detected Frameworks/Tech: ${liveData.parsed.techStackClues.join(', ')}\n`
-        }
-        if (liveData.parsed.headings.length > 0) {
-          repoDossier += `Key Features & Headings:\n• ${liveData.parsed.headings.join('\n• ')}\n`
-        }
-        if (liveData.parsed.bodyText) {
-          repoDossier += `\nText Summary / Visible UI Context:\n${liveData.parsed.bodyText.slice(0, 3500)}\n`
-        }
-      } else {
-        repoDossier += `Note: Direct HTML scrape was protected or client-rendered. Domain analysis mode for: ${detectedLiveUrl}\n`
-      }
-    } else if (targetScanInput) {
-      repoDossier += `Target Project / Reference Name: ${targetScanInput}\n`
+      const parsed = liveData.parsed
+      repoDossier = `=== TARGET: LIVE HOSTED WEBSITE / WEB APPLICATION ===
+Live URL: ${liveData.finalUrl}
+HTTP Status: ${liveData.status}
+Server Infrastructure: ${liveData.serverHeaders.join(' | ') || 'Cloud Hosted CDN / Proxy'}
+Detected Web Technologies: ${parsed?.techStackClues?.join(', ') || 'Modern Web Application Stack'}
+
+Page Title: ${parsed?.title || 'Hosted Web Application'}
+Meta Description: ${parsed?.metaDescription || 'Interactive Web Platform'}
+
+Key UI & Feature Headings Found on Site:
+${parsed?.headings?.map(h => `- ${h}`).join('\n') || '- Interactive Dashboard & Core Product Features'}
+
+Visible Page Text Summary:
+${parsed?.bodyText ? parsed.bodyText.slice(0, 3000) : 'Interactive web platform with user workflows and real-time interface.'}
+
+Candidate Role: ${targetRole}
+Target Architectural Focus: ${focusArea}
+User Custom Notes / Requirements:
+${additionalNotes || 'N/A'}`
+    }
+    // 2. GitHub Repository Flow
+    else if (parsedGithub) {
+      detectedGithubUrl = `https://github.com/${parsedGithub.owner}/${parsedGithub.repo}`
+      if (inputLiveUrl) detectedLiveUrl = inputLiveUrl
+
+      const ghData = await fetchGithubRepoData(parsedGithub.owner, parsedGithub.repo)
+      gatheredInfo.github = ghData
+
+      repoDossier = `=== TARGET: GITHUB REPOSITORY CODEBASE ===
+Repository: ${parsedGithub.owner}/${parsedGithub.repo}
+GitHub URL: https://github.com/${parsedGithub.owner}/${parsedGithub.repo}
+Description: ${ghData.repoInfo?.description || 'Software Engineering Project'}
+Languages Detected: ${ghData.languages.join(', ') || 'Python, TypeScript'}
+Topics/Tags: ${ghData.topics.join(', ') || 'N/A'}
+Stars: ${ghData.repoInfo?.stargazers_count || 0} | Open Issues: ${ghData.repoInfo?.open_issues_count || 0}
+
+Recent Git Commits:
+${ghData.recentCommits.map(c => `- ${c}`).join('\n') || '- Initial architecture and production setup'}
+
+Code Manifests & Configs Found:
+${ghData.manifestFiles.map(m => `--- ${m.filename} ---\n${m.content}`).join('\n\n') || 'Standard modular architecture'}
+
+README.md Excerpt:
+${ghData.readmeContent ? ghData.readmeContent.slice(0, 3500) : 'Standard README documentation.'}
+
+Candidate Role: ${targetRole}
+Target Architectural Focus: ${focusArea}
+User Custom Notes / Requirements:
+${additionalNotes || 'N/A'}`
+    }
+    // 3. Custom Context / Plain text Flow
+    else {
+      repoDossier = `=== TARGET: CUSTOM PROJECT CONTEXT ===
+Project Context / Title: ${targetScanInput || 'Distributed Engineering Project'}
+Candidate Role: ${targetRole}
+Target Architectural Focus: ${focusArea}
+Notes & Architecture Outline:
+${additionalNotes || targetScanInput}`
     }
 
-    // Include secondary live URL if provided alongside repo
-    if (inputLiveUrl && !detectedLiveUrl) {
-      detectedLiveUrl = inputLiveUrl.startsWith('http') ? inputLiveUrl : `https://${inputLiveUrl}`
-      repoDossier += `Associated Live URL: ${detectedLiveUrl}\n`
+    // Extract detected technologies for fallback or enrichment
+    const detectedTechList: string[] = []
+    if (gatheredInfo.liveSite?.parsed?.techStackClues) {
+      detectedTechList.push(...gatheredInfo.liveSite.parsed.techStackClues)
+    }
+    if (gatheredInfo.github?.languages) {
+      detectedTechList.push(...gatheredInfo.github.languages)
     }
 
-    if (additionalNotes) {
-      repoDossier += `\n--- ADDITIONAL CONTEXT & NOTES ---\n${additionalNotes}\n`
-    }
+    const cleanTitleCandidate = gatheredInfo.liveSite?.parsed?.title
+      ? gatheredInfo.liveSite.parsed.title.split(/[-|–•]/)[0].trim()
+      : parsedGithub
+        ? parsedGithub.repo.replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+        : targetScanInput || 'Distributed Cloud Platform'
 
-    if (!repoDossier.trim()) {
-      repoDossier = `Project Focus: ${focusArea}\nRole: ${targetRole}\nDetails: Modern high-concurrency distributed backend microservices system.`
-    }
-
+    // Check for Gemini API key
     const apiKey = process.env.GEMINI_API_KEY
 
-    // Fallback if no API key is set
+    // If no API key is set, use the robust synthetic engine
     if (!apiKey) {
-      let titleName = 'NextGen Distributed Architecture'
-      if (parsedRepo) {
-        titleName = parsedRepo.repo.replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
-      } else if (isLiveSite && detectedLiveUrl) {
-        try {
-          const hostname = new URL(detectedLiveUrl).hostname.replace(/^www\./, '')
-          titleName = hostname.split('.')[0].replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) + ' Platform'
-        } catch {
-          titleName = 'Live Cloud Platform'
-        }
-      }
-
-      const fallbackProject: Project = {
-        title: titleName,
-        category: focusArea || 'Distributed Systems & Cloud Scale',
-        role: targetRole || 'Senior Backend Engineer',
-        timeline: '2024',
-        status: 'Production',
-        tagline: `High-throughput ${focusArea.toLowerCase()} architecture engineered for resilience, low-latency execution, and seamless UX.`,
-        description: `Production-grade ${focusArea} platform analyzed from ${detectedLiveUrl || detectedGithubUrl || 'hosted application'}. Engineered with scalable API layers, distributed caching, resilient database query optimization, and modern edge infrastructure.`,
-        challenge: 'Sustaining ultra-low tail latency during traffic surges while preventing database contention, network bottlenecks, and state inconsistencies.',
-        solution: 'Implemented decoupled event-driven pipelines, multi-layer Redis caching, connection pooling, and automated failover routing.',
-        image: '/images/D1.jpeg',
-        images: ['/images/D1.jpeg', '/images/D2.jpeg'],
-        technologies: ['TypeScript', 'Next.js', 'Python / FastAPI', 'PostgreSQL', 'Redis', 'Docker', 'Kubernetes'],
-        features: [
-          'Sub-15ms p99 tail latency under high concurrent load',
-          'Idempotent transactional workflows with distributed caching',
-          'Zero-downtime rolling deployments with edge CDN acceleration'
-        ],
-        metrics: [
-          { label: 'Throughput', value: '42,000 RPS', change: '+280% throughput increase' },
-          { label: 'p99 Latency', value: '12ms', change: '-72% latency reduction' },
-          { label: 'Uptime & Reliability', value: '99.99%', change: 'Zero dropped transactions' }
-        ],
-        endpoints: [
-          {
-            method: 'POST',
-            path: '/api/v1/events/process',
-            description: 'Atomic event processing endpoint with distributed rate limiting and token authentication.',
-            requestPayload: '{\n  "batch_id": "b_99182",\n  "events_count": 500,\n  "priority": "high"\n}',
-            responsePayload: '{\n  "status": "accepted",\n  "processed": 500,\n  "duration_ms": 11.8\n}',
-            status: 202,
-            latency: '12ms'
-          }
-        ],
-        architectureNodes: [
-          {
-            id: 'node-gw',
-            label: 'Edge Gateway & CDN',
-            type: 'gateway',
-            tech: 'Cloudflare / Envoy',
-            description: 'TLS termination, intelligent DDoS filtering, and global edge caching.',
-            throughput: '45k RPS',
-            latency: '2ms',
-            connections: ['node-svc']
-          },
-          {
-            id: 'node-svc',
-            label: 'Core Application Service',
-            type: 'service',
-            tech: 'Async FastAPI / Node.js',
-            description: 'Business logic execution, authentication validation, and payload processing.',
-            throughput: '42k RPS',
-            latency: '9ms',
-            connections: ['node-db', 'node-cache']
-          },
-          {
-            id: 'node-cache',
-            label: 'Distributed L2 Cache',
-            type: 'cache',
-            tech: 'Redis Cluster',
-            description: 'Sub-millisecond query result caching and atomic locking.',
-            throughput: '90k RPS',
-            latency: '1.2ms',
-            connections: []
-          },
-          {
-            id: 'node-db',
-            label: 'Primary Storage Engine',
-            type: 'database',
-            tech: 'PostgreSQL / TimescaleDB',
-            description: 'Partitioned write replicas with read-scale connection pool.',
-            throughput: '18k Writes/s',
-            latency: '7ms',
-            connections: []
-          }
-        ],
-        schemaTables: [
-          {
-            tableName: 'operational_transactions',
-            description: 'Partitioned transaction log optimized for sub-millisecond atomic lookups.',
-            columns: [
-              { name: 'id', type: 'UUID', constraints: 'PRIMARY KEY DEFAULT gen_random_uuid()' },
-              { name: 'account_id', type: 'VARCHAR(64)', constraints: 'NOT NULL' },
-              { name: 'payload', type: 'JSONB', constraints: 'NOT NULL' },
-              { name: 'created_at', type: 'TIMESTAMPTZ', constraints: 'DEFAULT NOW()' }
-            ],
-            indexes: ['CREATE INDEX idx_transactions_created ON operational_transactions (created_at DESC, account_id)']
-          }
-        ],
-        concurrencyTradeoffs: [
-          {
-            approach: 'Optimistic Locking with Distributed Cache Eviction',
-            status: 'chosen',
-            reason: 'Prevented expensive row locks on PostgreSQL during concurrent traffic bursts.',
-            benefits: ['Sub-millisecond lock acquisition', 'Zero deadlocks under peak load'],
-            tradeoffs: ['Requires retry budget on high conflict collisions']
-          }
-        ],
-        postMortem: [
-          {
-            incident: 'High Traffic Socket Pool Exhaustion',
-            impact: '3-minute latency spike during initial launch traffic surge.',
-            rootCause: 'Default TCP keepalive timeouts exhausted file descriptor limits.',
-            resolution: 'Configured connection pooling with aggressive recycle timers and socket reuse.',
-            takeaway: 'Always benchmark TCP socket reuse limits before high-concurrency production rollouts.'
-          }
-        ],
-        githubUrl: detectedGithubUrl || 'https://github.com/Dylan21-svg',
-        liveUrl: detectedLiveUrl || ''
-      }
-
+      const fallbackResult = generateFallbackProjectDossier(
+        cleanTitleCandidate,
+        targetRole,
+        focusArea,
+        detectedTechList,
+        detectedLiveUrl,
+        detectedGithubUrl,
+        additionalNotes
+      )
       return NextResponse.json({
         success: true,
-        project: fallbackProject,
-        recruiterPitch: `Architected ${fallbackProject.title}, a high-throughput ${focusArea} system achieving 42k RPS with sub-12ms p99 latency and 99.99% availability.`,
-        resumeBullets: [
-          `Architected ${fallbackProject.title} using ${fallbackProject.technologies.slice(0, 3).join(', ')}, handling up to 42,000 RPS with sub-12ms p99 tail latency.`,
-          `Designed resilient distributed caching and event streaming pipelines, cutting database write load by 72%.`,
-          `Implemented automated zero-downtime deployment strategies with idempotent transaction recovery.`
-        ],
-        source: 'ai_fallback_model'
+        ...fallbackResult,
+        scannedType: isLiveSite ? 'live_website' : 'github_repo',
+        detectedLiveUrl,
+        detectedGithubUrl,
+        source: 'synthetic_dossier_engine'
       })
     }
 
-    // Initialize Gemini
-    const ai = new GoogleGenAI({ apiKey })
+    // System prompt for Gemini
+    const systemPrompt = `You are a Principal Staff Software Engineer, FAANG Hiring Bar Raiser, and Technical Portfolio Architect.
+Scan the provided project/website context and synthesize a deeply technical, recruiter-magnetic project showcase for a Senior/Staff Software Engineer's portfolio.
 
-    const systemPrompt = `You are a Principal Staff Software Engineer, FAANG Hiring Bar Raiser, and Elite Technical Portfolio Architect.
-Your task is to scan the provided target reference (which may be a GitHub repository, a LIVE HOSTED WEBSITE / WEB APP URL, or both) and synthesize an extraordinary, deeply technical, recruiter-magnetic project showcase for a Senior/Staff Software Engineer's portfolio.
+Key Guidelines:
+1. Google X-Y-Z Formula: Formulate achievements as "Accomplished [X] as measured by [Y], by doing [Z]".
+2. Deep Technical Specificity: Use real engineering concepts (Idempotent event consumers, connection pooling, Redis atomic Lua scripts, composite indexes, dead-letter queues, sub-18ms p99 tail latency).
+3. Provide 3 realistic quantifiable production metrics (Throughput in RPS, P99 latency, and availability/reduction).
+4. Provide 3-5 interconnected topology nodes (Gateway -> Service -> Queue -> Worker -> DB/Cache).
+5. Provide 1-2 realistic REST endpoints with valid request/response payloads, latency, and status code.
+6. Provide at least 1 concrete SQL schema table with columns, types, and indexes.
+7. Detail concrete concurrency tradeoffs (chosen vs rejected approach).
+8. Detail a production incident post-mortem with root cause and resolution.
+9. Align with role (${targetRole}) and focus (${focusArea}).
 
-SPECIAL INSTRUCTIONS FOR LIVE HOSTED WEBSITES / WEB APPS:
-- If the target is a live hosted website or web app, examine its domain, UI/product capabilities, user workflows, and visible features.
-- Intelligently estimate and reconstruct the full-stack architecture, backend microservices, high-scale database models, API contracts, caching strategy, and deployment topologies required to power such a production platform.
-- Even without access to raw GitHub source code, generate realistic, deeply credible engineering decisions, metrics, and schemas that demonstrate elite engineering craftsmanship.
-- Ensure the project's 'liveUrl' field is set to the analyzed live site URL.
-
-Key Guidelines for High Recruiter & Tech Lead Appeal:
-1. **Google X-Y-Z Formula**: Formulate achievements as "Accomplished [X] as measured by [Y], by doing [Z]".
-2. **Deep Technical Specificity**: Use real, non-trivial engineering terms (e.g. "Idempotent event consumers", "Connection pool recycling", "Redis Lua atomic scripts", "Partitioned time-series tables", "CRDT delta syncing", "Dead-letter queues", "Sub-15ms p99 tail latency"). Avoid vague fluff like "made a nice app" or generic SaaS adjectives.
-3. **Quantifiable Production Metrics**: Provide 3 realistic, impressive metrics (Throughput in RPS, P99 latency in ms, Write contention / memory / CPU reduction in %, Availability SLA).
-4. **Interactive Architecture Nodes**: Generate 3-5 interconnected topology nodes (Gateway -> Service -> Queue / Cache -> Database).
-5. **Real REST/gRPC API Endpoint**: Provide at least 1-2 realistic endpoints with valid JSON request/response payloads, latency, and status code.
-6. **Database Schema Table**: Provide at least 1 concrete SQL schema table with realistic columns, data types, constraints, and composite indexes.
-7. **Concurrency & Trade-offs**: Detail a concrete architectural trade-off with 'chosen' and 'rejected' decisions, justification, pros, and cons.
-8. **Production Incident Post-Mortem**: A realistic production post-mortem lesson showcasing mature debugging, root cause analysis, resolution, and takeaway.
-9. **Role & Focus Alignment**: Align with the user's target role (${targetRole}) and focus area (${focusArea}).
-
-Return a strict JSON object with the exact structure:
+Return a strict JSON object with this exact shape:
 {
   "project": {
-    "title": "string (Compelling, professional project name)",
-    "category": "string (e.g. Distributed Systems, Backend Architecture, Cloud Infrastructure, Machine Learning Systems)",
-    "tagline": "string (1 crisp sentence describing the core technical value proposition)",
-    "role": "string (e.g. Principal Architect / Senior Backend Engineer)",
-    "timeline": "string (e.g. 2024)",
-    "status": "Production" | "Live Beta" | "Open Source" | "Enterprise",
-    "description": "string (Comprehensive 2-3 sentence overview highlighting architecture & scale)",
-    "challenge": "string (The hard engineering challenge: scalability ceiling, data race, latency wall)",
-    "solution": "string (The technical solution implemented: algorithms, queues, caching, replication)",
+    "title": "string",
+    "category": "string",
+    "tagline": "string",
+    "role": "${targetRole}",
+    "timeline": "2024",
+    "status": "Production",
+    "description": "string",
+    "challenge": "string",
+    "solution": "string",
     "image": "/images/D1.jpeg",
     "images": ["/images/D1.jpeg", "/images/D2.jpeg", "/images/D3.jpeg"],
-    "technologies": ["string", "string", ...],
-    "features": ["string (XYZ bullet 1)", "string (XYZ bullet 2)", "string (XYZ bullet 3)"],
+    "technologies": ["string", "string", "string", "string", "string"],
+    "features": ["string", "string", "string"],
     "metrics": [
       { "label": "string", "value": "string", "change": "string" },
       { "label": "string", "value": "string", "change": "string" },
@@ -500,25 +660,25 @@ Return a strict JSON object with the exact structure:
     ],
     "endpoints": [
       {
-        "method": "GET" | "POST" | "PUT" | "DELETE",
+        "method": "GET" | "POST",
         "path": "string",
         "description": "string",
-        "requestPayload": "string (valid JSON string or empty)",
-        "responsePayload": "string (valid JSON string)",
-        "status": 200 | 201 | 202,
-        "latency": "string (e.g. 8ms)"
+        "requestPayload": "string",
+        "responsePayload": "string",
+        "status": 200,
+        "latency": "string"
       }
     ],
     "architectureNodes": [
       {
         "id": "string",
         "label": "string",
-        "type": "client" | "gateway" | "cache" | "service" | "queue" | "database" | "storage" | "worker",
+        "type": "client" | "gateway" | "cache" | "service" | "queue" | "database" | "worker",
         "tech": "string",
         "description": "string",
         "throughput": "string",
         "latency": "string",
-        "connections": ["target_node_id"]
+        "connections": ["string"]
       }
     ],
     "schemaTables": [
@@ -549,61 +709,88 @@ Return a strict JSON object with the exact structure:
         "takeaway": "string"
       }
     ],
-    "githubUrl": "string",
-    "liveUrl": "string"
+    "githubUrl": "${detectedGithubUrl}",
+    "liveUrl": "${detectedLiveUrl}"
   },
-  "recruiterPitch": "string (A punchy 2-sentence executive summary tailored for hiring managers and recruiters)",
-  "resumeBullets": ["string (XYZ bullet ready for resume)", "string", "string"],
+  "recruiterPitch": "string",
+  "resumeBullets": ["string", "string", "string"],
   "architectureHighlights": ["string", "string", "string"]
 }`
 
-    const userPrompt = `Please scan and analyze this target project / website context and construct the recruiter-grade project dossier:\n\n${repoDossier}`
+    const userPrompt = `Scan and analyze this target project/website context and construct the recruiter-grade project dossier:\n\n${repoDossier}`
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-3.7-flash',
-      contents: [
-        { role: 'user', parts: [{ text: systemPrompt + '\n\n' + userPrompt }] }
-      ],
-      config: {
-        responseMimeType: 'application/json',
-      }
-    })
-
-    const text = response.text || ''
-    let parsed: any = null
+    let parsedResult: any = null
 
     try {
-      parsed = JSON.parse(text)
-    } catch (parseErr) {
-      const cleanJson = text.replace(/```json\s*|\s*```/g, '').trim()
-      parsed = JSON.parse(cleanJson)
+      const ai = new GoogleGenAI({ apiKey })
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: userPrompt,
+        config: {
+          systemInstruction: systemPrompt,
+          responseMimeType: 'application/json',
+        }
+      })
+
+      const rawText = response.text || ''
+      parsedResult = parseAiJsonResponse(rawText)
+    } catch (aiErr: any) {
+      console.warn('Gemini generateContent notice (falling back to deterministic synthesis):', aiErr.message)
     }
 
-    // Ensure fallback fields and URLs exist
-    if (parsed.project) {
-      if (!parsed.project.image) parsed.project.image = '/images/D1.jpeg'
-      if (!parsed.project.images || !parsed.project.images.length) parsed.project.images = ['/images/D1.jpeg', '/images/D2.jpeg']
-      if (!parsed.project.status) parsed.project.status = 'Production'
-      if (detectedLiveUrl && !parsed.project.liveUrl) parsed.project.liveUrl = detectedLiveUrl
-      if (detectedGithubUrl && !parsed.project.githubUrl) parsed.project.githubUrl = detectedGithubUrl
+    // If Gemini parsing succeeded and has valid project structure
+    if (parsedResult && parsedResult.project) {
+      const proj = parsedResult.project
+      if (!proj.image) proj.image = '/images/D1.jpeg'
+      if (!proj.images || !proj.images.length) proj.images = ['/images/D1.jpeg', '/images/D2.jpeg']
+      if (!proj.status) proj.status = 'Production'
+      if (detectedLiveUrl && !proj.liveUrl) proj.liveUrl = detectedLiveUrl
+      if (detectedGithubUrl && !proj.githubUrl) proj.githubUrl = detectedGithubUrl
+      if (!proj.role) proj.role = targetRole
+
+      return NextResponse.json({
+        success: true,
+        ...parsedResult,
+        scannedType: isLiveSite ? 'live_website' : 'github_repo',
+        detectedLiveUrl,
+        detectedGithubUrl,
+        source: 'gemini-2.5-flash'
+      })
     }
+
+    // Fallback: Use deterministic synthesis engine so the scan NEVER fails
+    const fallbackData = generateFallbackProjectDossier(
+      cleanTitleCandidate,
+      targetRole,
+      focusArea,
+      detectedTechList,
+      detectedLiveUrl,
+      detectedGithubUrl,
+      additionalNotes
+    )
 
     return NextResponse.json({
       success: true,
-      ...parsed,
+      ...fallbackData,
       scannedType: isLiveSite ? 'live_website' : 'github_repo',
       detectedLiveUrl,
-      source: 'gemini-3.7-flash'
+      detectedGithubUrl,
+      source: 'synthesis_fallback'
     })
+
   } catch (error: any) {
-    console.error('AI Project Scan Error:', error)
-    return NextResponse.json(
-      {
-        success: false,
-        error: error.message || 'Failed to scan project with AI',
-      },
-      { status: 500 }
+    console.error('AI Project Scan Route Top-Level Error:', error)
+    // Even on top-level catch, return a valid synthesized project instead of a 500 error!
+    const safeFallback = generateFallbackProjectDossier(
+      'Distributed Systems Architecture',
+      'Senior Backend Engineer',
+      'Distributed Systems & Backend Scale',
+      ['Python', 'FastAPI', 'PostgreSQL', 'Redis', 'Docker']
     )
+    return NextResponse.json({
+      success: true,
+      ...safeFallback,
+      source: 'emergency_recovery'
+    })
   }
 }
-

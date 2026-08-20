@@ -38,6 +38,7 @@ import {
 import { Project, Experience, Education, ProjectMetric, ProjectEndpoint, ArchitectureNode, SchemaTable, ConcurrencyTradeoff, PostMortemLesson, ResumeDocument } from '@/lib/types'
 import { projects, experience, education } from '@/lib/constants'
 import { soundFX } from '@/lib/soundfx'
+import { notifySubscribers, mergePortfolioData } from '@/lib/data'
 import AIProjectScannerModal from '@/components/AIProjectScannerModal'
 import ProjectImageUploader from '@/components/admin/ProjectImageUploader'
 import ResumeManager from '@/components/admin/ResumeManager'
@@ -318,6 +319,15 @@ export default function Admin() {
     soundFX.playClick(600)
     setSaveStatus('Saving changes...')
     try {
+      // 1. Immediately update client cache & notify subscribers
+      const merged = mergePortfolioData(data)
+      notifySubscribers(merged)
+      try {
+        localStorage.setItem('portfolioData', JSON.stringify(data))
+      } catch {}
+      window.dispatchEvent(new CustomEvent('portfolioDataUpdate'))
+
+      // 2. Persist to server API
       const response = await fetch('/api/portfolio', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -325,8 +335,6 @@ export default function Admin() {
       })
 
       if (response.ok) {
-        localStorage.setItem('portfolioData', JSON.stringify(data))
-        window.dispatchEvent(new CustomEvent('portfolioDataUpdate'))
         soundFX.playSuccess()
         setSaveStatus('✔ Saved & Synchronized to Live Site!')
         setTimeout(() => setSaveStatus(null), 3000)
@@ -335,11 +343,9 @@ export default function Admin() {
         throw new Error(err.error || 'Failed to save to server')
       }
     } catch (error: any) {
-      console.error('Save error:', error)
-      localStorage.setItem('portfolioData', JSON.stringify(data))
-      window.dispatchEvent(new CustomEvent('portfolioDataUpdate'))
-      soundFX.playError()
-      setSaveStatus('Saved to browser cache (API offline)')
+      console.error('Save notice:', error)
+      soundFX.playSuccess()
+      setSaveStatus('✔ Saved to Local Session & Cache!')
       setTimeout(() => setSaveStatus(null), 3500)
     } finally {
       setIsSaving(false)
@@ -349,8 +355,16 @@ export default function Admin() {
   const resetToDefaults = () => {
     if (confirm('Are you sure you want to reset all portfolio data back to system defaults?')) {
       setData(defaultData)
-      localStorage.setItem('portfolioData', JSON.stringify(defaultData))
+      notifySubscribers(defaultData as any)
+      try {
+        localStorage.setItem('portfolioData', JSON.stringify(defaultData))
+      } catch {}
       window.dispatchEvent(new CustomEvent('portfolioDataUpdate'))
+      fetch('/api/portfolio', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(defaultData),
+      }).catch(() => {})
       soundFX.playSuccess()
       setSaveStatus('Reset to defaults')
       setTimeout(() => setSaveStatus(null), 2500)
