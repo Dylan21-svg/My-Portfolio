@@ -112,22 +112,6 @@ export default function AdminLogin() {
             </button>
           </form>
         </div>
-        
-        <div className="mt-6 text-center space-y-2">
-          <p className="text-text-gray/70 text-xs">
-            Default Login: <code className="text-primary bg-primary/10 px-1.5 py-0.5 rounded font-mono">chediland266@gmail.com</code> / <code className="text-primary bg-primary/10 px-1.5 py-0.5 rounded font-mono">#Dawson21</code>
-          </p>
-          <button
-            type="button"
-            onClick={() => {
-              setEmail('chediland266@gmail.com')
-              setPassword('#Dawson21')
-            }}
-            className="text-xs text-primary/80 hover:text-primary underline cursor-pointer"
-          >
-            Auto-fill credentials
-          </button>
-        </div>
       </motion.div>
     </div>
   )

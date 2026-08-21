@@ -72,7 +72,14 @@
         "title": "Senior Backend & Distributed Systems Engineer",
         "company": "SAMITECH Corporation",
         "description": "Architecting resilient asynchronous event pipelines, multi-tenant databases, and high-concurrency microservices with Python and Docker.",
-        "skills": ["Python", "FastAPI", "PostgreSQL", "Redis", "Docker", "RabbitMQ"],
+        "skills": [
+          "Python",
+          "FastAPI",
+          "PostgreSQL",
+          "Redis",
+          "Docker",
+          "RabbitMQ"
+        ],
         "highlights": [
           "Engineered distributed queuing architecture handling 50,000+ jobs/min with 99.98% uptime SLA.",
           "Cut database query P99 latency by 64% through index re-architecting, read-replicas, and Redis caching.",
@@ -84,7 +91,14 @@
         "title": "Full Stack Backend Developer",
         "company": "StartupXYZ / Freelance",
         "description": "Designed and deployed backend infrastructure and APIs for 5+ early-stage MVPs across fintech, logistics, and education.",
-        "skills": ["Python", "Django", "Node.js", "PostgreSQL", "Celery", "AWS"],
+        "skills": [
+          "Python",
+          "Django",
+          "Node.js",
+          "PostgreSQL",
+          "Celery",
+          "AWS"
+        ],
         "highlights": [
           "Built real-time order tracking and settlement pipelines with Stripe and automated webhook dunning.",
           "Designed relational schemas and wrote migration pipelines for over 250,000 active records.",
@@ -96,7 +110,13 @@
         "title": "Junior Software Developer",
         "company": "WebSolutions Ltd.",
         "description": "Maintained legacy backend services, integrated third-party REST APIs, and authored comprehensive unit test suites.",
-        "skills": ["Python", "Flask", "MySQL", "Git", "REST APIs"],
+        "skills": [
+          "Python",
+          "Flask",
+          "MySQL",
+          "Git",
+          "REST APIs"
+        ],
         "highlights": [
           "Refactored legacy monolithic endpoints into modular blueprints, improving test coverage from 35% to 88%.",
           "Automated daily database backups and transactional snapshot validation routines."
@@ -133,15 +153,26 @@
         "solution": "Architected a deterministic Priority-Queue delta sync protocol over WebSockets with Conflict-Free Replicated Data Types (CRDTs) and local IndexedDB fallback, paired with a containerized Python/Wasm runtime.",
         "architecture": "FastAPI microservices gateway with PostgreSQL write-ahead delta logs, Redis cache layer for active session state, and Dockerized worker pools for isolated code execution.",
         "metrics": [
-          { "label": "Data Overhead Reduction", "value": "98%", "change": "vs standard REST" },
-          { "label": "P99 Execution Latency", "value": "<28ms", "change": "offline evaluation" },
-          { "label": "Zero-Collision Sync", "value": "100%", "change": "CRDT verified" }
+          {
+            "label": "Data Overhead Reduction",
+            "value": "98%",
+            "change": "vs standard REST"
+          },
+          {
+            "label": "P99 Execution Latency",
+            "value": "<28ms",
+            "change": "offline evaluation"
+          },
+          {
+            "label": "Zero-Collision Sync",
+            "value": "100%",
+            "change": "CRDT verified"
+          }
         ],
-        "image": "/images/D1.jpeg",
+        "image": "/images/codeforge.png",
         "images": [
-          "/images/D1.jpeg",
-          "/images/D2.jpeg",
-          "/images/D3.jpeg"
+          "/images/codeforge.png",
+          "/images/codeforge.jpg"
         ],
         "technologies": [
           "Python",
@@ -187,7 +218,9 @@
             "tech": "TypeScript / IndexedDB / WebWorker",
             "description": "Buffers local operations, computes CRDT deltas, and updates local state optimistically with zero network wait.",
             "latency": "0.4ms",
-            "connections": ["gateway"]
+            "connections": [
+              "gateway"
+            ]
           },
           {
             "id": "gateway",
@@ -197,7 +230,10 @@
             "description": "Terminates bidirectional WebSocket connections, handles token verification, and broadcasts state deltas.",
             "throughput": "18,000 req/s",
             "latency": "2.1ms",
-            "connections": ["redis_state", "delta_service"]
+            "connections": [
+              "redis_state",
+              "delta_service"
+            ]
           },
           {
             "id": "redis_state",
@@ -216,7 +252,10 @@
             "tech": "Python 3.11 / Rust FFI",
             "description": "Applies commutative CRDT merge operations, resolves concurrent vector timestamps, and computes canonical AST.",
             "latency": "6.2ms",
-            "connections": ["pg_deltas", "sandbox_queue"]
+            "connections": [
+              "pg_deltas",
+              "sandbox_queue"
+            ]
           },
           {
             "id": "pg_deltas",
@@ -235,7 +274,9 @@
             "tech": "RabbitMQ Priority Queue",
             "description": "Routes user code execution requests to isolated worker pools with per-tenant rate-limiting and priority QoS.",
             "throughput": "8,000 msgs/s",
-            "connections": ["docker_workers"]
+            "connections": [
+              "docker_workers"
+            ]
           },
           {
             "id": "docker_workers",
@@ -252,12 +293,39 @@
             "tableName": "sync_deltas",
             "description": "Append-only distributed log storing serialized CRDT state transitions per workspace.",
             "columns": [
-              { "name": "id", "type": "UUID PRIMARY KEY", "constraints": "DEFAULT gen_random_uuid()", "description": "Global unique delta identifier" },
-              { "name": "workspace_id", "type": "UUID NOT NULL", "constraints": "REFERENCES workspaces(id) ON DELETE CASCADE", "description": "Foreign key to active workspace" },
-              { "name": "client_id", "type": "VARCHAR(64) NOT NULL", "description": "Originating client actor ID" },
-              { "name": "vector_clock", "type": "JSONB NOT NULL", "description": "Lamport/Vector timestamp map for causality ordering" },
-              { "name": "operation_payload", "type": "BYTEA NOT NULL", "description": "Binary-encoded Protobuf CRDT operation payload" },
-              { "name": "created_at", "type": "TIMESTAMPTZ NOT NULL", "constraints": "DEFAULT NOW()", "description": "Server ingest timestamp" }
+              {
+                "name": "id",
+                "type": "UUID PRIMARY KEY",
+                "constraints": "DEFAULT gen_random_uuid()",
+                "description": "Global unique delta identifier"
+              },
+              {
+                "name": "workspace_id",
+                "type": "UUID NOT NULL",
+                "constraints": "REFERENCES workspaces(id) ON DELETE CASCADE",
+                "description": "Foreign key to active workspace"
+              },
+              {
+                "name": "client_id",
+                "type": "VARCHAR(64) NOT NULL",
+                "description": "Originating client actor ID"
+              },
+              {
+                "name": "vector_clock",
+                "type": "JSONB NOT NULL",
+                "description": "Lamport/Vector timestamp map for causality ordering"
+              },
+              {
+                "name": "operation_payload",
+                "type": "BYTEA NOT NULL",
+                "description": "Binary-encoded Protobuf CRDT operation payload"
+              },
+              {
+                "name": "created_at",
+                "type": "TIMESTAMPTZ NOT NULL",
+                "constraints": "DEFAULT NOW()",
+                "description": "Server ingest timestamp"
+              }
             ],
             "indexes": [
               "CREATE INDEX idx_deltas_workspace_clock ON sync_deltas (workspace_id, created_at DESC)",
@@ -268,12 +336,36 @@
             "tableName": "execution_audits",
             "description": "Telemetry and security logs for containerized code execution workloads.",
             "columns": [
-              { "name": "job_id", "type": "UUID PRIMARY KEY", "description": "Task execution UUID" },
-              { "name": "user_id", "type": "UUID NOT NULL", "description": "Submitting user account" },
-              { "name": "runtime_lang", "type": "VARCHAR(32)", "description": "e.g. python3.11, rust1.75" },
-              { "name": "execution_time_ms", "type": "REAL NOT NULL", "description": "Total CPU execution time in ms" },
-              { "name": "memory_peak_kb", "type": "INTEGER NOT NULL", "description": "Peak RSS memory usage" },
-              { "name": "exit_code", "type": "SMALLINT NOT NULL", "description": "Sandbox exit status code (0 = success)" }
+              {
+                "name": "job_id",
+                "type": "UUID PRIMARY KEY",
+                "description": "Task execution UUID"
+              },
+              {
+                "name": "user_id",
+                "type": "UUID NOT NULL",
+                "description": "Submitting user account"
+              },
+              {
+                "name": "runtime_lang",
+                "type": "VARCHAR(32)",
+                "description": "e.g. python3.11, rust1.75"
+              },
+              {
+                "name": "execution_time_ms",
+                "type": "REAL NOT NULL",
+                "description": "Total CPU execution time in ms"
+              },
+              {
+                "name": "memory_peak_kb",
+                "type": "INTEGER NOT NULL",
+                "description": "Peak RSS memory usage"
+              },
+              {
+                "name": "exit_code",
+                "type": "SMALLINT NOT NULL",
+                "description": "Sandbox exit status code (0 = success)"
+              }
             ],
             "indexes": [
               "CREATE INDEX idx_exec_user_time ON execution_audits (user_id, execution_time_ms)"
@@ -299,8 +391,13 @@
             "approach": "Operational Transformation (OT) with Centralized Coordinator",
             "status": "rejected",
             "reason": "Requires high-frequency synchronous round-trips to an authoritative coordinator. In emerging markets with 300ms+ jitter and 15% packet loss, user typing stalled constantly.",
-            "benefits": ["Slightly smaller payload footprints"],
-            "tradeoffs": ["Severely degraded UX on slow networks", "Central coordinator becomes single point of failure under load"]
+            "benefits": [
+              "Slightly smaller payload footprints"
+            ],
+            "tradeoffs": [
+              "Severely degraded UX on slow networks",
+              "Central coordinator becomes single point of failure under load"
+            ]
           }
         ],
         "postMortem": [
@@ -328,15 +425,28 @@
         "solution": "Built an event-driven Celery & Redis pub/sub processing pipeline with automated dunning sequences, predictive churn classification, and idempotent Stripe webhook handlers.",
         "architecture": "Event-driven asynchronous architecture: FastAPI API layer, Celery distributed worker cluster, Redis stream ingestion buffer, PostgreSQL analytical warehouse with Stripe & CRM connectors.",
         "metrics": [
-          { "label": "Recovered Revenue", "value": "$1.4M+", "change": "across client tenants" },
-          { "label": "Event Ingestion Rate", "value": "45k/min", "change": "zero dropped webhooks" },
-          { "label": "Churn Prediction Accuracy", "value": "91.4%", "change": "ML AUC score" }
+          {
+            "label": "Recovered Revenue",
+            "value": "$1.4M+",
+            "change": "across client tenants"
+          },
+          {
+            "label": "Event Ingestion Rate",
+            "value": "45k/min",
+            "change": "zero dropped webhooks"
+          },
+          {
+            "label": "Churn Prediction Accuracy",
+            "value": "91.4%",
+            "change": "ML AUC score"
+          }
         ],
-        "image": "/images/D2.jpeg",
+        "image": "/images/reveneuarchitect.png",
         "images": [
-          "/images/D2.jpeg",
-          "/images/D3.jpeg",
-          "/images/D4.jpeg"
+          "/images/reveneuarchitect.png",
+          "/images/revenuearchitect.png",
+          "/images/reveneuarchitect.jpg",
+          "/images/revenuearchitect.jpg"
         ],
         "technologies": [
           "Python",
@@ -382,7 +492,9 @@
             "tech": "HTTPS Inbound Webhook Dispatcher",
             "description": "High-volume billing events: invoices, disputes, subscriptions, and card expiration telemetry.",
             "throughput": "45,000 events/min",
-            "connections": ["ingress_gateway"]
+            "connections": [
+              "ingress_gateway"
+            ]
           },
           {
             "id": "ingress_gateway",
@@ -391,7 +503,10 @@
             "tech": "FastAPI Async Ingest Controller",
             "description": "Validates cryptographic signatures (HMAC SHA-256) and performs atomic deduplication against Redis cache.",
             "latency": "3.4ms",
-            "connections": ["redis_idempotency", "celery_broker"]
+            "connections": [
+              "redis_idempotency",
+              "celery_broker"
+            ]
           },
           {
             "id": "redis_idempotency",
@@ -409,7 +524,10 @@
             "tech": "Redis Streams / Celery 5.3",
             "description": "Dispatches asynchronous dunning workflows, payment retries, and customer notifications into priority queues.",
             "throughput": "25,000 msgs/s",
-            "connections": ["celery_workers", "ml_pipeline"]
+            "connections": [
+              "celery_workers",
+              "ml_pipeline"
+            ]
           },
           {
             "id": "celery_workers",
@@ -417,7 +535,9 @@
             "type": "worker",
             "tech": "Python Multiprocessing Workers",
             "description": "Executes smart retry schedules, generates custom recovery invoices, and interfaces with SMS/email gateways.",
-            "connections": ["postgres_warehouse"]
+            "connections": [
+              "postgres_warehouse"
+            ]
           },
           {
             "id": "ml_pipeline",
@@ -426,7 +546,9 @@
             "tech": "Scikit-Learn / XGBoost Daemon",
             "description": "Calculates churn probability scores based on billing delinquency, product engagement, and support ticket sentiment.",
             "latency": "45ms",
-            "connections": ["postgres_warehouse"]
+            "connections": [
+              "postgres_warehouse"
+            ]
           },
           {
             "id": "postgres_warehouse",
@@ -443,13 +565,40 @@
             "tableName": "billing_events",
             "description": "Immutable ledger of all received billing webhooks with processing status and retry metadata.",
             "columns": [
-              { "name": "id", "type": "UUID PRIMARY KEY", "constraints": "DEFAULT gen_random_uuid()" },
-              { "name": "event_id", "type": "VARCHAR(128) UNIQUE NOT NULL", "description": "Stripe/Provider unique event ID for idempotency" },
-              { "name": "tenant_id", "type": "UUID NOT NULL", "description": "Tenant owner organization" },
-              { "name": "event_type", "type": "VARCHAR(64) NOT NULL", "description": "e.g. invoice.payment_failed" },
-              { "name": "payload", "type": "JSONB NOT NULL", "description": "Sanitized raw JSON payload" },
-              { "name": "status", "type": "VARCHAR(32) NOT NULL", "description": "queued | processed | failed" },
-              { "name": "retry_count", "type": "INTEGER DEFAULT 0" }
+              {
+                "name": "id",
+                "type": "UUID PRIMARY KEY",
+                "constraints": "DEFAULT gen_random_uuid()"
+              },
+              {
+                "name": "event_id",
+                "type": "VARCHAR(128) UNIQUE NOT NULL",
+                "description": "Stripe/Provider unique event ID for idempotency"
+              },
+              {
+                "name": "tenant_id",
+                "type": "UUID NOT NULL",
+                "description": "Tenant owner organization"
+              },
+              {
+                "name": "event_type",
+                "type": "VARCHAR(64) NOT NULL",
+                "description": "e.g. invoice.payment_failed"
+              },
+              {
+                "name": "payload",
+                "type": "JSONB NOT NULL",
+                "description": "Sanitized raw JSON payload"
+              },
+              {
+                "name": "status",
+                "type": "VARCHAR(32) NOT NULL",
+                "description": "queued | processed | failed"
+              },
+              {
+                "name": "retry_count",
+                "type": "INTEGER DEFAULT 0"
+              }
             ],
             "indexes": [
               "CREATE UNIQUE INDEX idx_billing_event_id ON billing_events (event_id)",
@@ -460,12 +609,31 @@
             "tableName": "churn_forecasts",
             "description": "ML-generated churn risk scores and recommended recovery interventions.",
             "columns": [
-              { "name": "id", "type": "UUID PRIMARY KEY" },
-              { "name": "tenant_id", "type": "UUID NOT NULL" },
-              { "name": "customer_id", "type": "VARCHAR(64) NOT NULL" },
-              { "name": "churn_risk_score", "type": "NUMERIC(4,3) NOT NULL", "description": "Probability score 0.000 to 1.000" },
-              { "name": "expected_loss_usd", "type": "NUMERIC(10,2) NOT NULL" },
-              { "name": "recommended_action", "type": "TEXT" }
+              {
+                "name": "id",
+                "type": "UUID PRIMARY KEY"
+              },
+              {
+                "name": "tenant_id",
+                "type": "UUID NOT NULL"
+              },
+              {
+                "name": "customer_id",
+                "type": "VARCHAR(64) NOT NULL"
+              },
+              {
+                "name": "churn_risk_score",
+                "type": "NUMERIC(4,3) NOT NULL",
+                "description": "Probability score 0.000 to 1.000"
+              },
+              {
+                "name": "expected_loss_usd",
+                "type": "NUMERIC(10,2) NOT NULL"
+              },
+              {
+                "name": "recommended_action",
+                "type": "TEXT"
+              }
             ],
             "indexes": [
               "CREATE INDEX idx_churn_tenant_score ON churn_forecasts (tenant_id, churn_risk_score DESC)"
@@ -490,8 +658,12 @@
             "approach": "Synchronous Database Unique Key Constraint Handling",
             "status": "rejected",
             "reason": "Caused database lock waits and deadlock errors during large batch billing events at the start of each month.",
-            "benefits": ["Simpler code structure"],
-            "tradeoffs": ["High DB connection pool exhaustion under 10k+ concurrent webhook bursts"]
+            "benefits": [
+              "Simpler code structure"
+            ],
+            "tradeoffs": [
+              "High DB connection pool exhaustion under 10k+ concurrent webhook bursts"
+            ]
           }
         ],
         "postMortem": [
@@ -519,15 +691,26 @@
         "solution": "Engineered distributed atomic inventory reservation in Redis via Lua scripts, backed by RabbitMQ asynchronous order queues and PostgreSQL read-replicas.",
         "architecture": "Multi-tier microservices: Flask API gateway, Redis distributed lock manager, RabbitMQ message broker, PostgreSQL transactional cluster, and Prometheus/Grafana real-time metrics telemetry.",
         "metrics": [
-          { "label": "Peak Throughput", "value": "12,500+", "change": "req/sec during flash sales" },
-          { "label": "Overselling Incidents", "value": "0", "change": "100% atomic locks" },
-          { "label": "P99 Checkout Latency", "value": "42ms", "change": "under max load" }
+          {
+            "label": "Peak Throughput",
+            "value": "12,500+",
+            "change": "req/sec during flash sales"
+          },
+          {
+            "label": "Overselling Incidents",
+            "value": "0",
+            "change": "100% atomic locks"
+          },
+          {
+            "label": "P99 Checkout Latency",
+            "value": "42ms",
+            "change": "under max load"
+          }
         ],
-        "image": "/images/D3.jpeg",
+        "image": "/images/velora.png",
         "images": [
-          "/images/D3.jpeg",
-          "/images/D4.jpeg",
-          "/images/D1.jpeg"
+          "/images/velora.png",
+          "/images/velora.jpg"
         ],
         "technologies": [
           "Python",
@@ -573,7 +756,9 @@
             "tech": "Mobile & Web Shoppers",
             "description": "Surges of up to 15,000 concurrent users clicking 'Buy Now' within 10 seconds of a drop.",
             "throughput": "15,000 users",
-            "connections": ["api_gateway"]
+            "connections": [
+              "api_gateway"
+            ]
           },
           {
             "id": "api_gateway",
@@ -582,7 +767,10 @@
             "tech": "Python Flask / Gevent async workers",
             "description": "Validates cart tokens, applies rate limits via token-bucket algorithm, and initiates inventory reservation.",
             "latency": "4.2ms",
-            "connections": ["redis_lua", "rabbitmq_orders"]
+            "connections": [
+              "redis_lua",
+              "rabbitmq_orders"
+            ]
           },
           {
             "id": "redis_lua",
@@ -601,7 +789,9 @@
             "tech": "RabbitMQ Quorum Queues",
             "description": "Buffers order creation payloads with persistent disk durability to decouple checkout from database writes.",
             "throughput": "12,000 msgs/s",
-            "connections": ["order_workers"]
+            "connections": [
+              "order_workers"
+            ]
           },
           {
             "id": "order_workers",
@@ -610,7 +800,9 @@
             "tech": "Python Async Task Workers",
             "description": "Charges tokenized cards and writes finalized orders in batch transactions to PostgreSQL.",
             "latency": "35ms",
-            "connections": ["postgres_orders"]
+            "connections": [
+              "postgres_orders"
+            ]
           },
           {
             "id": "postgres_orders",
@@ -627,10 +819,24 @@
             "tableName": "sku_inventory",
             "description": "Authoritative database inventory balance synced with Redis cache buffers.",
             "columns": [
-              { "name": "sku_id", "type": "VARCHAR(64) PRIMARY KEY", "description": "Unique product SKU code" },
-              { "name": "total_stock", "type": "INTEGER NOT NULL CHECK (total_stock >= 0)" },
-              { "name": "allocated_stock", "type": "INTEGER NOT NULL DEFAULT 0" },
-              { "name": "version", "type": "INTEGER NOT NULL DEFAULT 1", "description": "Optimistic concurrency control version tag" }
+              {
+                "name": "sku_id",
+                "type": "VARCHAR(64) PRIMARY KEY",
+                "description": "Unique product SKU code"
+              },
+              {
+                "name": "total_stock",
+                "type": "INTEGER NOT NULL CHECK (total_stock >= 0)"
+              },
+              {
+                "name": "allocated_stock",
+                "type": "INTEGER NOT NULL DEFAULT 0"
+              },
+              {
+                "name": "version",
+                "type": "INTEGER NOT NULL DEFAULT 1",
+                "description": "Optimistic concurrency control version tag"
+              }
             ],
             "indexes": [
               "CREATE INDEX idx_inventory_lookup ON sku_inventory (sku_id, allocated_stock)"
@@ -640,12 +846,30 @@
             "tableName": "orders",
             "description": "Finalized order transactions with payment status and idempotency keys.",
             "columns": [
-              { "name": "id", "type": "UUID PRIMARY KEY DEFAULT gen_random_uuid()" },
-              { "name": "cart_id", "type": "VARCHAR(64) UNIQUE NOT NULL" },
-              { "name": "total_cents", "type": "INTEGER NOT NULL" },
-              { "name": "payment_ref", "type": "VARCHAR(128) NOT NULL" },
-              { "name": "status", "type": "VARCHAR(32) NOT NULL DEFAULT 'confirmed'" },
-              { "name": "created_at", "type": "TIMESTAMPTZ DEFAULT NOW()" }
+              {
+                "name": "id",
+                "type": "UUID PRIMARY KEY DEFAULT gen_random_uuid()"
+              },
+              {
+                "name": "cart_id",
+                "type": "VARCHAR(64) UNIQUE NOT NULL"
+              },
+              {
+                "name": "total_cents",
+                "type": "INTEGER NOT NULL"
+              },
+              {
+                "name": "payment_ref",
+                "type": "VARCHAR(128) NOT NULL"
+              },
+              {
+                "name": "status",
+                "type": "VARCHAR(32) NOT NULL DEFAULT 'confirmed'"
+              },
+              {
+                "name": "created_at",
+                "type": "TIMESTAMPTZ DEFAULT NOW()"
+              }
             ],
             "indexes": [
               "CREATE INDEX idx_orders_created ON orders (created_at DESC)"
@@ -670,8 +894,12 @@
             "approach": "PostgreSQL 'SELECT ... FOR UPDATE' Row Locking",
             "status": "rejected",
             "reason": "Under 2,000+ concurrent requests on the same SKU, PostgreSQL transaction queues exploded, driving P99 checkout latency over 4,500ms and exhausting connection pools.",
-            "benefits": ["Single source of truth without caching"],
-            "tradeoffs": ["Severe database deadlocks and timeouts during high-traffic drops"]
+            "benefits": [
+              "Single source of truth without caching"
+            ],
+            "tradeoffs": [
+              "Severe database deadlocks and timeouts during high-traffic drops"
+            ]
           }
         ],
         "postMortem": [
@@ -685,6 +913,583 @@
         ],
         "liveUrl": "https://velora-store.com",
         "githubUrl": "https://github.com/Dylan21-svg/velora-store"
+      },
+      {
+        "id": "netcom237",
+        "title": "NetCom 237",
+        "tagline": "High-Speed Telecommunications & Fiber Network Solutions Portal",
+        "category": "Network Infrastructure & Web Systems",
+        "role": "Full-Stack & Systems Infrastructure Engineer",
+        "timeline": "2024",
+        "status": "Live",
+        "description": "A modern customer portal and network services platform for NetCom 237, delivering seamless broadband package subscriptions, client account routing, and high-availability service provisioning across Cameroon.",
+        "challenge": "ISP customers experienced friction navigating complex bandwidth packages, tracking billing status, and requesting real-time fiber installations across regional hubs.",
+        "solution": "Engineered an interactive, high-performance web platform featuring automated package selectors, instant customer query dispatch, and responsive regional infrastructure mapping.",
+        "architecture": "Fast client-side React frontend paired with asynchronous API endpoints for automated inquiry intake, customer notification webhooks, and secure cloud deployment on Vercel.",
+        "metrics": [
+          {
+            "label": "Lighthouse Score",
+            "value": "98/100",
+            "change": "optimized assets"
+          },
+          {
+            "label": "Inquiry Conversion",
+            "value": "+45%",
+            "change": "via streamlined UX"
+          },
+          {
+            "label": "Page Load Time",
+            "value": "<1.2s",
+            "change": "edge-cached assets"
+          }
+        ],
+        "image": "/images/netcom237.png",
+        "images": [
+          "/images/netcom237.png",
+          "/images/netcom237.jpg"
+        ],
+        "technologies": [
+          "React",
+          "TypeScript",
+          "Tailwind CSS",
+          "Vite",
+          "REST APIs",
+          "Vercel"
+        ],
+        "features": [
+          "Modern responsive UI showcasing high-speed fiber & residential broadband plans",
+          "Automated customer onboarding and package subscription inquiry pipeline",
+          "Integrated real-time support widget and contact routing",
+          "Mobile-optimized performance with edge caching"
+        ],
+        "endpoints": [
+          {
+            "method": "POST",
+            "path": "/api/v1/inquiry/submit",
+            "description": "Process customer package subscription request and territory coverage check",
+            "requestPayload": "{\n  \"customerName\": \"Emmanuel N.\",\n  \"email\": \"emmanuel@example.cm\",\n  \"packageId\": \"fiber_pro_50mbps\",\n  \"city\": \"Douala\"\n}",
+            "responsePayload": "{\n  \"status\": \"received\",\n  \"inquiryRef\": \"NC-2026-8812\",\n  \"coverageStatus\": \"available\",\n  \"dispatchEta\": \"24-48h\"\n}",
+            "status": 200,
+            "latency": "16ms"
+          }
+        ],
+        "architectureNodes": [
+          {
+            "id": "client_portal",
+            "label": "Client Portal PWA",
+            "type": "client",
+            "tech": "React 18 / TypeScript / Tailwind CSS",
+            "description": "Lightweight client interface with offline asset caching and instant package calculation.",
+            "latency": "0.8ms",
+            "connections": [
+              "edge_cdn"
+            ]
+          },
+          {
+            "id": "edge_cdn",
+            "label": "Edge Network & API Router",
+            "type": "gateway",
+            "tech": "Vercel Edge Functions",
+            "description": "Terminates HTTPS requests at closest POP and routes customer inquiries to CRM webhooks.",
+            "throughput": "5,000 req/s",
+            "latency": "12ms",
+            "connections": [
+              "inquiry_db"
+            ]
+          },
+          {
+            "id": "inquiry_db",
+            "label": "Inquiry Ledger & Coverage Store",
+            "type": "database",
+            "tech": "PostgreSQL / Prisma",
+            "description": "Maintains subscriber leads, coverage heatmaps, and technician dispatch queues.",
+            "connections": []
+          }
+        ],
+        "schemaTables": [
+          {
+            "tableName": "network_packages",
+            "description": "Broadband and dedicated fiber subscription tiers.",
+            "columns": [
+              {
+                "name": "id",
+                "type": "VARCHAR(32) PRIMARY KEY",
+                "description": "e.g. fiber_ultra_100"
+              },
+              {
+                "name": "name",
+                "type": "VARCHAR(128) NOT NULL"
+              },
+              {
+                "name": "speed_down_mbps",
+                "type": "INTEGER NOT NULL"
+              },
+              {
+                "name": "price_xaf",
+                "type": "INTEGER NOT NULL"
+              }
+            ],
+            "indexes": [
+              "CREATE INDEX idx_packages_speed ON network_packages (speed_down_mbps)"
+            ]
+          }
+        ],
+        "concurrencyTradeoffs": [
+          {
+            "approach": "Edge-Cached Static Front-End with Serverless Ingest",
+            "status": "chosen",
+            "reason": "Allows instantaneous page rendering across mobile networks while handling traffic surges during promotion campaigns effortlessly.",
+            "benefits": [
+              "Sub-second initial contentful paint",
+              "Zero server maintenance overhead"
+            ],
+            "tradeoffs": [
+              "Dynamic database queries require edge API hops"
+            ]
+          }
+        ],
+        "postMortem": [
+          {
+            "incident": "High initial image payload on 3G connections",
+            "impact": "LCP reached 3.4s on low-tier mobile networks.",
+            "rootCause": "Uncompressed banner assets loaded synchronously before critical CSS.",
+            "resolution": "Implemented WebP/AVIF automated conversion and lazy-loading with responsive image `srcset`.",
+            "takeaway": "Always optimize and compress visual assets for real-world mobile bandwidth."
+          }
+        ],
+        "liveUrl": "https://www.netcom237.com/",
+        "githubUrl": "https://github.com/Dylan21-svg/netcom237"
+      },
+      {
+        "id": "samitech237",
+        "title": "SamiTech Corporation",
+        "tagline": "Enterprise Software Solutions, Cloud Infrastructure & Cybersecurity",
+        "category": "Enterprise Software & Cybersecurity",
+        "role": "Chief Operating Officer & Senior Backend Architect",
+        "timeline": "2023 - Present",
+        "status": "Live",
+        "description": "The corporate digital headquarters and enterprise solutions platform for SAMITECH Corporation, showcasing enterprise software engineering, distributed systems consulting, and cybersecurity auditing services.",
+        "challenge": "Communicating complex technical consulting services, cybersecurity compliance standards, and multi-disciplinary engineering capabilities to global enterprise clients.",
+        "solution": "Developed an authoritative, high-performance corporate platform with interactive service architectures, automated consultation booking, and seamless multi-channel lead routing.",
+        "architecture": "Modular React/TypeScript frontend with modern design language, integrated with automated booking webhooks, CRM synchronization, and cybersecurity service cataloging.",
+        "metrics": [
+          {
+            "label": "Enterprise Inquiries",
+            "value": "+120%",
+            "change": "quarter-over-quarter"
+          },
+          {
+            "label": "Global Reach",
+            "value": "15+ Countries",
+            "change": "client base expansion"
+          },
+          {
+            "label": "Core Web Vitals",
+            "value": "100%",
+            "change": "performance score"
+          }
+        ],
+        "image": "/images/samitech237.png",
+        "images": [
+          "/images/samitech237.png",
+          "/images/samitech237.jpg"
+        ],
+        "technologies": [
+          "React",
+          "TypeScript",
+          "Python",
+          "FastAPI",
+          "Docker",
+          "Tailwind CSS"
+        ],
+        "features": [
+          "Comprehensive service portfolio covering custom backend software, cloud DevOps, and cyber defense",
+          "Automated client consultation scheduler and security audit request workflow",
+          "Dynamic case studies and technical capabilities showcase",
+          "Secure API-driven contact intake with spam prevention"
+        ],
+        "endpoints": [
+          {
+            "method": "POST",
+            "path": "/api/v1/consultation/book",
+            "description": "Schedule executive technical architecture or cybersecurity audit session",
+            "requestPayload": "{\n  \"company\": \"FinTech Group Africa\",\n  \"email\": \"cto@fintech.africa\",\n  \"service\": \"cybersecurity_audit\",\n  \"preferredDate\": \"2026-09-10\"\n}",
+            "responsePayload": "{\n  \"bookingId\": \"SMT-9921\",\n  \"status\": \"confirmed\",\n  \"calendarInviteSent\": true\n}",
+            "status": 200,
+            "latency": "22ms"
+          }
+        ],
+        "architectureNodes": [
+          {
+            "id": "corporate_web",
+            "label": "Corporate Platform Web Application",
+            "type": "client",
+            "tech": "React 18 / TypeScript / Vite",
+            "description": "High-contrast enterprise branding with interactive service blueprints.",
+            "connections": [
+              "samitech_gateway"
+            ]
+          },
+          {
+            "id": "samitech_gateway",
+            "label": "SamiTech API Microservices Gateway",
+            "type": "gateway",
+            "tech": "FastAPI ASGI Server",
+            "description": "Handles consultation scheduling, audit request sanitization, and automated CRM notifications.",
+            "connections": [
+              "audit_db"
+            ]
+          },
+          {
+            "id": "audit_db",
+            "label": "Enterprise Client Ledger",
+            "type": "database",
+            "tech": "PostgreSQL with AES Encryption",
+            "description": "Encrypted enterprise lead records and consultation booking schedules.",
+            "connections": []
+          }
+        ],
+        "schemaTables": [
+          {
+            "tableName": "client_consultations",
+            "description": "Scheduled technical architecture consultations and audit briefs.",
+            "columns": [
+              {
+                "name": "id",
+                "type": "UUID PRIMARY KEY",
+                "constraints": "DEFAULT gen_random_uuid()"
+              },
+              {
+                "name": "company_name",
+                "type": "VARCHAR(255) NOT NULL"
+              },
+              {
+                "name": "service_type",
+                "type": "VARCHAR(64) NOT NULL"
+              },
+              {
+                "name": "status",
+                "type": "VARCHAR(32) DEFAULT 'pending'"
+              }
+            ],
+            "indexes": [
+              "CREATE INDEX idx_consultations_status ON client_consultations (status)"
+            ]
+          }
+        ],
+        "concurrencyTradeoffs": [
+          {
+            "approach": "Asynchronous Event Dispatch for Consultation Booking",
+            "status": "chosen",
+            "reason": "Prevents third-party CRM webhook delays from blocking user UI confirmation.",
+            "benefits": [
+              "Sub-30ms client acknowledgment",
+              "Resilient background retries"
+            ],
+            "tradeoffs": [
+              "Requires worker process for outbound notification delivery"
+            ]
+          }
+        ],
+        "postMortem": [
+          {
+            "incident": "Spam submission spike on contact forms",
+            "impact": "Dozens of automated crawler submissions flooded the booking inbox.",
+            "rootCause": "Missing honeypot validation and client-side rate limiting.",
+            "resolution": "Implemented invisible honeypot fields and IP-based token-bucket rate limiting.",
+            "takeaway": "Always harden public lead generation endpoints with multi-layer spam prevention."
+          }
+        ],
+        "liveUrl": "https://samitech237.com/",
+        "githubUrl": "https://github.com/Dylan21-svg/samitech237"
+      },
+      {
+        "id": "sa-bookkeeping",
+        "title": "Sea Digital Wealth & Bookkeeping",
+        "tagline": "Automated Digital Wealth Academy & Professional Financial Bookkeeping",
+        "category": "Fintech & Business Operations",
+        "role": "Lead Full-Stack Solutions Engineer",
+        "timeline": "2024",
+        "status": "Live",
+        "description": "A dual-purpose financial technology and educational hub offering small business bookkeeping management alongside structured digital wealth academy programs.",
+        "challenge": "Balancing two distinct user journeys — business owners seeking hands-off monthly bookkeeping and students enrolling in digital wealth automation courses.",
+        "solution": "Designed a bifurcated conversion architecture with dedicated client intake pathways, automated onboarding sequences, and integrated financial consulting booking.",
+        "architecture": "Modern React framework with Cardo display typography, streamlined enrollment forms, automated Stripe/payment webhook connectors, and client intake portals.",
+        "metrics": [
+          {
+            "label": "Client Onboarding Time",
+            "value": "-60%",
+            "change": "automated intake"
+          },
+          {
+            "label": "Academy Enrollees",
+            "value": "500+",
+            "change": "active students"
+          },
+          {
+            "label": "Bookkeeping Clients",
+            "value": "50+",
+            "change": "managed portfolios"
+          }
+        ],
+        "image": "/images/sa-bookkeeping.png",
+        "images": [
+          "/images/sa-bookkeeping.png",
+          "/images/sa-bookkeeping.jpg"
+        ],
+        "technologies": [
+          "React",
+          "TypeScript",
+          "Tailwind CSS",
+          "Fintech APIs",
+          "Vercel"
+        ],
+        "features": [
+          "Dual-path customer portal for academy students and bookkeeping business clients",
+          "Interactive financial service tier comparisons and ROI calculators",
+          "Streamlined appointment scheduling and client document upload intake",
+          "Responsive layout with accessible typography"
+        ],
+        "endpoints": [
+          {
+            "method": "POST",
+            "path": "/api/v1/onboarding/start",
+            "description": "Initialize bookkeeping client onboarding questionnaire and intake",
+            "requestPayload": "{\n  \"businessName\": \"Apex Retail LLC\",\n  \"monthlyExpenses\": 25000,\n  \"software\": \"QuickBooks Online\"\n}",
+            "responsePayload": "{\n  \"status\": \"created\",\n  \"portalToken\": \"sec_tok_99120a\",\n  \"recommendedTier\": \"Growth Care\"\n}",
+            "status": 201,
+            "latency": "19ms"
+          }
+        ],
+        "architectureNodes": [
+          {
+            "id": "sa_web",
+            "label": "Sea Digital Academy & Bookkeeping Web",
+            "type": "client",
+            "tech": "React / TypeScript / Tailwind",
+            "description": "High-conversion landing pages with dual-track enrollment pathways.",
+            "connections": [
+              "sa_api"
+            ]
+          },
+          {
+            "id": "sa_api",
+            "label": "Intake & Webhook Gateway",
+            "type": "gateway",
+            "tech": "Node.js Serverless API",
+            "description": "Validates enrollment inputs and coordinates automated onboarding emails.",
+            "connections": [
+              "sa_storage"
+            ]
+          },
+          {
+            "id": "sa_storage",
+            "label": "Client & Student Database",
+            "type": "database",
+            "tech": "PostgreSQL Cloud Database",
+            "description": "Secure storage for student enrollments and business financial intakes.",
+            "connections": []
+          }
+        ],
+        "schemaTables": [
+          {
+            "tableName": "academy_enrollments",
+            "description": "Student registrations for wealth academy curriculum tracks.",
+            "columns": [
+              {
+                "name": "id",
+                "type": "UUID PRIMARY KEY DEFAULT gen_random_uuid()"
+              },
+              {
+                "name": "student_email",
+                "type": "VARCHAR(255) NOT NULL"
+              },
+              {
+                "name": "track_name",
+                "type": "VARCHAR(128) NOT NULL"
+              },
+              {
+                "name": "payment_status",
+                "type": "VARCHAR(32) DEFAULT 'paid'"
+              }
+            ],
+            "indexes": [
+              "CREATE INDEX idx_enrollment_email ON academy_enrollments (student_email)"
+            ]
+          }
+        ],
+        "concurrencyTradeoffs": [
+          {
+            "approach": "Dual-Funnel State Machine with Instant Validation",
+            "status": "chosen",
+            "reason": "Prevents confusion between students and bookkeeping clients by strictly isolating form states.",
+            "benefits": [
+              "Frictionless conversion rates",
+              "Clean CRM contact categorization"
+            ],
+            "tradeoffs": [
+              "Requires maintaining two distinct funnel analytics paths"
+            ]
+          }
+        ],
+        "postMortem": [
+          {
+            "incident": "Delayed intake notification during peak launch webinar",
+            "impact": "15 students did not receive immediate academy credentials on checkout.",
+            "rootCause": "Email API rate quota was exceeded during sudden enrollment surge.",
+            "resolution": "Implemented asynchronous Redis-backed message queue with exponential retry backoff.",
+            "takeaway": "Always buffer external notification dispatches during live promotional events."
+          }
+        ],
+        "liveUrl": "https://sa-bookkeeping.com/",
+        "githubUrl": "https://github.com/Dylan21-svg/sa-bookkeeping"
+      },
+      {
+        "id": "rare-beauty-by-anne",
+        "title": "Rare Beauty by Anne",
+        "tagline": "Luxury Raw Virgin Hair Extensions, Salon Booking & Boutique E-Commerce",
+        "category": "E-Commerce & Salon Management",
+        "role": "Full-Stack Web Architect",
+        "timeline": "2024",
+        "status": "Live",
+        "description": "Premier luxury e-commerce and salon reservation boutique in Buea, Cameroon by Stylist Anna, offering 100% raw virgin hair bundles, Swiss HD lace installations, wig revamps, and designer fashion.",
+        "challenge": "Local clients in Southwest Cameroon required effortless mobile browsing with direct WhatsApp concierge ordering, real-time product catalogs, and local appointment scheduling without payment friction.",
+        "solution": "Built an ultra-fast, mobile-first luxury catalog with one-click direct WhatsApp cart dispatch, location-based local SEO rich snippets, and interactive product galleries.",
+        "architecture": "High-performance React/Vite single-page application with JSON-LD LocalBusiness schemas, optimized image galleries with lazy loading, and direct WhatsApp order payload generator.",
+        "metrics": [
+          {
+            "label": "WhatsApp Conversions",
+            "value": "+180%",
+            "change": "via 1-click ordering"
+          },
+          {
+            "label": "Mobile Page Speed",
+            "value": "99/100",
+            "change": "optimized bundles"
+          },
+          {
+            "label": "Local Search Rank",
+            "value": "#1 Salon",
+            "change": "Buea, Cameroon"
+          }
+        ],
+        "image": "/images/rarebeauty.png",
+        "images": [
+          "/images/rarebeauty.png",
+          "/images/rarebeauty.jpg"
+        ],
+        "technologies": [
+          "React",
+          "TypeScript",
+          "Tailwind CSS",
+          "WhatsApp API",
+          "Vercel"
+        ],
+        "features": [
+          "Direct 1-click WhatsApp cart generator with automatic SKU & bundle pre-filling",
+          "Interactive hair texture & length selector with real-time currency calculation",
+          "Salon appointment reservation system for custom wig installs and styling",
+          "Local SEO schema optimization for Cameroon geographic search discovery"
+        ],
+        "endpoints": [
+          {
+            "method": "POST",
+            "path": "/api/v1/booking/reserve",
+            "description": "Reserve luxury wig revamp or salon installation slot",
+            "requestPayload": "{\n  \"clientName\": \"Brenda T.\",\n  \"phone\": \"+237653848822\",\n  \"service\": \"Swiss HD Wig Install\",\n  \"preferredDate\": \"2026-08-28\"\n}",
+            "responsePayload": "{\n  \"status\": \"reserved\",\n  \"bookingCode\": \"RBA-7712\",\n  \"whatsappNotificationUrl\": \"https://wa.me/237653848822?text=...\"\n}",
+            "status": 200,
+            "latency": "14ms"
+          }
+        ],
+        "architectureNodes": [
+          {
+            "id": "boutique_pwa",
+            "label": "Rare Beauty Mobile PWA",
+            "type": "client",
+            "tech": "React 18 / Tailwind / Vite",
+            "description": "Optimized mobile boutique with smooth touch transitions and lazy image carousels.",
+            "latency": "0.5ms",
+            "connections": [
+              "whatsapp_dispatch"
+            ]
+          },
+          {
+            "id": "whatsapp_dispatch",
+            "label": "WhatsApp Business Concierge Dispatch",
+            "type": "gateway",
+            "tech": "WhatsApp URI Generator & Webhook",
+            "description": "Encodes cart selection into pre-formatted WhatsApp chat payloads for instantaneous salon booking.",
+            "connections": [
+              "catalog_cache"
+            ]
+          },
+          {
+            "id": "catalog_cache",
+            "label": "Edge Product Catalog Store",
+            "type": "cache",
+            "tech": "Edge-Cached Static Catalog",
+            "description": "Serves product inventory, length pricing, and hair care guides with zero backend latency.",
+            "connections": []
+          }
+        ],
+        "schemaTables": [
+          {
+            "tableName": "salon_products",
+            "description": "Hair extensions, lace frontals, and luxury beauty accessories.",
+            "columns": [
+              {
+                "name": "sku",
+                "type": "VARCHAR(64) PRIMARY KEY"
+              },
+              {
+                "name": "title",
+                "type": "VARCHAR(255) NOT NULL"
+              },
+              {
+                "name": "category",
+                "type": "VARCHAR(64) NOT NULL"
+              },
+              {
+                "name": "price_xaf",
+                "type": "INTEGER NOT NULL"
+              },
+              {
+                "name": "in_stock",
+                "type": "BOOLEAN DEFAULT true"
+              }
+            ],
+            "indexes": [
+              "CREATE INDEX idx_products_category ON salon_products (category)"
+            ]
+          }
+        ],
+        "concurrencyTradeoffs": [
+          {
+            "approach": "Direct WhatsApp Order Dispatch vs. Traditional Complex Cart Checkout",
+            "status": "chosen",
+            "reason": "Eliminates payment drop-offs in the Central African market where mobile money and direct WhatsApp communication are preferred by 95% of salon clients.",
+            "benefits": [
+              "Massive conversion boost",
+              "Zero checkout friction",
+              "Direct personal consultation with Stylist Anna"
+            ],
+            "tradeoffs": [
+              "Requires manual booking confirmation via WhatsApp chat by salon staff"
+            ]
+          }
+        ],
+        "postMortem": [
+          {
+            "incident": "Product gallery lag on older smartphones",
+            "impact": "High frame drops during fast horizontal scrolling through raw hair bundles.",
+            "rootCause": "Unoptimized high-resolution PNGs decoding synchronously on mobile UI thread.",
+            "resolution": "Converted gallery assets to compressed WebP format and added CSS `content-visibility: auto`.",
+            "takeaway": "Always profile image decoding times on mid-range Android devices."
+          }
+        ],
+        "liveUrl": "https://rarebeautybyanne.vercel.app/",
+        "githubUrl": "https://github.com/Dylan21-svg/rare-beauty-by-anne"
       }
     ]
   },

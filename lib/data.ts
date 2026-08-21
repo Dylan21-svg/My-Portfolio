@@ -121,7 +121,30 @@ export function mergePortfolioData(incoming: any): PageData {
     works: {
       ...defaultData.works,
       ...(incoming.works || {}),
-      projects: incoming.works?.projects || defaultData.works.projects
+      projects: (() => {
+        const defaultProjects = defaultData.works?.projects || []
+        const incomingProjects = incoming.works?.projects
+        if (!Array.isArray(incomingProjects) || incomingProjects.length === 0) {
+          return defaultProjects
+        }
+        const defaultMap = new Map(defaultProjects.map((p: any) => [p.id, p]))
+        const mergedList = incomingProjects.map((p: any) => {
+          const def = defaultMap.get(p.id)
+          if (!def) return p
+          return {
+            ...def,
+            ...p,
+            image: def.image || p.image,
+            images: def.images || p.images
+          }
+        })
+        defaultProjects.forEach((def: any) => {
+          if (!mergedList.some((p: any) => p.id === def.id)) {
+            mergedList.push(def)
+          }
+        })
+        return mergedList
+      })()
     },
     contact: {
       ...defaultData.contact,

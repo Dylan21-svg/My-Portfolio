@@ -33,7 +33,8 @@ import {
   Check,
   Award,
   Zap,
-  Cpu
+  Cpu,
+  Image as ImageIcon
 } from 'lucide-react'
 import { Project, Experience, Education, ProjectMetric, ProjectEndpoint, ArchitectureNode, SchemaTable, ConcurrencyTradeoff, PostMortemLesson, ResumeDocument } from '@/lib/types'
 import { projects, experience, education } from '@/lib/constants'
@@ -255,6 +256,42 @@ export default function Admin() {
       openAiScanner(quickScanUrl)
     } finally {
       setIsQuickScanning(false)
+    }
+  }
+
+  const [isAutoMappingImages, setIsAutoMappingImages] = useState(false)
+
+  const handleAutoMapImages = async () => {
+    setIsAutoMappingImages(true)
+    soundFX.playClick(700)
+    try {
+      const res = await fetch('/api/admin/map-images', { method: 'POST' })
+      const resData = await res.json()
+      if (resData.success) {
+        soundFX.playSuccess()
+        // Refresh local state with updated projects
+        const refreshRes = await fetch('/api/portfolio')
+        if (refreshRes.ok) {
+          const freshData = await refreshRes.json()
+          setData(prev => ({
+            ...prev,
+            works: {
+              ...prev.works,
+              projects: freshData.works?.projects || prev.works.projects
+            }
+          }))
+        }
+        setSaveStatus(`🖼️ Auto-mapped ${resData.mappedCount} projects to local image assets!`)
+        setTimeout(() => setSaveStatus(null), 4000)
+      } else {
+        throw new Error(resData.error || resData.message || 'Mapping failed')
+      }
+    } catch (err: any) {
+      console.error('Auto-map images error:', err)
+      setSaveStatus(`❌ Failed to auto-map images: ${err.message}`)
+      setTimeout(() => setSaveStatus(null), 4000)
+    } finally {
+      setIsAutoMappingImages(false)
     }
   }
 
@@ -574,7 +611,7 @@ export default function Admin() {
                 </span>
               </div>
               <p className="text-xs text-text-gray font-mono">
-                Logged in as <span className="text-primary">chediland266@gmail.com</span>
+                Session: <span className="text-primary font-semibold">Authenticated Administrator</span>
               </p>
             </div>
           </div>
@@ -816,6 +853,27 @@ export default function Admin() {
                 <p className="text-xs text-text-gray font-mono">
                   Full control over case studies, system design topologies, API endpoints, and post-mortems.
                 </p>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={handleAutoMapImages}
+                  disabled={isAutoMappingImages}
+                  className="px-3.5 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-mono font-bold transition-all flex items-center gap-2 disabled:opacity-50"
+                  title="Automatically map local image files in public/ to matching projects"
+                >
+                  <ImageIcon className={`w-4 h-4 ${isAutoMappingImages ? 'animate-spin' : ''}`} />
+                  <span>{isAutoMappingImages ? 'Mapping Images...' : 'Auto-Map Local Images'}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={addProject}
+                  className="px-3.5 py-2 rounded-xl bg-primary hover:bg-primary/90 text-background-dark text-xs font-mono font-bold transition-all flex items-center gap-1.5 shadow-lg shadow-primary/20"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>Add Project</span>
+                </button>
               </div>
             </div>
 

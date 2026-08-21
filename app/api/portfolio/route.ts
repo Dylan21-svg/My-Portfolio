@@ -25,25 +25,7 @@ const ensureDataDir = () => {
 const memoryStore = new Map<string, any>()
 
 const readData = async () => {
-  // 1. Check in-memory store
-  if (memoryStore.has(KV_KEY)) {
-    return memoryStore.get(KV_KEY)
-  }
-
-  // 2. Try Vercel KV if credentials exist
-  try {
-    if (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) {
-      const kvData = await kv.get(KV_KEY)
-      if (kvData) {
-        memoryStore.set(KV_KEY, kvData)
-        return kvData
-      }
-    }
-  } catch (error) {
-    console.warn('Vercel KV not reachable, falling back to local file:', error)
-  }
-
-  // 3. Fallback to local file on disk
+  // 1. First read local file on disk if present
   try {
     ensureDataDir()
     if (fs.existsSync(DATA_FILE)) {
@@ -54,6 +36,24 @@ const readData = async () => {
     }
   } catch (error) {
     console.error('Error reading portfolio data file:', error)
+  }
+
+  // 2. Check in-memory store
+  if (memoryStore.has(KV_KEY)) {
+    return memoryStore.get(KV_KEY)
+  }
+
+  // 3. Try Vercel KV if credentials exist
+  try {
+    if (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) {
+      const kvData = await kv.get(KV_KEY)
+      if (kvData) {
+        memoryStore.set(KV_KEY, kvData)
+        return kvData
+      }
+    }
+  } catch (error) {
+    console.warn('Vercel KV not reachable, falling back to local file:', error)
   }
 
   return null
