@@ -135,7 +135,7 @@ const defaultData: PageData = {
     },
     social: [
       { platform: 'GitHub', url: 'https://github.com/Dylan21-svg' },
-      { platform: 'LinkedIn', url: 'https://linkedin.com' },
+      { platform: 'LinkedIn', url: 'https://www.linkedin.com/in/che-amah-diland-ngwa' },
       { platform: 'Twitter', url: 'https://twitter.com' }
     ]
   },
@@ -147,7 +147,7 @@ const defaultData: PageData = {
     {
       id: 'resume-primary',
       title: 'Primary Technical Resume',
-      label: 'Senior Backend & Distributed Systems Engineer',
+      label: 'Backend & Distributed Systems Engineer',
       filename: 'Che_Dylan_Backend_Resume.pdf',
       fileSize: '142 KB',
       fileType: 'application/pdf',
@@ -344,10 +344,14 @@ export default function Admin() {
   const handleLogout = async () => {
     try {
       soundFX.playClick(400)
+      try {
+        localStorage.removeItem('admin_token')
+      } catch {}
       await fetch('/api/admin/logout', { method: 'POST' })
       router.push('/admin/login')
     } catch (error) {
       console.error('Logout failed:', error)
+      router.push('/admin/login')
     }
   }
 
@@ -364,10 +368,16 @@ export default function Admin() {
       } catch {}
       window.dispatchEvent(new CustomEvent('portfolioDataUpdate'))
 
-      // 2. Persist to server API
+      // 2. Persist to server API with token header fallback
+      const token = typeof window !== 'undefined' ? localStorage.getItem('admin_token') : null
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`
+      }
+
       const response = await fetch('/api/portfolio', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify(data),
       })
 
@@ -377,13 +387,12 @@ export default function Admin() {
         setTimeout(() => setSaveStatus(null), 3000)
       } else {
         const err = await response.json()
-        throw new Error(err.error || 'Failed to save to server')
+        throw new Error(err.message || err.error || 'Failed to save to server')
       }
     } catch (error: any) {
-      console.error('Save notice:', error)
-      soundFX.playSuccess()
-      setSaveStatus('✔ Saved to Local Session & Cache!')
-      setTimeout(() => setSaveStatus(null), 3500)
+      console.error('Save error:', error)
+      setSaveStatus(`⚠️ ${error.message || 'Failed to sync to server'}`)
+      setTimeout(() => setSaveStatus(null), 4000)
     } finally {
       setIsSaving(false)
     }
@@ -1366,17 +1375,70 @@ export default function Admin() {
                       </button>
                     </div>
 
-                    <textarea
-                      value={exp.description}
-                      onChange={(e) => {
-                        const updated = [...(data.about.experience || [])]
-                        updated[eIdx] = { ...updated[eIdx], description: e.target.value }
-                        setData(prev => ({ ...prev, about: { ...prev.about, experience: updated } }))
-                      }}
-                      className="w-full bg-black/40 border border-white/10 rounded px-2.5 py-1.5 text-xs font-mono text-text-gray"
-                      rows={2}
-                      placeholder="Role summary"
-                    />
+                    <div className="space-y-2">
+                      <label className="text-[11px] font-mono text-text-gray">Role Summary & Overview</label>
+                      <textarea
+                        value={exp.description}
+                        onChange={(e) => {
+                          const updated = [...(data.about.experience || [])]
+                          updated[eIdx] = { ...updated[eIdx], description: e.target.value }
+                          setData(prev => ({ ...prev, about: { ...prev.about, experience: updated } }))
+                        }}
+                        className="w-full bg-black/40 border border-white/10 rounded px-2.5 py-1.5 text-xs font-mono text-text-gray"
+                        rows={2}
+                        placeholder="Role summary"
+                      />
+                    </div>
+
+                    {/* Highlights / Problem-Solution-Impact Points */}
+                    <div className="space-y-2 pt-2 border-t border-white/5">
+                      <div className="flex items-center justify-between">
+                        <label className="text-[11px] font-mono text-primary font-bold">Key Achievements & Impact Points ({exp.highlights?.length || 0})</label>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const updated = [...(data.about.experience || [])]
+                            const current = updated[eIdx].highlights || []
+                            updated[eIdx] = { ...updated[eIdx], highlights: [...current, ''] }
+                            setData(prev => ({ ...prev, about: { ...prev.about, experience: updated } }))
+                          }}
+                          className="text-[10px] font-mono text-primary hover:underline"
+                        >
+                          + Add Bullet Point
+                        </button>
+                      </div>
+                      <div className="space-y-1.5">
+                        {(exp.highlights || []).map((h: string, hIdx: number) => (
+                          <div key={hIdx} className="flex items-start gap-2">
+                            <textarea
+                              value={h}
+                              onChange={(e) => {
+                                const updated = [...(data.about.experience || [])]
+                                const current = [...(updated[eIdx].highlights || [])]
+                                current[hIdx] = e.target.value
+                                updated[eIdx] = { ...updated[eIdx], highlights: current }
+                                setData(prev => ({ ...prev, about: { ...prev.about, experience: updated } }))
+                              }}
+                              className="flex-1 bg-black/40 border border-white/10 rounded px-2 py-1 text-xs font-mono text-text-gray"
+                              rows={2}
+                              placeholder="Problem, Strategy, or Impact bullet point"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const updated = [...(data.about.experience || [])]
+                                const current = (updated[eIdx].highlights || []).filter((_: any, i: number) => i !== hIdx)
+                                updated[eIdx] = { ...updated[eIdx], highlights: current }
+                                setData(prev => ({ ...prev, about: { ...prev.about, experience: updated } }))
+                              }}
+                              className="text-text-gray/50 hover:text-rose-400 p-1"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>

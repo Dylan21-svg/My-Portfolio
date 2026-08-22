@@ -53,7 +53,7 @@ export default function ResumePage() {
         {
           id: 'resume-primary',
           title: 'Primary Technical Resume',
-          label: 'Senior Backend & Distributed Systems Architecture',
+          label: 'Backend & Distributed Systems Engineer',
           filename: data.resume.filename || 'Che_Dylan_Backend_Resume.pdf',
           url: data.resume.url,
           fileSize: '142 KB',
@@ -261,7 +261,7 @@ export default function ResumePage() {
                   CHE AMAH DILAND NGWA
                 </h2>
                 <div className="text-primary font-mono text-sm font-semibold mt-0.5">
-                  Senior Backend & Distributed Systems Engineer
+                  Backend & Distributed Systems Engineer
                 </div>
                 <p className="text-xs text-text-gray mt-1">
                   Buea, Cameroon • Open to Global Remote Relocation

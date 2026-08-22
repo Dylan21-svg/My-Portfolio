@@ -28,6 +28,11 @@ export default function AdminLogin() {
       const data = await response.json()
 
       if (data.success) {
+        if (data.token) {
+          try {
+            localStorage.setItem('admin_token', data.token)
+          } catch {}
+        }
         router.push('/admin')
       } else {
         setError(data.message || 'Invalid credentials')

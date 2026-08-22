@@ -75,7 +75,7 @@ export default function CustomCursor() {
       }}
       animate={{
         scale: isHovering ? 2.2 : 1,
-        backgroundColor: isHovering ? 'rgba(31, 181, 173, 0.3)' : 'transparent',
+        backgroundColor: isHovering ? 'rgba(31, 181, 173, 0.3)' : 'rgba(31, 181, 173, 0)',
       }}
     >
       <div className="w-1 h-1 bg-primary rounded-full" />

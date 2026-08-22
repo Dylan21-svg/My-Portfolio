@@ -1,0 +1,141 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 6 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+6 0 obj
+<< /Length 2226 >>
+stream
+BT
+/F1 18 Tf
+50 740 Td
+(CHE AMAH DILAND NGWA) Tj
+ET
+BT
+/F1 12 Tf
+50 720 Td
+(Lead Software Engineer & COO | Backend Architect) Tj
+ET
+BT
+/F1 10 Tf
+50 705 Td
+(Buea, Cameroon | Email: ngwadiland68@gmail.com | Phone: +237 672 344 814 | GitHub: github.com/Dylan21-svg) Tj
+ET
+BT
+/F2 12 Tf
+50 665 Td
+(PROFESSIONAL SUMMARY) Tj
+ET
+BT
+/F1 9 Tf
+50 647 Td
+(Lead Software Engineer and COO specializing in distributed backend systems, Python, FastAPI, and multi-tenant architectures.) Tj
+ET
+BT
+/F2 12 Tf
+50 624 Td
+(CORE COMPETENCIES) Tj
+ET
+BT
+/F1 9 Tf
+50 606 Td
+(Languages: Python, TypeScript, SQL, Go \(Basics\) | Frameworks: FastAPI, Django, Flask, Next.js) Tj
+ET
+BT
+/F1 9 Tf
+50 593 Td
+(Databases: PostgreSQL, TimescaleDB, MySQL, Redis Cache | Queues: Celery, RabbitMQ, Redis, WebSockets) Tj
+ET
+BT
+/F1 9 Tf
+50 580 Td
+(DevOps: Docker, CI/CD Pipelines, Prometheus, Grafana, Linux/Nginx) Tj
+ET
+BT
+/F2 12 Tf
+50 557 Td
+(PROFESSIONAL WORK EXPERIENCE) Tj
+ET
+BT
+/F1 10 Tf
+50 539 Td
+(Lead Software Engineer & COO - SAMITECH Corporation \(Sep 2023 - Present\)) Tj
+ET
+BT
+/F1 9 Tf
+50 524 Td
+(- Engineered decoupled async event pipelines and multi-tenant DB architecture using Python, FastAPI & Docker.) Tj
+ET
+BT
+/F1 9 Tf
+50 511 Td
+(- Reduced processing latency by >60% and unlocked horizontal scaling under high concurrent load.) Tj
+ET
+BT
+/F1 9 Tf
+50 498 Td
+(- Established standardized DevOps CI/CD pipelines and restructured developer sprint workflows.) Tj
+ET
+BT
+/F1 10 Tf
+50 485 Td
+(Full Stack Backend Developer - NEXORA / Freelance \(Aug 2024 - Oct 2024\)) Tj
+ET
+BT
+/F1 9 Tf
+50 470 Td
+(- Designed and deployed modular backend architectures and standardized REST APIs for 5+ client applications.) Tj
+ET
+BT
+/F1 10 Tf
+50 457 Td
+(Software Engineer Intern - Revival Company Ltd. \(Jun 2025 - Nov 2025\)) Tj
+ET
+BT
+/F1 9 Tf
+50 442 Td
+(- Standardized internal API integration layers and authored automated unit/integration test suites.) Tj
+ET
+BT
+/F2 12 Tf
+50 419 Td
+(EDUCATION) Tj
+ET
+BT
+/F1 10 Tf
+50 401 Td
+(Higher National Diploma in Software Engineering - College of Technology / University of Buea \(2024 - 2026\)) Tj
+ET
+BT
+/F1 10 Tf
+50 386 Td
+(Bachelor of Science in Computer Science - College of Technology / University of Buea \(2022 - 2026\)) Tj
+ET
+
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000251 00000 n 
+0000000321 00000 n 
+0000000396 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+2674
+%%EOF

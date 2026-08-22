@@ -54,7 +54,7 @@ const defaultResumes: ResumeDocument[] = [
   {
     id: 'resume-primary',
     title: 'Primary Technical Resume',
-    label: 'Senior Backend & Distributed Systems Engineer',
+    label: 'Backend & Distributed Systems Engineer',
     filename: 'Che_Dylan_Backend_Resume.pdf',
     fileSize: '142 KB',
     fileType: 'application/pdf',
@@ -122,28 +122,11 @@ export function mergePortfolioData(incoming: any): PageData {
       ...defaultData.works,
       ...(incoming.works || {}),
       projects: (() => {
-        const defaultProjects = defaultData.works?.projects || []
         const incomingProjects = incoming.works?.projects
-        if (!Array.isArray(incomingProjects) || incomingProjects.length === 0) {
-          return defaultProjects
+        if (Array.isArray(incomingProjects)) {
+          return incomingProjects
         }
-        const defaultMap = new Map(defaultProjects.map((p: any) => [p.id, p]))
-        const mergedList = incomingProjects.map((p: any) => {
-          const def = defaultMap.get(p.id)
-          if (!def) return p
-          return {
-            ...def,
-            ...p,
-            image: def.image || p.image,
-            images: def.images || p.images
-          }
-        })
-        defaultProjects.forEach((def: any) => {
-          if (!mergedList.some((p: any) => p.id === def.id)) {
-            mergedList.push(def)
-          }
-        })
-        return mergedList
+        return defaultData.works?.projects || []
       })()
     },
     contact: {
@@ -159,7 +142,7 @@ export function mergePortfolioData(incoming: any): PageData {
       {
         id: 'resume-primary',
         title: 'Primary Technical Resume',
-        label: 'Senior Backend & Distributed Systems Engineer',
+        label: 'Backend & Distributed Systems Engineer',
         filename: incoming.resume.filename || 'Che_Dylan_Backend_Resume.pdf',
         fileSize: '142 KB',
         fileType: 'application/pdf',
@@ -225,33 +208,24 @@ export const syncDataFromServer = async (): Promise<PageData> => {
 }
 
 export function getPortfolioData(): PageData {
-  if (typeof window === 'undefined') {
-    return defaultData
-  }
-  // Try reading from localStorage if cached is still default
-  try {
-    const local = localStorage.getItem('portfolioData')
-    if (local) {
-      return mergePortfolioData(JSON.parse(local))
-    }
-  } catch {}
   return cachedPortfolioData
 }
 
 export function usePortfolioData(): PageData {
-  const [data, setData] = useState<PageData>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const local = localStorage.getItem('portfolioData')
-        if (local) {
-          return mergePortfolioData(JSON.parse(local))
-        }
-      } catch {}
-    }
-    return cachedPortfolioData
-  })
+  const [data, setData] = useState<PageData>(cachedPortfolioData)
 
   useEffect(() => {
+    // 1. Check localStorage first and update state after hydration
+    try {
+      const local = localStorage.getItem('portfolioData')
+      if (local) {
+        const parsed = JSON.parse(local)
+        const merged = mergePortfolioData(parsed)
+        cachedPortfolioData = merged
+        setData(merged)
+      }
+    } catch {}
+
     // Subscribe to state updates
     const handleChange = (newData: PageData) => {
       setData(newData)

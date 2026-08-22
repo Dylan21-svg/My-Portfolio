@@ -16,11 +16,21 @@ export async function POST(request: NextRequest) {
 
     const { success, token, message } = await loginAdmin(password, email)
 
-    if (success) {
-      return NextResponse.json({ 
+    if (success && token) {
+      const response = NextResponse.json({ 
         success: true, 
         token: token 
       })
+
+      response.cookies.set('admin_token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 60 * 60 * 24, // 24 hours
+        path: '/',
+      })
+
+      return response
     } else {
       return NextResponse.json({ 
         success: false, 

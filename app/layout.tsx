@@ -50,8 +50,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`}>
-      <body className={`${inter.className} relative`}>
+    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`} suppressHydrationWarning>
+      <body className={`${inter.className} relative`} suppressHydrationWarning>
         <RouteProgressBar />
         <div className="noise-overlay" />
         <CustomCursor />

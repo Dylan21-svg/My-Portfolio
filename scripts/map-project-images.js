@@ -26,8 +26,8 @@ const PROJECT_RULES = [
   },
   {
     projectId: 'revenue-architect',
-    aliases: ['revenue-architect', 'revenuearchitect', 'reveneuarchitect', 'revenue_architect', 'revenue'],
-    imageKeywords: ['revenuearchitect', 'reveneuarchitect', 'revenue_architect', 'revenue-architect']
+    aliases: ['revenue-architect', 'revenuearchitect', 'revenuearchitech', 'reveneuarchitect', 'revenue_architect', 'revenue'],
+    imageKeywords: ['revenuearchitech', 'revenuearchitect', 'reveneuarchitect', 'revenue_architect', 'revenue-architect']
   },
   {
     projectId: 'velora-store',
@@ -37,22 +37,22 @@ const PROJECT_RULES = [
   {
     projectId: 'samitech237',
     aliases: ['samitech237', 'samitech', 'sami-tech'],
-    imageKeywords: ['samitech237', 'samitech', 'sami-tech', 'samitech_portal']
+    imageKeywords: ['samitech', 'samitech237', 'sami-tech', 'samitech_portal']
   },
   {
     projectId: 'netcom237',
     aliases: ['netcom237', 'netcom', 'net-com'],
-    imageKeywords: ['netcom237', 'netcom', 'net-com', 'netcom_telecom']
+    imageKeywords: ['netcom', 'netcom237', 'net-com', 'netcom_telecom']
   },
   {
     projectId: 'sa-bookkeeping',
     aliases: ['sa-bookkeeping', 'sa-bookeeping', 'bookkeeping', 'bookeeping', 'sea-digital-wealth', 'sea-digital'],
-    imageKeywords: ['sa-bookkeeping', 'sa-bookeeping', 'bookkeeping', 'bookeeping', 'sea_bookkeeping', 'sea-bookkeeping']
+    imageKeywords: ['bookeeping', 'sa-bookkeeping', 'sa-bookeeping', 'bookkeeping', 'sea_bookkeeping', 'sea-bookkeeping']
   },
   {
     projectId: 'rare-beauty-by-anne',
     aliases: ['rare-beauty-by-anne', 'rarebeautybyanne', 'rarebeauty', 'rare-beauty', 'anne', 'rare_beauty'],
-    imageKeywords: ['rarebeauty', 'rare-beauty', 'rare_beauty', 'rarebeautybyanne', 'anne']
+    imageKeywords: ['anne', 'rarebeauty', 'rare-beauty', 'rare_beauty', 'rarebeautybyanne']
   }
 ]
 
@@ -168,10 +168,34 @@ function mapProjectImages() {
     })
 
     if (matches.length > 0) {
-      // Prioritize PNG if available, then JPG/JPEG
+      const getScore = (img) => {
+        const bName = img.baseName.toLowerCase().replace(/[^a-z0-9]/g, '')
+        let kwIndex = 999
+        let isExact = false
+        for (let i = 0; i < rule.imageKeywords.length; i++) {
+          const cleanKw = rule.imageKeywords[i].toLowerCase().replace(/[^a-z0-9]/g, '')
+          if (bName === cleanKw) {
+            kwIndex = i
+            isExact = true
+            break
+          }
+          if (bName.includes(cleanKw) || cleanKw.includes(bName)) {
+            if (i < kwIndex) {
+              kwIndex = i
+            }
+          }
+        }
+        return { kwIndex, isExact, isPng: img.ext === '.png' }
+      }
+
       const preferred = matches.sort((a, b) => {
-        if (a.ext === '.png' && b.ext !== '.png') return -1
-        if (b.ext === '.png' && a.ext !== '.png') return 1
+        const scoreA = getScore(a)
+        const scoreB = getScore(b)
+        if (scoreA.isExact && !scoreB.isExact) return -1
+        if (!scoreA.isExact && scoreB.isExact) return 1
+        if (scoreA.kwIndex !== scoreB.kwIndex) return scoreA.kwIndex - scoreB.kwIndex
+        if (scoreA.isPng && !scoreB.isPng) return -1
+        if (!scoreA.isPng && scoreB.isPng) return 1
         return 0
       })
 

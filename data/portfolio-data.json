@@ -13,7 +13,7 @@
         "id": "1",
         "type": "profile",
         "title": "A BACKEND-SOFTWARE ENGINEER",
-        "content": "Che Amah Diland Ngwa (Dylan Sparks)\nBuea, Cameroon"
+        "content": "Che Amah Diland Ngwa\nBuea, Cameroon"
       },
       {
         "id": "2",
@@ -68,73 +68,74 @@
     },
     "experience": [
       {
-        "period": "2022 - Present",
-        "title": "Senior Backend & Distributed Systems Engineer",
+        "period": "September 2023 - Present",
+        "title": "Lead Software Engineer & COO | SAMITECH Corporation",
         "company": "SAMITECH Corporation",
-        "description": "Architecting resilient asynchronous event pipelines, multi-tenant databases, and high-concurrency microservices with Python and Docker.",
+        "description": "Leading distributed backend architecture, asynchronous event pipelines, and operational engineering roadmaps across SAMITECH's flagship SaaS platforms.",
         "skills": [
           "Python",
           "FastAPI",
-          "PostgreSQL",
-          "Redis",
           "Docker",
-          "RabbitMQ"
+          "Multi-Tenant DB",
+          "DevOps CI/CD",
+          "Microservices"
         ],
         "highlights": [
-          "Engineered distributed queuing architecture handling 50,000+ jobs/min with 99.98% uptime SLA.",
-          "Cut database query P99 latency by 64% through index re-architecting, read-replicas, and Redis caching.",
-          "Implemented zero-trust OAuth2/JWT security boundaries and role-based access control across 15+ microservices."
+          "Technical Leadership (Lead Software Engineer) - Problem: Monolithic data pipelines and single-tenant database bottlenecks caused severe latency spikes and service outages during high-concurrency event bursts. Strategy: Engineered decoupled asynchronous event pipelines and multi-tenant database architectures using Python, FastAPI, and Docker. Impact: Reduced processing latency by over 60%, guaranteed strict multi-tenant data isolation, and unlocked seamless horizontal scaling under high system load.",
+          "Executive Operations & Product Strategy (COO) - Problem: Inconsistent engineering workflows and misaligned technical execution were lengthening feature delivery cycles and driving up cloud operational costs. Strategy: Established standardized DevOps CI/CD pipelines, redefined technical roadmaps to align with core business goals, and restructured developer sprint workflows. Impact: Reduced deployment cycle times, optimized cloud infrastructure expenditure, and accelerated time-to-market for flagship SaaS features."
         ]
       },
       {
-        "period": "2020 - 2022",
+        "period": "August 2024 – October 2024",
         "title": "Full Stack Backend Developer",
-        "company": "StartupXYZ / Freelance",
-        "description": "Designed and deployed backend infrastructure and APIs for 5+ early-stage MVPs across fintech, logistics, and education.",
+        "company": "NEXORA / Freelance",
+        "description": "Architected modular backend services and standardized RESTful APIs for multiple early-stage tech startups.",
         "skills": [
           "Python",
           "Django",
-          "Node.js",
+          "FastAPI",
           "PostgreSQL",
-          "Celery",
-          "AWS"
+          "REST APIs",
+          "Docker"
         ],
         "highlights": [
-          "Built real-time order tracking and settlement pipelines with Stripe and automated webhook dunning.",
-          "Designed relational schemas and wrote migration pipelines for over 250,000 active records.",
-          "Automated CI/CD workflows reducing feature deployment lead time from 3 days to 45 minutes."
+          "Problem: Early-stage startups in fintech, logistics, and edtech struggled with delayed launch timelines due to unscalable, fragmented MVP backends.",
+          "Solution: Designed and deployed modular backend architectures and standardized REST APIs for 5+ client applications.",
+          "Impact: Accelerated client time-to-market by weeks while establishing resilient foundations ready for rapid user scaling."
         ]
       },
       {
-        "period": "2018 - 2020",
-        "title": "Junior Software Developer",
-        "company": "WebSolutions Ltd.",
-        "description": "Maintained legacy backend services, integrated third-party REST APIs, and authored comprehensive unit test suites.",
+        "period": "June 2025 – November 2025",
+        "title": "Software Engineer Intern",
+        "company": "Revival Company Ltd.",
+        "description": "Strengthened core backend reliability through API standardization, regression testing frameworks, and integration stabilization.",
         "skills": [
           "Python",
-          "Flask",
-          "MySQL",
-          "Git",
-          "REST APIs"
+          "API Integration",
+          "Unit Testing",
+          "Integration Testing",
+          "Service Reliability",
+          "Git"
         ],
         "highlights": [
-          "Refactored legacy monolithic endpoints into modular blueprints, improving test coverage from 35% to 88%.",
-          "Automated daily database backups and transactional snapshot validation routines."
+          "Problem: Fragile legacy backend services suffered from frequent regressions during third-party integration updates and deployment.",
+          "Solution: Standardized internal API integration layers and authored comprehensive unit and integration test suites.",
+          "Impact: Drastically decreased system regressions, stabilized service uptime, and significantly shortened developer debugging cycles."
         ]
       }
     ],
     "education": [
       {
-        "period": "2022 - 2024",
+        "period": "October 2024 - June 2026",
         "degree": "Higher National Diploma in Software Engineering",
-        "institution": "University of Buea / SAMITECH Institute",
-        "description": "Advanced coursework in Distributed Systems, Relational Database Theory, Algorithm Complexity, and Network Protocols."
+        "institution": "College of Technology / University of Buea",
+        "description": "Key Achievements & Applied Focus: Specialized in Distributed Systems, Relational Database Theory, and Network Protocols. Applied advanced concurrency models and algorithmic optimization techniques to solve real-world system architecture problems."
       },
       {
-        "period": "2018 - 2022",
+        "period": "October 2022 - December 2026",
         "degree": "Bachelor of Science in Computer Science",
-        "institution": "University of Technology",
-        "description": "Foundation in Computer Architecture, Data Structures, Operating Systems, and Concurrent Programming."
+        "institution": "College of Technology / University of Buea",
+        "description": "Key Achievements & Applied Focus: Focused on Computer Architecture, Operating Systems, and Concurrent Programming. Built a strong theoretical and practical foundation in memory management and high-performance system design."
       }
     ]
   },
@@ -441,12 +442,13 @@
             "change": "ML AUC score"
           }
         ],
-        "image": "/images/reveneuarchitect.png",
+        "image": "/images/revenuearchitech.png",
         "images": [
-          "/images/reveneuarchitect.png",
+          "/images/revenuearchitech.png",
           "/images/revenuearchitect.png",
-          "/images/reveneuarchitect.jpg",
-          "/images/revenuearchitect.jpg"
+          "/images/revenuearchitect.jpg",
+          "/images/reveneuarchitect.png",
+          "/images/reveneuarchitect.jpg"
         ],
         "technologies": [
           "Python",
@@ -943,8 +945,9 @@
             "change": "edge-cached assets"
           }
         ],
-        "image": "/images/netcom237.png",
+        "image": "/images/netcom.png",
         "images": [
+          "/images/netcom.png",
           "/images/netcom237.png",
           "/images/netcom237.jpg"
         ],
@@ -1089,8 +1092,9 @@
             "change": "performance score"
           }
         ],
-        "image": "/images/samitech237.png",
+        "image": "/images/samitech.png",
         "images": [
+          "/images/samitech.png",
           "/images/samitech237.png",
           "/images/samitech237.jpg"
         ],
@@ -1232,8 +1236,9 @@
             "change": "managed portfolios"
           }
         ],
-        "image": "/images/sa-bookkeeping.png",
+        "image": "/images/bookeeping.png",
         "images": [
+          "/images/bookeeping.png",
           "/images/sa-bookkeeping.png",
           "/images/sa-bookkeeping.jpg"
         ],
@@ -1373,8 +1378,9 @@
             "change": "Buea, Cameroon"
           }
         ],
-        "image": "/images/rarebeauty.png",
+        "image": "/images/anne.png",
         "images": [
+          "/images/anne.png",
           "/images/rarebeauty.png",
           "/images/rarebeauty.jpg"
         ],
@@ -1506,12 +1512,36 @@
       },
       {
         "platform": "LinkedIn",
-        "url": "https://linkedin.com/in/dylansparks"
+        "url": "https://www.linkedin.com/in/che-amah-diland-ngwa"
       },
       {
-        "platform": "Instagram",
+        "platform": "Twitter",
         "url": "https://twitter.com/dylansparks"
       }
     ]
-  }
+  },
+  "resumes": [
+    {
+      "id": "resume-primary",
+      "title": "Primary Technical Resume",
+      "label": "Backend & Distributed Systems Engineer",
+      "filename": "Che_Dylan_Backend_Resume.pdf",
+      "fileSize": "142 KB",
+      "fileType": "application/pdf",
+      "url": "/resume.pdf",
+      "uploadedAt": "2026-08-15",
+      "description": "Focused on Python, FastAPI, distributed task queues, database concurrency, and high-scale architecture."
+    },
+    {
+      "id": "resume-secondary",
+      "title": "Full-Stack & Solutions Resume",
+      "label": "Full-Stack & Systems Solutions Architect",
+      "filename": "Che_Dylan_FullStack_Resume.pdf",
+      "fileSize": "158 KB",
+      "fileType": "application/pdf",
+      "url": "/resume.pdf",
+      "uploadedAt": "2026-08-15",
+      "description": "Focused on full-stack architecture, Next.js/React frontend integration, REST/WebSocket APIs, and cloud deployments."
+    }
+  ]
 }
