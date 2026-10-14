@@ -25,16 +25,36 @@ export default function DistributedMeshCanvas() {
     let width = (canvas.width = container.clientWidth || window.innerWidth)
     let height = (canvas.height = container.clientHeight || 600)
 
+    let resizeRafId: number | null = null
     const updateSize = () => {
       if (!canvas || !container) return
-      width = canvas.width = container.clientWidth || window.innerWidth
-      height = canvas.height = container.clientHeight || 600
+      const targetWidth = container.clientWidth || window.innerWidth
+      const targetHeight = container.clientHeight || 600
+      if (canvas.width !== targetWidth || canvas.height !== targetHeight) {
+        width = canvas.width = targetWidth
+        height = canvas.height = targetHeight
+      }
     }
 
-    const resizeObserver = new ResizeObserver(() => {
-      updateSize()
-    })
-    resizeObserver.observe(container)
+    const onResize = () => {
+      if (resizeRafId !== null) cancelAnimationFrame(resizeRafId)
+      resizeRafId = requestAnimationFrame(() => {
+        updateSize()
+      })
+    }
+
+    window.addEventListener('resize', onResize, { passive: true })
+    let resizeObserver: ResizeObserver | null = null
+    try {
+      if (typeof ResizeObserver !== 'undefined') {
+        resizeObserver = new ResizeObserver(() => {
+          onResize()
+        })
+        resizeObserver.observe(container)
+      }
+    } catch {
+      // fallback to window resize only
+    }
 
     // Generate distributed graph nodes
     const nodeCount = Math.min(Math.floor(width / 32), 48)
@@ -131,7 +151,9 @@ export default function DistributedMeshCanvas() {
     render()
 
     return () => {
-      resizeObserver.disconnect()
+      window.removeEventListener('resize', onResize)
+      if (resizeObserver) resizeObserver.disconnect()
+      if (resizeRafId !== null) cancelAnimationFrame(resizeRafId)
       window.removeEventListener('mousemove', handleMouseMove)
       document.removeEventListener('mouseleave', handleMouseLeave)
       cancelAnimationFrame(animationFrameId)

@@ -8,6 +8,7 @@ import CustomCursor from '@/components/CustomCursor'
 import PageTransition from '@/components/PageTransition'
 import CommandPalette from '@/components/CommandPalette'
 import RouteProgressBar from '@/components/RouteProgressBar'
+import BrowserErrorGuard from '@/components/BrowserErrorGuard'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -52,6 +53,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`} suppressHydrationWarning>
       <body className={`${inter.className} relative`} suppressHydrationWarning>
+        <BrowserErrorGuard />
         <RouteProgressBar />
         <div className="noise-overlay" />
         <CustomCursor />

@@ -522,7 +522,7 @@ export default function Admin() {
           takeaway: 'Decouple ingestion serialization from database write execution.'
         }
       ],
-      liveUrl: 'https://codeforge.dev',
+      liveUrl: 'https://codeforge-dylan21-svgs-projects.vercel.app/',
       githubUrl: 'https://github.com/Dylan21-svg'
     }
 

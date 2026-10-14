@@ -40,7 +40,7 @@ interface AIProjectScannerModalProps {
 }
 
 const PRESET_SOURCES = [
-  { name: '🌐 Live Vercel App', url: 'https://codeforge.dev', desc: 'Live Gamified Platform' },
+  { name: '🌐 Live Vercel App', url: 'https://codeforge-dylan21-svgs-projects.vercel.app/', desc: 'Live Gamified Platform' },
   { name: '🌐 Live SaaS Dashboard', url: 'https://linear.app', desc: 'Real-time Distributed App' },
   { name: '🌐 Render Cloud App', url: 'https://render.com', desc: 'Cloud Infrastructure Portal' },
   { name: '📦 GitHub: CodeForge', url: 'Dylan21-svg/CodeForge', desc: 'Offline-First Engine Repo' },
