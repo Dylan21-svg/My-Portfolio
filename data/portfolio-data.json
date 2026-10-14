@@ -913,7 +913,7 @@
             "takeaway": "Never rely solely on Redis keyspace notifications for critical financial/inventory workflows, as pub/sub deliveries are fire-and-forget."
           }
         ],
-        "liveUrl": "https://velora-store.com",
+        "liveUrl": "https://velora-store-two-iota.vercel.app/",
         "githubUrl": "https://github.com/Dylan21-svg/velora-store"
       },
       {

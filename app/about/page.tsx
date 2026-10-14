@@ -55,6 +55,12 @@ export default function About() {
               className="rounded-full border-4 border-primary shadow-teal-glow"
               loading="lazy"
               referrerPolicy="no-referrer"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement
+                if (target && !target.src.includes('/images/dylan1.jpg')) {
+                  target.src = '/images/dylan1.jpg'
+                }
+              }}
             />
           </div>
           <h2 className="text-3xl font-bold text-primary mb-4 font-display">{data.about.profile.name}</h2>

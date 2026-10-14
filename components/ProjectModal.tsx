@@ -57,6 +57,7 @@ export default function ProjectModal({ project, onClose, onSelectTech, selectedT
   const [copiedCurl, setCopiedCurl] = useState(false)
   const [iframeError, setIframeError] = useState(false)
   const [iframeReloadKey, setIframeReloadKey] = useState(0)
+  const [simMode, setSimMode] = useState<'live' | 'screenshot'>('live')
 
   if (!project) return null
 
@@ -270,12 +271,93 @@ export default function ProjectModal({ project, onClose, onSelectTech, selectedT
                       Category: <span className="text-white">{project.category}</span>
                     </span>
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-2">
+                  <h3 className="text-xl font-bold text-white mb-2 font-display">
                     {project.tagline || project.description}
                   </h3>
                   <p className="text-text-gray text-sm leading-relaxed">
                     {project.description}
                   </p>
+                </div>
+
+                {/* System Preview Screenshot Banner */}
+                <div className="rounded-2xl overflow-hidden bg-background-dark border border-white/10 p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <ImageIcon className="w-4 h-4 text-primary" />
+                      <span className="text-xs font-mono uppercase text-white font-semibold tracking-wider">
+                        Production Architecture & Interface Screenshot
+                      </span>
+                    </div>
+                    {projectImages.length > 1 && (
+                      <span className="text-[11px] font-mono text-primary bg-primary/10 px-2 py-0.5 rounded-full border border-primary/20">
+                        {projectImages.length} Visual Assets Available
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="relative aspect-video w-full rounded-xl overflow-hidden bg-black/80 border border-white/10 group">
+                    <Image
+                      src={projectImages[selectedImageIndex] || project.image || '/images/D1.jpeg'}
+                      alt={`${project.title} screenshot`}
+                      fill
+                      className="object-cover object-top transition-transform duration-500 group-hover:scale-102"
+                      referrerPolicy="no-referrer"
+                      priority
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement
+                        if (target && !target.src.includes('/images/D1.jpeg')) {
+                          target.src = '/images/D1.jpeg'
+                        }
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 pointer-events-none" />
+
+                    <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between pointer-events-none">
+                      <span className="px-3 py-1 rounded-lg bg-black/80 backdrop-blur-md text-xs font-mono text-white border border-white/15">
+                        {project.title} • System Preview
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleTabChange('preview')
+                          soundFX.playClick(600)
+                        }}
+                        className="pointer-events-auto px-3 py-1 rounded-lg bg-primary hover:bg-secondary text-white text-xs font-mono font-semibold transition-all shadow-teal-glow flex items-center gap-1.5"
+                      >
+                        <Monitor className="w-3.5 h-3.5" />
+                        <span>Interactive Simulator</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Thumbnail Row if multiple images */}
+                  {projectImages.length > 1 && (
+                    <div className="flex items-center gap-2 pt-1 overflow-x-auto pb-1 scrollbar-none">
+                      {projectImages.map((img, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => {
+                            setSelectedImageIndex(idx)
+                            soundFX.playClick(500)
+                          }}
+                          className={`relative w-20 h-14 rounded-lg overflow-hidden border-2 transition-all shrink-0 ${
+                            selectedImageIndex === idx
+                              ? 'border-primary scale-105 shadow-teal-glow ring-2 ring-primary/40'
+                              : 'border-white/10 opacity-60 hover:opacity-100'
+                          }`}
+                        >
+                          <Image
+                            src={img}
+                            alt={`Preview asset ${idx + 1}`}
+                            fill
+                            className="object-cover"
+                            referrerPolicy="no-referrer"
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* Key Engineering Impact Metrics */}
@@ -428,7 +510,7 @@ export default function ProjectModal({ project, onClose, onSelectTech, selectedT
                       onClick={() => setViewport('desktop')}
                       className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium transition-colors ${
                         viewport === 'desktop'
-                          ? 'bg-primary text-white'
+                          ? 'bg-primary text-white shadow-teal-glow'
                           : 'text-text-gray hover:text-white'
                       }`}
                     >
@@ -439,7 +521,7 @@ export default function ProjectModal({ project, onClose, onSelectTech, selectedT
                       onClick={() => setViewport('tablet')}
                       className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium transition-colors ${
                         viewport === 'tablet'
-                          ? 'bg-primary text-white'
+                          ? 'bg-primary text-white shadow-teal-glow'
                           : 'text-text-gray hover:text-white'
                       }`}
                     >
@@ -450,7 +532,7 @@ export default function ProjectModal({ project, onClose, onSelectTech, selectedT
                       onClick={() => setViewport('mobile')}
                       className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium transition-colors ${
                         viewport === 'mobile'
-                          ? 'bg-primary text-white'
+                          ? 'bg-primary text-white shadow-teal-glow'
                           : 'text-text-gray hover:text-white'
                       }`}
                     >
@@ -459,10 +541,44 @@ export default function ProjectModal({ project, onClose, onSelectTech, selectedT
                     </button>
                   </div>
 
+                  {/* Mode switcher: Live Interactive vs Architecture Screenshot */}
+                  {project.liveUrl && (
+                    <div className="flex items-center bg-black/60 rounded-lg p-1 border border-white/10 text-xs">
+                      <button
+                        onClick={() => {
+                          setSimMode('live')
+                          setIframeError(false)
+                          soundFX.playClick(600)
+                        }}
+                        className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-mono font-medium transition-all ${
+                          simMode === 'live'
+                            ? 'bg-emerald-500/25 text-emerald-300 border border-emerald-500/40 shadow-[0_0_12px_rgba(16,185,129,0.3)]'
+                            : 'text-text-gray hover:text-white'
+                        }`}
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        <span>Live Site</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSimMode('screenshot')
+                          soundFX.playClick(550)
+                        }}
+                        className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-mono font-medium transition-all ${
+                          simMode === 'screenshot'
+                            ? 'bg-primary/25 text-primary border border-primary/40'
+                            : 'text-text-gray hover:text-white'
+                        }`}
+                      >
+                        <span>Screenshots</span>
+                      </button>
+                    </div>
+                  )}
+
                   {/* Browser URL bar */}
                   <div className="flex-1 max-w-md hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-black/60 border border-white/10 text-xs font-mono text-text-gray">
                     <Globe className="w-3.5 h-3.5 text-primary shrink-0" />
-                    <span className="truncate text-white">{project.liveUrl || 'https://sandbox.local'}</span>
+                    <span className="truncate text-white">{project.liveUrl || 'https://production-preview.local'}</span>
                     <button
                       onClick={handleCopyLink}
                       className="ml-auto p-1 rounded hover:bg-white/10 text-text-gray hover:text-white"
@@ -472,76 +588,182 @@ export default function ProjectModal({ project, onClose, onSelectTech, selectedT
                     </button>
                   </div>
 
-                  <button
-                    onClick={() => {
-                      setIframeError(false)
-                      setIframeReloadKey((k) => k + 1)
-                      soundFX.playClick(700)
-                    }}
-                    className="p-2 rounded-lg bg-background-medium hover:bg-white/10 text-text-gray hover:text-white border border-white/10 transition-colors"
-                    title="Reload Sandbox Preview"
-                  >
-                    <RotateCw className="w-4 h-4" />
-                  </button>
+                  <div className="flex items-center gap-2">
+                    {project.liveUrl && (
+                      <a
+                        href={project.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3 py-1.5 rounded-lg bg-primary hover:bg-secondary text-white text-xs font-mono font-semibold transition-all flex items-center gap-1.5 shadow-teal-glow"
+                      >
+                        <span>Open Live</span>
+                        <ArrowUpRight className="w-3.5 h-3.5" />
+                      </a>
+                    )}
+                    <button
+                      onClick={() => {
+                        setIframeError(false)
+                        setIframeReloadKey((k) => k + 1)
+                        soundFX.playClick(700)
+                      }}
+                      className="p-2 rounded-lg bg-background-medium hover:bg-white/10 text-text-gray hover:text-white border border-white/10 transition-colors"
+                      title="Reload Viewport"
+                    >
+                      <RotateCw className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
 
-                {/* Simulated Device Frame */}
-                <div className="flex justify-center bg-black/50 p-4 rounded-xl border border-white/10 overflow-hidden min-h-[420px]">
+                {/* Simulated Device Frame with Interactive IFrame or Full High-Fidelity Screenshot */}
+                <div className="flex justify-center bg-black/70 p-4 sm:p-6 rounded-2xl border border-white/10 overflow-hidden min-h-[460px]">
                   <div
-                    className={`transition-all duration-300 bg-background-dark rounded-xl overflow-hidden border border-white/10 shadow-2xl relative flex flex-col ${
+                    className={`transition-all duration-300 bg-background-dark rounded-xl overflow-hidden border border-white/15 shadow-2xl relative flex flex-col ${
                       viewport === 'mobile'
-                        ? 'w-[360px] h-[580px]'
+                        ? 'w-[360px] h-[600px]'
                         : viewport === 'tablet'
                         ? 'w-[680px] h-[520px]'
-                        : 'w-full h-[520px]'
+                        : 'w-full h-[560px]'
                     }`}
                   >
                     {/* Device Top Bar */}
-                    <div className="h-6 bg-black/80 px-3 flex items-center justify-between border-b border-white/5">
+                    <div className="h-7 bg-black/90 px-3 flex items-center justify-between border-b border-white/10 shrink-0">
                       <div className="flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-rose-500/80" />
-                        <span className="w-2 h-2 rounded-full bg-amber-500/80" />
-                        <span className="w-2 h-2 rounded-full bg-emerald-500/80" />
+                        <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />
+                        <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
+                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
                       </div>
-                      <div className="text-[10px] font-mono text-text-gray/70">
-                        {viewport.toUpperCase()} EMULATOR (SANDBOX)
+                      <div className="text-[10px] font-mono text-text-gray flex items-center gap-2">
+                        <span>{viewport.toUpperCase()} EMULATOR</span>
+                        <span className="text-primary">•</span>
+                        <span className="text-white font-semibold truncate max-w-[200px]">{project.title}</span>
+                        {simMode === 'live' && project.liveUrl && !iframeError && (
+                          <span className="px-1.5 py-0.5 rounded text-[9px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
+                            LIVE
+                          </span>
+                        )}
                       </div>
+                      <div className="w-10" />
                     </div>
 
                     {/* Frame Content */}
-                    <div className="flex-1 relative bg-background-dark flex flex-col items-center justify-center p-6 text-center">
-                      <Image
-                        src={project.image || '/images/D1.jpeg'}
-                        alt={project.title}
-                        fill
-                        className="object-cover opacity-30"
-                        referrerPolicy="no-referrer"
-                      />
-                      <div className="relative z-10 max-w-md p-6 rounded-2xl bg-black/80 border border-primary/30 backdrop-blur-md">
-                        <div className="w-12 h-12 rounded-xl bg-primary/20 border border-primary/40 flex items-center justify-center mx-auto mb-3 text-primary">
-                          <Globe className="w-6 h-6" />
+                    {simMode === 'live' && project.liveUrl && !iframeError ? (
+                      <div className="flex-1 relative w-full h-full bg-slate-900 flex flex-col overflow-hidden">
+                        <iframe
+                          key={iframeReloadKey}
+                          src={project.liveUrl}
+                          title={`${project.title} Live App`}
+                          className="w-full flex-1 border-0 bg-white"
+                          sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
+                          onError={() => setIframeError(true)}
+                        />
+                        {/* Status bar */}
+                        <div className="h-8 bg-black/90 px-3 flex items-center justify-between border-t border-white/10 text-xs font-mono text-text-gray shrink-0">
+                          <div className="flex items-center gap-2 text-[11px] text-emerald-400">
+                            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                            <span className="truncate">Connected: {project.liveUrl}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => setSimMode('screenshot')}
+                              className="text-[10px] text-text-gray hover:text-white underline"
+                            >
+                              View Architecture Screenshot
+                            </button>
+                            <a
+                              href={project.liveUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[10px] text-primary hover:text-primary-light flex items-center gap-1"
+                            >
+                              <span>Full Window</span>
+                              <ArrowUpRight className="w-3 h-3" />
+                            </a>
+                          </div>
                         </div>
-                        <h4 className="text-lg font-bold text-white font-display mb-1">
-                          {project.title} Live Application
-                        </h4>
-                        <p className="text-xs text-text-gray mb-4">
-                          Running on production infrastructure with active telemetry and real-time load balancing.
-                        </p>
-                        {project.liveUrl && (
-                          <a
-                            href={project.liveUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary hover:bg-secondary text-white text-xs font-bold font-mono transition-all shadow-teal-glow"
-                          >
-                            <span>Open Dedicated App Window</span>
-                            <ArrowUpRight className="w-4 h-4" />
-                          </a>
-                        )}
                       </div>
-                    </div>
+                    ) : (
+                      <div className="flex-1 relative bg-black overflow-y-auto group">
+                        {iframeError && (
+                          <div className="p-2.5 bg-amber-500/10 border-b border-amber-500/20 text-amber-300 text-xs flex items-center justify-between font-mono">
+                            <span>Host prevents embedding. Showing architecture capture:</span>
+                            <a
+                              href={project.liveUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="underline font-semibold flex items-center gap-1 hover:text-white"
+                            >
+                              Open Live Site <ArrowUpRight className="w-3 h-3" />
+                            </a>
+                          </div>
+                        )}
+                        <Image
+                          src={projectImages[selectedImageIndex] || project.image || '/images/D1.jpeg'}
+                          alt={project.title}
+                          fill
+                          className="object-contain sm:object-cover object-top transition-transform duration-300"
+                          referrerPolicy="no-referrer"
+                          priority
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement
+                            if (target && !target.src.includes('/images/D1.jpeg')) {
+                              target.src = '/images/D1.jpeg'
+                            }
+                          }}
+                        />
+
+                        {/* Floating Bottom Status Pill */}
+                        <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between p-2.5 rounded-xl bg-black/85 backdrop-blur-md border border-white/15">
+                          <div className="flex items-center gap-2 truncate">
+                            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping shrink-0" />
+                            <span className="text-xs font-mono text-white truncate">
+                              {project.title} • {project.category}
+                            </span>
+                          </div>
+                          {project.liveUrl && (
+                            <a
+                              href={project.liveUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="shrink-0 px-3 py-1 rounded-lg bg-primary hover:bg-secondary text-white text-xs font-mono font-bold transition-all flex items-center gap-1"
+                            >
+                              <span>Live System</span>
+                              <ArrowUpRight className="w-3.5 h-3.5" />
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
+
+                {/* Multiple Screenshots Selector */}
+                {projectImages.length > 1 && (
+                  <div className="flex items-center gap-2 overflow-x-auto p-2 bg-background-dark/80 rounded-xl border border-white/10">
+                    <span className="text-xs font-mono text-text-gray px-2 shrink-0">Switch Screen:</span>
+                    {projectImages.map((img, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => {
+                          setSelectedImageIndex(idx)
+                          soundFX.playClick(500)
+                        }}
+                        className={`relative w-16 h-12 rounded-lg overflow-hidden border-2 transition-all shrink-0 ${
+                          selectedImageIndex === idx
+                            ? 'border-primary ring-2 ring-primary/40'
+                            : 'border-white/10 opacity-50 hover:opacity-100'
+                        }`}
+                      >
+                        <Image
+                          src={img}
+                          alt={`Screen ${idx + 1}`}
+                          fill
+                          className="object-cover"
+                          referrerPolicy="no-referrer"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 
@@ -670,6 +892,12 @@ export default function ProjectModal({ project, onClose, onSelectTech, selectedT
                     fill
                     className="object-cover"
                     referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement
+                      if (target && !target.src.includes('/images/D1.jpeg')) {
+                        target.src = '/images/D1.jpeg'
+                      }
+                    }}
                   />
                   <div className="absolute bottom-3 left-3 px-3 py-1 rounded-md bg-black/75 backdrop-blur-sm text-xs font-mono text-white border border-white/10">
                     Figure {selectedImageIndex + 1} of {projectImages.length}: {project.title} Architecture
@@ -698,6 +926,12 @@ export default function ProjectModal({ project, onClose, onSelectTech, selectedT
                           fill
                           className="object-cover"
                           referrerPolicy="no-referrer"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement
+                            if (target && !target.src.includes('/images/D1.jpeg')) {
+                              target.src = '/images/D1.jpeg'
+                            }
+                          }}
                         />
                       </button>
                     ))}

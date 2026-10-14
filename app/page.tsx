@@ -192,27 +192,43 @@ export default function Home() {
                       </span>
                     </div>
                     <h3 className="text-xl font-bold mb-3 font-display">{card.title || 'Featured Architecture'}</h3>
-                    <div className="space-y-2 mb-4">
+                    <div className="space-y-2.5 mb-4">
                       {(data.works.projects || []).slice(0, 3).map((proj, pIdx) => (
                         <Link
                           key={pIdx}
                           href="/works"
-                          className="p-2.5 rounded-lg bg-background-dark/80 hover:bg-primary/10 border border-white/5 hover:border-primary/30 transition-all flex items-center justify-between group/p"
+                          onClick={() => soundFX.playClick(500 + pIdx * 50)}
+                          className="p-2 rounded-xl bg-background-dark/90 hover:bg-primary/15 border border-white/5 hover:border-primary/40 transition-all flex items-center gap-3 group/p"
                         >
-                          <div>
-                            <div className="text-xs font-bold text-white group-hover/p:text-primary transition-colors flex items-center gap-1.5">
-                              <span>{proj.title}</span>
+                          <div className="relative w-12 h-12 rounded-lg overflow-hidden shrink-0 border border-white/10 group-hover/p:border-primary/50 transition-colors">
+                            <Image
+                              src={proj.image || '/images/D1.jpeg'}
+                              alt={proj.title}
+                              fill
+                              className="object-cover group-hover/p:scale-110 transition-transform duration-300"
+                              referrerPolicy="no-referrer"
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement
+                                if (target && !target.src.includes('/images/D1.jpeg')) {
+                                  target.src = '/images/D1.jpeg'
+                                }
+                              }}
+                            />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="text-xs font-bold text-white group-hover/p:text-primary transition-colors flex items-center gap-1.5 truncate">
+                              <span className="truncate">{proj.title}</span>
                               {proj.metrics && proj.metrics[0] && (
-                                <span className="text-[10px] text-emerald-400 font-mono font-normal">
+                                <span className="text-[10px] text-emerald-400 font-mono font-normal shrink-0">
                                   ({proj.metrics[0].value})
                                 </span>
                               )}
                             </div>
-                            <div className="text-[11px] text-text-gray truncate max-w-[200px]">
+                            <div className="text-[11px] text-text-gray truncate">
                               {proj.role || proj.category}
                             </div>
                           </div>
-                          <span className="text-xs text-primary opacity-0 group-hover/p:opacity-100 group-hover/p:translate-x-1 transition-all">
+                          <span className="text-xs text-primary opacity-0 group-hover/p:opacity-100 group-hover/p:translate-x-1 transition-all mr-1">
                             →
                           </span>
                         </Link>
